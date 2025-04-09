@@ -2,6 +2,15 @@ import { INavData } from '@coreui/angular';
 
 export const navItems: INavData[] = [
   {
+    name: 'Bodegas',
+    url: '/warehouses',
+    iconComponent: { name: 'cil-speedometer' },
+    // badge: {
+    //   color: 'info',
+    //   text: 'NEW'
+    // }
+  },
+  {
     name: 'Dashboard',
     url: '/dashboard',
     iconComponent: { name: 'cil-speedometer' },
@@ -34,6 +43,11 @@ export const navItems: INavData[] = [
     url: '/base',
     iconComponent: { name: 'cil-puzzle' },
     children: [
+      {
+        name: 'Bodegas',
+        url: '/base/warehouses',
+        icon: 'nav-icon-bullet'
+      },
       {
         name: 'Accordion',
         url: '/base/accordion',
