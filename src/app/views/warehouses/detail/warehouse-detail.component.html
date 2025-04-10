@@ -1,0 +1,71 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-3">
+      <c-card-header>
+        <strong>Bodega:</strong> {{ warehouseDetail?.name }}
+      </c-card-header>
+      <c-card-body>
+        <div class="input-group mb-3">
+          <span class="input-group-text">🔍</span>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar producto"
+            [(ngModel)]="searchTerm"
+            (input)="filterProducts()"
+          />
+          <button class="btn btn-outline-secondary" (click)="clearSearch()">
+            Limpiar
+          </button>
+        </div>
+
+        <c-accordion [alwaysOpen]="true">
+          <c-accordion-item
+            *ngFor="let product of filteredProducts; let i = index"
+            #item="cAccordionItem"
+            [visible]="false"
+          >
+            <ng-template cTemplateId="accordionHeaderTemplate">
+              <button
+                (click)="item.toggleItem()"
+                [collapsed]="!item.visible"
+                cAccordionButton
+                class="text-start fw-semibold"
+              >
+                {{ product.name }}
+                <span
+                  *ngIf="product.shopifyId"
+                  class="badge bg-secondary rounded-pill ms-2"
+                  >shopify id: {{ product.shopifyId }}</span
+                >
+                <span class="badge bg-primary rounded-pill">
+                  {{ product.variants.length }}
+                </span>
+              </button>
+            </ng-template>
+            <ng-template cTemplateId="accordionBodyTemplate">
+              <ul class="list-group list-group-flush">
+                <li
+                  *ngFor="let variant of product.variants"
+                  class="list-group-item d-flex justify-content-between"
+                >
+                  <span>
+                    <strong>{{ variant.name }}</strong>
+                    <span
+                      *ngIf="variant.shopifyId"
+                      class="badge bg-secondary rounded-pill ms-2"
+                      >shopify id: {{ variant.shopifyId }}</span
+                    >
+                    <span class="badge bg-primary rounded-pill">
+                      {{ variant.quantity }}
+                    </span>
+                  </span>
+                </li>
+              </ul>
+            </ng-template>
+          </c-accordion-item>
+        </c-accordion>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

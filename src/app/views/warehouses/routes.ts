@@ -4,9 +4,16 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./warehouses.component').then((m) => m.WarehousesComponent),
+      import('./list/warehouses.component').then((m) => m.WarehousesComponent),
     data: {
       title: 'Bodegas',
     },
+  },
+  {
+    path: ':id',
+    loadComponent: () =>
+      import('./detail/warehouse-detail.component').then(
+        (m) => m.WarehouseDetailComponent
+      ),
   },
 ];

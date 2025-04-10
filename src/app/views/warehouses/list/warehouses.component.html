@@ -1,0 +1,48 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Bodegas</strong> -> <small>Listado</small>
+      </c-card-header>
+      <c-card-body>
+        <table cTable>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let warehouse of warehouses">
+              <td>{{ warehouse.id }}</td>
+              <td>{{ warehouse.name }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-primary"
+                  (click)="openModal(warehouse)"
+                >
+                  Agregar productos
+                </button>
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  [routerLink]="[warehouse.id]"
+                >
+                  Ver Detalle
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+<app-warehouse-product-modal
+  *ngIf="selectedWarehouseId"
+  [warehouseId]="selectedWarehouseId"
+  [warehouseName]="selectedWarehouseName"
+  (onSave)="handleSave($event)"
+  (onClose)="handleClose($event)"
+>
+</app-warehouse-product-modal>
