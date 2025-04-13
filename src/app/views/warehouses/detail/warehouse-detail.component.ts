@@ -12,11 +12,10 @@ import {
   TemplateIdDirective,
   AccordionButtonDirective,
 } from '@coreui/angular';
-import { WarehouseService } from 'src/app/services/warehouse.service';
-import { WarehouseDto } from 'src/app/models/warehouse.dto';
+import { WarehouseService } from '../../../services/warehouse.service';
 import { FormsModule } from '@angular/forms';
-import { WarehouseDetailDto } from 'src/app/models/warehouse-detail.dto';
-import { ProductDetailDto } from 'src/app/models/product-detail.dto';
+import { WarehouseDetailDto } from '../../../models/warehouse-detail.dto';
+import { ProductDetailDto } from '../../../models/product-detail.dto';
 
 @Component({
   selector: 'app-warehouse-detail',

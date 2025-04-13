@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { WarehouseService } from 'src/app/services/warehouse.service';
-import {  WarehouseDto } from 'src/app/models/warehouse.dto';
-import {  WarehouseFilter } from 'src/app/models/warehouse-filter.model';
+import { WarehouseService } from '../../../services/warehouse.service';
+import { WarehouseDto } from '../../../models/warehouse.dto';
+import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { CommonModule } from '@angular/common';
-import { WarehouseProductModalComponent } from 'src/app/views/warehouses/components/warehouse-product-modal/warehouse-product-modal.component';
-import { ModalModule } from '@coreui/angular';
+import { WarehouseProductModalComponent } from '../../../views/warehouses/components/warehouse-product-modal/warehouse-product-modal.component';
 import { RouterLink, RouterOutlet } from '@angular/router';
 
 import {
@@ -30,10 +29,9 @@ import {
     CardBodyComponent,
     TableDirective,
     WarehouseProductModalComponent,
-    RouterLink
-  ]
+    RouterLink,
+  ],
 })
-
 export class WarehousesComponent implements OnInit {
   selectedWarehouseId: number | undefined;
   selectedWarehouseName: string = '';
@@ -44,19 +42,19 @@ export class WarehousesComponent implements OnInit {
       name: 'Main Warehouse',
       cityId: 1,
       countryId: 1,
-      cityName : 'Bogotá',
-      countryName : 'Colombia',
+      cityName: 'Bogotá',
+      countryName: 'Colombia',
     },
     {
       id: 1,
       name: 'Secondary Warehouse',
       cityId: 1,
       countryId: 1,
-      cityName : 'Bogotá',
-      countryName : 'Colombia',
+      cityName: 'Bogotá',
+      countryName: 'Colombia',
     },
   ];
-  
+
   loading = false;
 
   constructor(private warehouseService: WarehouseService) {}
@@ -69,16 +67,16 @@ export class WarehousesComponent implements OnInit {
     this.loading = true;
     const filter: WarehouseFilter = {
       // Aquí pones filtros si los necesitas
-    }; 
+    };
     this.warehouseService.getAll(filter).subscribe({
-      next: data => {
+      next: (data) => {
         this.warehouses = data;
         this.loading = false;
       },
-      error: err => {
+      error: (err) => {
         console.error('Error loading warehouses', err);
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -86,25 +84,25 @@ export class WarehousesComponent implements OnInit {
     this.selectedWarehouseId = warehouse.id;
     this.selectedWarehouseName = warehouse.name;
   }
-  
+
   handleClose(data: any) {
-    this.selectedWarehouseId = undefined; 
+    this.selectedWarehouseId = undefined;
   }
 
   handleSave(data: any) {
-    console.log('Saved data:', data);
-    // Aquí podrías llamar a tu servicio y enviar la data a la API
-    this.warehouseService.addInventory(this.selectedWarehouseId!, data.products).subscribe({
-      next: data => {
-        console.log('Warehouse created:', data);
-        this.loading = false;
-      },
-      error: err => {
-        console.error('Error loading warehouses', err);
-        this.loading = false;
-      }
-    });
+    this.warehouseService
+      .addInventory(this.selectedWarehouseId!, data.products)
+      .subscribe({
+        next: (data) => {
+          console.log('Warehouse created:', data);
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Error loading warehouses', err);
+          this.loading = false;
+        },
+      });
 
-    this.selectedWarehouseId = undefined; 
+    this.selectedWarehouseId = undefined;
   }
 }

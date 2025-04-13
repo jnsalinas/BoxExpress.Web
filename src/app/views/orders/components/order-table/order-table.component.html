@@ -1,0 +1,31 @@
+<table cTable>
+  <thead>
+    <tr>
+      <th *ngFor="let col of columns">{{ col.label }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let order of orders">
+      <td *ngFor="let col of columns">
+        <ng-container [ngSwitch]="col.key">
+          <ng-container *ngSwitchCase="'actions'">
+            <button
+              class="btn btn-sm btn-outline-primary"
+              [routerLink]="[order.id]"
+            >
+              Ver Detalle
+            </button>
+          </ng-container>
+
+          <ng-container *ngSwitchCase="'export'">
+            <button class="btn btn-sm btn-outline-success">Exportar</button>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>
+            {{ order[col.key] }}
+          </ng-container>
+        </ng-container>
+      </td>
+    </tr>
+  </tbody>
+</table>

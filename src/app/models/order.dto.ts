@@ -1,0 +1,23 @@
+import { BaseDto } from './base.dto';
+
+export interface OrderDto extends BaseDto {
+  country?: string;
+  city?: string;
+  deliveryDate?: Date;
+  rescheduleDate?: Date;
+  scheduledDate?: Date;
+  contains?: string;
+  latitude?: string;
+  longitude?: string;
+  clientAddress?: string;
+  clientFullName?: string;
+  clientDocument?: string;
+  clientPhone?: string;
+  totalAmount: number;
+  status?: string;
+  category?: string;
+  storeName?: string;
+  notes?: string;
+  code?: string;
+  deliveryFee?: number;
+}

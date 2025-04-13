@@ -1,0 +1,79 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Órdenes</strong> -> <small>Listado</small>
+      </c-card-header>
+      <c-card-body>
+        <c-tabs
+          [activeItemKey]="activeTab"
+          (activeItemKeyChange)="handleActiveItemChange($event)"
+        >
+          <c-tabs-list variant="underline-border">
+            <button cTab [itemKey]="0">Órdenes</button>
+            <button cTab [itemKey]="1">Express</button>
+            <button cTab [itemKey]="2">Tradicional</button>
+          </c-tabs-list>
+
+          <c-tabs-content>
+            <c-tab-panel
+              *ngFor="let i of [0, 1, 2]; let idx = index"
+              [itemKey]="idx"
+              class="p-3"
+            >
+              <app-order-table
+                *ngIf="orders$ | async as orders"
+                [orders]="orders"
+                [columns]="columns"
+              />
+            </c-tab-panel>
+          </c-tabs-content>
+        </c-tabs>
+
+        <!-- <table cTable>
+          <thead>
+            <tr>
+              <th>Guia</th>
+              <th>Orden</th>
+              <th>Cliente</th>
+              <th>Tienda</th>
+              <th>Telefono</th>
+              <th>Direccion</th>
+              <th>Notas</th>
+              <th>Flete</th>
+              <th>Valor total</th>
+              <th>Contiene</th>
+              <th>Ciudad</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let order of orders">
+              <td>{{ order.id }}</td>
+              <td>{{ order.code }}</td>
+              <td>{{ order.clientFullName }}</td>
+              <td>{{ order.storeName }}</td>
+              <td>{{ order.clientPhone }}</td>
+              <td>{{ order.clientAddress }}</td>
+              <td>{{ order.notes }}</td>
+              <td>{{ order.deliveryFee }}</td>
+              <td>{{ order.totalAmount }}</td>
+              <td>{{ order.contains }}</td>
+              <td>{{ order.city }}</td>
+              <td>{{ order.status }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  [routerLink]="[order.id]"
+                >
+                  Ver Detalle
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table> -->
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
