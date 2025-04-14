@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   RowComponent,
@@ -9,19 +9,54 @@ import {
   CardBodyComponent,
   TableDirective,
 } from '@coreui/angular';
+import { EventEmitter } from '@angular/core';
+import { OrderCategoryDto } from '../../../../models/order-category.dto';
+import { OrderStatusDto } from '../../../../models/order-status.dto';
+import { FormsModule } from '@angular/forms';
+import { WarehouseDto } from '../../../../models/warehouse.dto';
 
 @Component({
   standalone: true,
   selector: 'app-order-table',
-  imports: [
-    TableDirective,
-    RouterLink,
-    CommonModule
-  ],
+  imports: [TableDirective, RouterLink, CommonModule, FormsModule],
   templateUrl: './order-table.component.html',
   styleUrl: './order-table.component.scss',
 })
 export class OrderTableComponent {
   @Input() orders: any[] = [];
   @Input() columns: { key: string; label: string; isButton?: boolean }[] = [];
+  @Input() statusOptions: OrderStatusDto[] = [];
+  @Input() categoryOptions: OrderCategoryDto[] = [];
+  @Input() warehouseOptions: WarehouseDto[] = [];
+  @Output() statusChanged = new EventEmitter<{
+    orderId: number;
+    statusId: number;
+  }>();
+  @Output() categoryChanged = new EventEmitter<{
+    orderId: number;
+    categoryId: number;
+  }>();
+  @Output() warehouseChanged = new EventEmitter<{
+    orderId: number;
+    warehouseId: number;
+  }>();
+
+  onStatusChange(orderId: number, statusId: number) {
+    console.log('Status changed:', orderId, statusId);
+    this.statusChanged.emit({ orderId, statusId });
+  }
+
+  onCategoryChange(orderId: number, categoryId: number) {
+    this.categoryChanged.emit({ orderId, categoryId });
+  }
+
+  onWarehouseChange(orderId: number, warehouseId: number) {
+    this.warehouseChanged.emit({ orderId, warehouseId });
+
+  }
+
+  hasColumn(key: string): boolean {
+    return this.columns.some(col => col.key === key);
+  }
+  
 }

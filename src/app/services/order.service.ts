@@ -19,8 +19,15 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
         `${environment.apiUrl}/Orders/${orderId}/inventory`,
         inventoryData
       )
-      .pipe(
-        this.handleResponse()
-      );
+      .pipe(this.handleResponse());
+  }
+
+  changeWarehouse(orderId: number, warehouseId: number): Observable<void> {
+    return this.http
+      .patch<ApiResponse<null>>(
+        `${environment.apiUrl}/Orders/${orderId}/warehouse/${warehouseId}`,
+        {}
+      )
+      .pipe(this.handleResponse());
   }
 }

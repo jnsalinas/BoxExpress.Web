@@ -22,9 +22,15 @@
               class="p-3"
             >
               <app-order-table
-                *ngIf="orders$ | async as orders"
+                *ngIf="orders"
                 [orders]="orders"
                 [columns]="columns"
+                [statusOptions]="statusOptions"
+                [categoryOptions]="categoryOptions"
+                [warehouseOptions]="warehouseOptions"
+                (statusChanged)="handleStatusChange($event)"
+                (categoryChanged)="handleCategoryChange($event)"
+                (warehouseChanged)="handleWarehouseChange($event)"
               />
             </c-tab-panel>
           </c-tabs-content>
@@ -77,3 +83,5 @@
     </c-card>
   </c-col>
 </c-row>
+
+<app-generic-modal></app-generic-modal>

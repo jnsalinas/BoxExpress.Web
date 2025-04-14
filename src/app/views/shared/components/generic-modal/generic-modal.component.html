@@ -1,0 +1,11 @@
+<c-modal [visible]="isVisible">
+  <c-modal-header>
+    <h5 cModalTitle>{{ title }}</h5>
+    <button (click)="onClose()" cButtonClose></button>
+  </c-modal-header>
+  <c-modal-body>{{ body }}</c-modal-body>
+  <c-modal-footer>
+    <button (click)="onClose()" cButton color="secondary">Close</button>
+    <button cButton color="primary" (click)="onOk()">Save changes</button>
+  </c-modal-footer>
+</c-modal>

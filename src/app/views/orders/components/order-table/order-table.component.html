@@ -1,30 +1,64 @@
+<!-- Se dejan las columnas "fijas" ya que al hacerlo de forma dinamica con swtich o ngif dentro de un ngfor de columnas para hacer el render de los td cuando se pone ngmodule y ngchange se muere el binding y no carga la pagina  -->
 <table cTable>
   <thead>
     <tr>
-      <th *ngFor="let col of columns">{{ col.label }}</th>
+      <th *ngIf="hasColumn('id')">Guía</th>
+      <th *ngIf="hasColumn('code')">Orden</th>
+      <th *ngIf="hasColumn('clientFullName')">Cliente</th>
+      <th *ngIf="hasColumn('storeName')">Tienda</th>
+      <th *ngIf="hasColumn('clientPhone')">Teléfono</th>
+      <th *ngIf="hasColumn('clientAddress')">Dirección</th>
+      <th *ngIf="hasColumn('notes')">Notas</th>
+      <th *ngIf="hasColumn('deliveryFee')">Flete</th>
+      <th *ngIf="hasColumn('totalAmount')">Valor total</th>
+      <th *ngIf="hasColumn('contains')">Contiene</th>
+      <th *ngIf="hasColumn('city')">Ciudad</th>
+      <th *ngIf="hasColumn('category')">Categoría</th>
+      <th *ngIf="hasColumn('status')">Estado</th>
+      <th *ngIf="hasColumn('actions')">Acciones</th>
     </tr>
   </thead>
+
   <tbody>
     <tr *ngFor="let order of orders">
-      <td *ngFor="let col of columns">
-        <ng-container [ngSwitch]="col.key">
-          <ng-container *ngSwitchCase="'actions'">
-            <button
-              class="btn btn-sm btn-outline-primary"
-              [routerLink]="[order.id]"
-            >
-              Ver Detalle
-            </button>
-          </ng-container>
-
-          <ng-container *ngSwitchCase="'export'">
-            <button class="btn btn-sm btn-outline-success">Exportar</button>
-          </ng-container>
-
-          <ng-container *ngSwitchDefault>
-            {{ order[col.key] }}
-          </ng-container>
-        </ng-container>
+      <td *ngIf="hasColumn('id')">{{ order.id }}</td>
+      <td *ngIf="hasColumn('code')">{{ order.code }}</td>
+      <td *ngIf="hasColumn('clientFullName')">{{ order.clientFullName }}</td>
+      <td *ngIf="hasColumn('storeName')">{{ order.storeName }}</td>
+      <td *ngIf="hasColumn('clientPhone')">{{ order.clientPhone }}</td>
+      <td *ngIf="hasColumn('clientAddress')">{{ order.clientAddress }}</td>
+      <td *ngIf="hasColumn('notes')">{{ order.notes }}</td>
+      <td *ngIf="hasColumn('deliveryFee')">{{ order.deliveryFee }}</td>
+      <td *ngIf="hasColumn('totalAmount')">{{ order.totalAmount }}</td>
+      <td *ngIf="hasColumn('contains')">{{ order.contains }}</td>
+      <td *ngIf="hasColumn('city')">{{ order.city }}</td>
+      <td *ngIf="hasColumn('category')">
+        <select
+          class="form-select form-select-sm"
+          [(ngModel)]="order.warehouseId"
+          (ngModelChange)="onWarehouseChange(order.id, $event)"
+          [disabled]="warehouseOptions.length === 0"
+        >
+          <option [value]="null" disabled>Seleccione...</option>
+          <option
+            *ngFor="let warehouse of warehouseOptions"
+            [value]="warehouse.id"
+          >
+            {{ warehouse.name }}
+          </option>
+        </select>
+      </td>
+      <td *ngIf="hasColumn('status')">
+        <span class="badge bg-info">{{ order.status }}</span>
+      </td>
+      <!-- Acciones -->
+      <td *ngIf="hasColumn('actions')">
+        <button
+          class="btn btn-sm btn-outline-primary"
+          [routerLink]="[order.id]"
+        >
+          Ver Detalle
+        </button>
       </td>
     </tr>
   </tbody>

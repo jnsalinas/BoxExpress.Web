@@ -1,10 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrderService } from '../../../services/order.service';
+import { OrderCategoryService } from '../../../services/order-category.service';
+import { OrderStatusService } from '../../../services/order-status.service';
+
 import { WarehouseService } from '../../../services/warehouse.service';
 import { OrderDto } from '../../../models/order.dto';
 import { OrderFilter } from '../../../models/order-filter.model';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { GenericModalComponent } from '../../../views/shared/components/generic-modal/generic-modal.component';
 
 import {
   RowComponent,
@@ -22,7 +26,10 @@ import {
 import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { WarehouseDto } from '../../../models/warehouse.dto';
 import { OrderTableComponent } from '../components/order-table/order-table.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, forkJoin } from 'rxjs';
+import { OrderCategoryDto } from '../../../models/order-category.dto';
+import { OrderStatusDto } from '../../../models/order-status.dto';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   standalone: true,
@@ -42,47 +49,57 @@ import { BehaviorSubject } from 'rxjs';
     TabsContentComponent,
     TabsListComponent,
     OrderTableComponent,
+    FormsModule,
+    GenericModalComponent,
   ],
 })
 export class OrderListComponent implements OnInit {
+  @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
+
+  statusOptions: OrderStatusDto[] = [];
+  categoryOptions: OrderCategoryDto[] = [];
+
   selectedOrderId: number | undefined;
   selectedOrderName: string = '';
 
   orders: OrderDto[] = [];
-  warehouses: WarehouseDto[] = [
+  warehouseOptions: WarehouseDto[] = [
     {
       id: 0,
       name: 'Tradicional',
     },
   ];
   loading = false;
-  activeTab: number = 1;
+  activeTab: number = 0;
 
   private ordersSubject = new BehaviorSubject<OrderDto[]>([]); // Aquí almacenamos las órdenes
   orders$ = this.ordersSubject.asObservable(); // Observable para los componentes que escuchan cambios
 
   constructor(
     private orderService: OrderService,
-    private warehouseService: WarehouseService
+    private warehouseService: WarehouseService,
+    private statusOrderService: OrderStatusService,
+    private categoryOrderService: OrderCategoryService
   ) {}
 
   ngOnInit(): void {
-    this.loadOrders({ categoryId: this.activeTab });
-    this.loadWarehouses();
-  }
+    this.loadOrders({ categoryId: this.statusForActiveTab });
 
-  loadWarehouses(): void {
     this.loading = true;
-    const filter: WarehouseFilter = {
-      // Aquí pones filtros si los necesitas
-    };
-    this.warehouseService.getAll(filter).subscribe({
-      next: (data) => {
-        this.warehouses.push(...data);
+    forkJoin({
+      warehouses: this.warehouseService.getAll({}),
+      statuses: this.statusOrderService.getAll(),
+      categories: this.categoryOrderService.getAll(),
+    }).subscribe({
+      next: (responses) => {
+        this.statusOptions = responses.statuses;
+        this.categoryOptions = responses.categories;
+        this.warehouseOptions.push(...responses.warehouses);
+        console.log('Warehouse options:', this.warehouseOptions);
         this.loading = false;
       },
-      error: (err) => {
-        console.error('Error loading warehouses', err);
+      error: (error) => {
+        console.error('Error loading data:', error);
         this.loading = false;
       },
     });
@@ -103,10 +120,10 @@ export class OrderListComponent implements OnInit {
     });
   }
 
-  openModal(order: OrderDto) {
-    this.selectedOrderId = order.id;
-    this.selectedOrderName = order.name;
-  }
+  // openModal(order: OrderDto) {
+  //   this.selectedOrderId = order.id;
+  //   this.selectedOrderName = order.name;
+  // }
 
   handleClose(data: any) {
     this.selectedOrderId = undefined;
@@ -133,7 +150,7 @@ export class OrderListComponent implements OnInit {
     const validIndex = typeof index === 'number' ? index : Number(index);
     if (!isNaN(validIndex)) {
       this.activeTab = validIndex;
-      this.loadOrders({ categoryId: this.activeTab });
+      this.loadOrders({ categoryId: this.statusForActiveTab });
     }
   }
 
@@ -152,7 +169,7 @@ export class OrderListComponent implements OnInit {
           { key: 'totalAmount', label: 'Valor total' },
           { key: 'contains', label: 'Contiene' },
           { key: 'city', label: 'Ciudad' },
-          { key: 'status', label: 'Estado' },
+          { key: 'category', label: 'Categoria' },
           { key: 'actions', label: 'Acciones' },
         ];
       case 1:
@@ -167,11 +184,56 @@ export class OrderListComponent implements OnInit {
         return [
           { key: 'id', label: 'Guia' },
           { key: 'clientFullName', label: 'Cliente' },
-          { key: 'export', label: 'Exportar' },
           { key: 'status', label: 'Estado' },
         ];
       default:
         return [];
     }
+  }
+
+  get statusForActiveTab(): number {
+    return this.activeTab + 1;
+  }
+
+  handleStatusChange(event: { orderId: number; statusId: number }) {
+    console.log('Status changed:', event);
+  }
+
+  handleCategoryChange(event: { orderId: number; categoryId: number }) {
+    console.log('Category changed:', event);
+  }
+
+  handleWarehouseChange(event: { orderId: number; warehouseId: number }) {
+    console.log('Warehouse changed:', event);
+    console.log(
+      'Warehouse changed for Order ID:',
+      event.orderId,
+      'with Warehouse ID:',
+      event.warehouseId
+    );
+
+    let category = "Express";
+    if (event.warehouseId == 0) {
+      category = "Tradicional";
+    }
+
+    this.modal.show({
+      title: 'Confirmar Acción',
+      body: `¿Estás seguro de que desea pasar la orden ${event.orderId} como ${category}?`,
+      ok: () => {
+        this.orderService.changeWarehouse(event.orderId, event.warehouseId).subscribe({
+          next: (data) => {
+            console.log('Warehouse changed successfully:', data);
+            this.loadOrders({ categoryId: this.statusForActiveTab });
+          },
+          error: (err) => {
+            console.error('Error changing warehouse', err);
+          },
+        });
+      },
+      close: () => {
+        console.log('Acción close');
+      },
+    });
   }
 }
