@@ -175,8 +175,16 @@ export class OrderListComponent implements OnInit {
       case 1:
         return [
           { key: 'id', label: 'Guia' },
-          { key: 'storeName', label: 'Tienda' },
+          { key: 'code', label: 'Orden' },
+          { key: 'clientFullName', label: 'Cliente' },
+          { key: 'storeName', label: 'Tienda' }, //todo solo para admin
+          { key: 'clientPhone', label: 'Teléfono' },
           { key: 'clientAddress', label: 'Dirección' },
+          { key: 'notes', label: 'Notas' },
+          { key: 'deliveryFee', label: 'Flete' },
+          { key: 'totalAmount', label: 'Valor' },
+          { key: 'contains', label: 'Contiene' },
+          { key: 'city', label: 'Ciudad' },
           { key: 'status', label: 'Estado' },
           { key: 'actions', label: 'Acciones' },
         ];
@@ -196,40 +204,53 @@ export class OrderListComponent implements OnInit {
   }
 
   handleStatusChange(event: { orderId: number; statusId: number }) {
-    console.log('Status changed:', event);
-  }
+    console.log(event.statusId);
+    const status = this.statusOptions.find(
+      (status) => status.id === Number(event.statusId)
+    );
 
-  handleCategoryChange(event: { orderId: number; categoryId: number }) {
-    console.log('Category changed:', event);
+    this.modal.show({
+      title: 'Cambio de estado',
+      body: `¿Estás seguro de que desea pasar la orden ${event.orderId} como ${status?.name}?`,
+      ok: () => {
+        this.orderService
+          .changeStatus(event.orderId, event.statusId)
+          .subscribe({
+            next: (data) => {
+              this.loadOrders({ categoryId: this.statusForActiveTab });
+            },
+            error: (err) => {
+              console.error('Error changing warehouse', err);
+            },
+          });
+      },
+      close: () => {
+        console.log('Acción close');
+      },
+    });
   }
 
   handleWarehouseChange(event: { orderId: number; warehouseId: number }) {
-    console.log('Warehouse changed:', event);
-    console.log(
-      'Warehouse changed for Order ID:',
-      event.orderId,
-      'with Warehouse ID:',
-      event.warehouseId
-    );
-
-    let category = "Express";
+    let category = 'Express';
     if (event.warehouseId == 0) {
-      category = "Tradicional";
+      category = 'Tradicional';
     }
 
     this.modal.show({
-      title: 'Confirmar Acción',
+      title: 'Cambio de bodega',
       body: `¿Estás seguro de que desea pasar la orden ${event.orderId} como ${category}?`,
       ok: () => {
-        this.orderService.changeWarehouse(event.orderId, event.warehouseId).subscribe({
-          next: (data) => {
-            console.log('Warehouse changed successfully:', data);
-            this.loadOrders({ categoryId: this.statusForActiveTab });
-          },
-          error: (err) => {
-            console.error('Error changing warehouse', err);
-          },
-        });
+        this.orderService
+          .changeWarehouse(event.orderId, event.warehouseId)
+          .subscribe({
+            next: (data) => {
+              console.log('Warehouse changed successfully:', data);
+              this.loadOrders({ categoryId: this.statusForActiveTab });
+            },
+            error: (err) => {
+              console.error('Error changing warehouse', err);
+            },
+          });
       },
       close: () => {
         console.log('Acción close');

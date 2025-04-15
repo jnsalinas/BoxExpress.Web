@@ -32,10 +32,6 @@ export class OrderTableComponent {
     orderId: number;
     statusId: number;
   }>();
-  @Output() categoryChanged = new EventEmitter<{
-    orderId: number;
-    categoryId: number;
-  }>();
   @Output() warehouseChanged = new EventEmitter<{
     orderId: number;
     warehouseId: number;
@@ -44,10 +40,6 @@ export class OrderTableComponent {
   onStatusChange(orderId: number, statusId: number) {
     console.log('Status changed:', orderId, statusId);
     this.statusChanged.emit({ orderId, statusId });
-  }
-
-  onCategoryChange(orderId: number, categoryId: number) {
-    this.categoryChanged.emit({ orderId, categoryId });
   }
 
   onWarehouseChange(orderId: number, warehouseId: number) {

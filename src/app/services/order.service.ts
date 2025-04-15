@@ -30,4 +30,13 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
       )
       .pipe(this.handleResponse());
   }
+
+  changeStatus(orderId: number, statusId: number): Observable<void> {
+    return this.http
+      .patch<ApiResponse<null>>(
+        `${environment.apiUrl}/Orders/${orderId}/status/${statusId}`,
+        {}
+      )
+      .pipe(this.handleResponse());
+  }
 }

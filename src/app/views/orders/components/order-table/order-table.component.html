@@ -49,7 +49,19 @@
         </select>
       </td>
       <td *ngIf="hasColumn('status')">
+        {{ order.statusId | json }}
         <span class="badge bg-info">{{ order.status }}</span>
+        <select
+          class="form-select form-select-sm"
+          [(ngModel)]="order.statusId"
+          (ngModelChange)="onStatusChange(order.id, $event)"
+          [disabled]="statusOptions.length === 0"
+        >
+          <option [value]="null" disabled>Seleccione...</option>
+          <option *ngFor="let status of statusOptions" [value]="status.id">
+            {{ status.name }}
+          </option>
+        </select>
       </td>
       <!-- Acciones -->
       <td *ngIf="hasColumn('actions')">
