@@ -8,7 +8,7 @@ export const routes: Routes = [
         (m) => m.OrderListComponent
       ),
     data: {
-      title: 'Bodegas',
+      title: 'Ordenes',
     },
   },
   {

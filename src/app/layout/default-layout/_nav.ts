@@ -20,6 +20,15 @@ export const navItems: INavData[] = [
     // }
   },
   {
+    name: 'Wallet',
+    url: '/wallet',
+    iconComponent: { name: 'cil-speedometer' },
+    // badge: {
+    //   color: 'info',
+    //   text: 'NEW'
+    // }
+  },
+  {
     name: 'Dashboard',
     url: '/dashboard',
     iconComponent: { name: 'cil-speedometer' },

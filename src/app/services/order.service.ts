@@ -25,7 +25,7 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
   changeWarehouse(orderId: number, warehouseId: number): Observable<void> {
     return this.http
       .patch<ApiResponse<null>>(
-        `${environment.apiUrl}/Orders/${orderId}/warehouse/${warehouseId}`,
+        `${environment.apiUrl}/orders/${orderId}/warehouse/${warehouseId}`,
         {}
       )
       .pipe(this.handleResponse());
@@ -34,7 +34,7 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
   changeStatus(orderId: number, statusId: number): Observable<void> {
     return this.http
       .patch<ApiResponse<null>>(
-        `${environment.apiUrl}/Orders/${orderId}/status/${statusId}`,
+        `${environment.apiUrl}/orders/${orderId}/status/${statusId}`,
         {}
       )
       .pipe(this.handleResponse());

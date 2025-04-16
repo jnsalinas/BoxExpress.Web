@@ -1,0 +1,33 @@
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Bodegas</strong> -> <small>Listado</small>
+      </c-card-header>
+      <c-card-body>
+        <table cTable class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Store</th>
+              <th scope="col">User</th>
+              <th scope="col">Description</th>
+              <th scope="col">Amount</th>
+              <th scope="col">Order ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tx of transactions; let i = index">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ tx.storeName || "-" }}</td>
+              <td>{{ tx.userName || "-" }}</td>
+              <td>{{ tx.description || "-" }}</td>
+              <td>{{ tx.amount }}</td>
+              <td>{{ tx.relatedOrderId || "-" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
