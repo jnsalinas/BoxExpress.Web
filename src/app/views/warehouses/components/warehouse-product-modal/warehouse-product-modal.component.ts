@@ -1,7 +1,15 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { freeSet } from '@coreui/icons';
 
 import {
   ModalModule,
@@ -13,6 +21,9 @@ import {
   ModalBodyComponent,
   ModalFooterComponent,
 } from '@coreui/angular'; // Ajusta según cómo estés usando CoreUI
+import { IconDirective } from '@coreui/icons-angular';
+import { ProductDto } from 'src/app/models/product.dto';
+import { ProductVariantDto } from 'src/app/models/product-variant.dto';
 
 @Component({
   selector: 'app-warehouse-product-modal',
@@ -29,15 +40,19 @@ import {
     ModalBodyComponent,
     ModalFooterComponent,
     ReactiveFormsModule,
+    IconDirective,
   ],
 })
 export class WarehouseProductModalComponent implements OnInit {
   @Input() warehouseId: number | null = null;
   @Input() warehouseName: string | null = null;
+  @Input() isVisible: boolean = false;
+  @Input() productToEdit: ProductDto | null = null;
   @Output() onSave = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
+  icons = freeSet;
 
-  productForm: FormGroup = this.fb.group({});;
+  productForm: FormGroup = this.fb.group({});
 
   constructor(private fb: FormBuilder) {}
 
@@ -48,10 +63,58 @@ export class WarehouseProductModalComponent implements OnInit {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['productToEdit']) {
+      if (this.productToEdit) {
+        this.initializeFormWithProducts(this.productToEdit);
+      } else {
+        this.resetForm();
+      }
+    }
+  }
+
+  initializeFormWithProducts(product: ProductDto) {
+    const productGroup = this.fb.group({
+      id: [product.id || 0],
+      name: [product.name || '', Validators.required],
+      sku: [product.sku || ''],
+      shopifyId: [product.shopifyId || ''],
+      price: [product.price || 0],
+      variants: this.fb.array(
+        (product.variants || []).map((v: ProductVariantDto) =>
+          this.fb.group({
+            id: [v.id || 0],
+            name: [v.name || '', Validators.required],
+            sku: [v.sku || ''],
+            price: [v.price || 0],
+            quantity: [
+              v.quantity || 0,
+              [Validators.required, Validators.min(1)],
+            ],
+          })
+        )
+      ),
+    });
+
+    this.productForm = this.fb.group({
+      products: this.fb.array([productGroup]),
+    });
+  }
+
+  resetForm() {
+    this.productForm = this.fb.group({
+      products: this.fb.array([this.createProduct()]),
+    });
+  }
+
   // Crear un nuevo FormGroup para un producto
   createProduct(): FormGroup {
     return this.fb.group({
+      id: [0],
       name: ['', Validators.required], // Nombre del producto
+      shopifyId: [''],
+      sku: [''],
+      price: [null],
       variants: this.fb.array([this.createVariant()]), // Inicializar con una variante
     });
   }
@@ -59,9 +122,12 @@ export class WarehouseProductModalComponent implements OnInit {
   // Crear un nuevo FormGroup para una variante
   createVariant(): FormGroup {
     return this.fb.group({
+      id: [0],
       name: ['', Validators.required], // Nombre de la variante
       productCode: [''],
-      quantity: [0, [Validators.required, Validators.min(1)]], // Cantidad de la variante
+      sku: [''],
+      price: [null],
+      quantity: [null, [Validators.required, Validators.min(1)]], // Cantidad de la variante
     });
   }
 

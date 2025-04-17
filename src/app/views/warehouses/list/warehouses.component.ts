@@ -3,8 +3,7 @@ import { WarehouseService } from '../../../services/warehouse.service';
 import { WarehouseDto } from '../../../models/warehouse.dto';
 import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { CommonModule } from '@angular/common';
-import { WarehouseProductModalComponent } from '../../../views/warehouses/components/warehouse-product-modal/warehouse-product-modal.component';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterLink } from '@angular/router';
 
 import {
   RowComponent,
@@ -28,13 +27,11 @@ import {
     CardHeaderComponent,
     CardBodyComponent,
     TableDirective,
-    WarehouseProductModalComponent,
     RouterLink,
   ],
 })
 export class WarehousesComponent implements OnInit {
   selectedWarehouseId: number | undefined;
-  selectedWarehouseName: string = '';
 
   warehouses: WarehouseDto[] = [
     {
@@ -80,29 +77,29 @@ export class WarehousesComponent implements OnInit {
     });
   }
 
-  openModal(warehouse: WarehouseDto) {
-    this.selectedWarehouseId = warehouse.id;
-    this.selectedWarehouseName = warehouse.name;
-  }
+  // openModal(warehouse: WarehouseDto) {
+  //   this.selectedWarehouseId = warehouse.id;
+  //   this.selectedWarehouseName = warehouse.name;
+  // }
 
-  handleClose(data: any) {
-    this.selectedWarehouseId = undefined;
-  }
+  // handleClose(data: any) {
+  //   this.selectedWarehouseId = undefined;
+  // }
 
-  handleSave(data: any) {
-    this.warehouseService
-      .addInventory(this.selectedWarehouseId!, data.products)
-      .subscribe({
-        next: (data) => {
-          console.log('Warehouse created:', data);
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error loading warehouses', err);
-          this.loading = false;
-        },
-      });
+  // handleSave(data: any) {
+  //   this.warehouseService
+  //     .addInventory(this.selectedWarehouseId!, data.products)
+  //     .subscribe({
+  //       next: (data) => {
+  //         console.log('Warehouse created:', data);
+  //         this.loading = false;
+  //       },
+  //       error: (err) => {
+  //         console.error('Error loading warehouses', err);
+  //         this.loading = false;
+  //       },
+  //     });
 
-    this.selectedWarehouseId = undefined;
-  }
+  //   this.selectedWarehouseId = undefined;
+  // }
 }
