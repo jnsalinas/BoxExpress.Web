@@ -16,7 +16,7 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
   addInventory(orderId: number, inventoryData: any): Observable<void> {
     return this.http
       .post<ApiResponse<null>>(
-        `${environment.apiUrl}/Orders/${orderId}/inventory`,
+        `${environment.apiUrl}/orders/${orderId}/inventory`,
         inventoryData
       )
       .pipe(this.handleResponse());

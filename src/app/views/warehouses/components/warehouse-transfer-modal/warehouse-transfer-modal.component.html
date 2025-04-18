@@ -1,0 +1,121 @@
+<c-modal [visible]="isVisible" size="lg" backdrop="static">
+  <c-modal-header>
+    <h5 class="modal-title">Transferencia entre Bodegas</h5>
+  </c-modal-header>
+
+  <c-modal-body>
+    <form [formGroup]="form">
+      <div class="mb-3">
+        <label for="destinationWarehouseId" class="form-label"
+          >Bodega destino</label
+        >
+        <select
+          id="destinationWarehouseId"
+          class="form-select"
+          formControlName="destinationWarehouseId"
+        >
+          <option value="" disabled selected>Seleccione una bodega</option>
+          <option *ngFor="let warehouse of warehouses" [value]="warehouse.id">
+            {{ warehouse.name }}
+          </option>
+        </select>
+      </div>
+
+      <div formArrayName="lines">
+        <div
+          *ngFor="let line of lines.controls; let i = index"
+          [formGroupName]="i"
+          class="border rounded p-3 mb-3"
+        >
+          <div class="row g-2 align-items-end">
+            <div class="col-md-6">
+              <label class="form-label">Variante</label>
+              <input
+                type="text"
+                class="form-control"
+                [value]="displayVariant(line.get('variantId')?.value)"
+                (input)="onVariantInput($event, i)"
+                placeholder="Buscar variante..."
+              />
+              <ul
+                class="list-group mt-1"
+                *ngIf="getVariantOptions(i).length > 0"
+              >
+                <li
+                  class="list-group-item list-group-item-action"
+                  *ngFor="let variant of getVariantOptions(i)"
+                  (click)="line.get('variantId')?.setValue(variant.id)"
+                >
+                  {{ variant.name }}
+                </li>
+              </ul>
+              <div
+                *ngIf="
+                  line.get('variantId')?.invalid &&
+                  line.get('variantId')?.touched
+                "
+                class="text-danger mt-1"
+              >
+                Variante requerida
+              </div>
+              <div
+                *ngIf="isDuplicate(line.get('variantId')?.value, i)"
+                class="text-warning mt-1"
+              >
+                Variante duplicada
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Cantidad</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="quantity"
+                min="1"
+              />
+            </div>
+
+            <div class="col-md-2 text-end">
+              icon remove?
+
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="removeLine(i)"
+                *ngIf="lines.length > 1"
+              >
+                <!-- <c-icon name="cil-x" /> -->
+                icon remove?
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="btn btn-secondary w-100" (click)="addLine()">
+        <!-- <c-icon name="cil-plus" />  -->
+        icon Agregar Variante
+      </button>
+
+      <div class="mt-4">
+        <h6>Resumen</h6>
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let item of getSummary()">
+            {{ item.name }} - Cantidad: {{ item.quantity }}
+          </li>
+        </ul>
+      </div>
+    </form>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Cancelar
+    </button>
+    <!-- <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid"> -->
+    <button type="button" class="btn btn-primary" (click)="save()">
+      Transferir
+    </button>
+  </c-modal-footer>
+</c-modal>

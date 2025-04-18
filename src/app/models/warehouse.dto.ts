@@ -6,4 +6,6 @@ export interface WarehouseDto extends BaseDto {
   countryId?: number;
   cityName?: string;
   countryName?: string;
+  address?: string;
+  manager?: string;
 }

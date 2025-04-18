@@ -1,73 +1,16 @@
-<!-- <c-row>
-  <c-col xs="12">
-    <c-card class="mb-3">
-      <c-card-header>
-        <strong>Bodega:</strong> {{ warehouseDetail?.name }}
-        <button class="btn btn-sm btn-primary float-end" (click)="openModal()">
-          Agregar productos
-        </button>
-      </c-card-header>
-      <c-card-body>
-        <div class="input-group mb-3">
-          <span class="input-group-text">🔍</span>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Buscar producto"
-            [(ngModel)]="searchTerm"
-            (input)="filterProducts()"
-          />
-          <button class="btn btn-outline-secondary" (click)="clearSearch()">
-            Limpiar
-          </button>
-        </div>
-
-        <table cTable>
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Variantes</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let product of filteredProducts">
-              <td>
-                {{ product.name }} / {{ product.sku }}
-                <span class="badge bg-secondary">{{ product.sku }}</span>
-              </td>
-              <td>
-                <div
-                  *ngFor="let variant of product.variants"
-                  class="p-2 mb-2 border rounded bg-light"
-                >
-                  <div>
-                    <strong>{{ variant.name }}</strong> ({{ variant.quantity }})
-                  </div>
-                  <div *ngIf="variant.shopifyId" class="text-muted small">
-                    Shopify ID: {{ variant.shopifyId }}
-                  </div>
-                  <div *ngIf="variant.sku" class="text-muted small">
-                    SKU:
-                    <span class="badge bg-secondary">{{ variant.sku }}</span>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row> -->
-
 <c-row>
   <c-col xs="12">
     <c-card class="mb-3">
       <c-card-header>
         <strong>Bodega:</strong> {{ warehouseDetail?.name }}
-        <button class="btn btn-sm btn-primary float-end" (click)="openModal()">
-          Agregar productos
-        </button>
+        <div class="d-flex justify-content-end gap-2">
+          <button class="btn btn-sm btn-primary" (click)="openInventoryModal()">
+            Agregar productos
+          </button>
+          <button class="btn btn-sm btn-primary" (click)="openTransferModal()">
+            Transferir productos
+          </button>
+        </div>
       </c-card-header>
       <c-card-body>
         <div class="input-group mb-3">
@@ -102,31 +45,6 @@
                       <h5 class="mb-0">{{ product.name }}</h5>
                       <span class="badge bg-secondary">{{ product.sku }}</span>
                     </div>
-                    <div>
-                      <button
-                        class="btn btn-sm btn-outline-primary me-2"
-                        (click)="editProduct(product)"
-                      >
-                        <i class="bi bi-pencil"></i>
-                        <svg
-                          [cIcon]="icons.cilPencil"
-                          size="sm"
-                          title="List Icon"
-                        ></svg>
-                        Editar
-                      </button>
-                      <button
-                        class="btn btn-sm btn-outline-danger"
-                        (click)="deleteProduct(product)"
-                      >
-                        <svg
-                          [cIcon]="icons.cilTrash"
-                          size="sm"
-                          title="Eliminar"
-                        ></svg>
-                        Eliminar
-                      </button>
-                    </div>
                   </div>
 
                   <!-- Lista de variantes -->
@@ -153,28 +71,6 @@
                             }}</span>
                           </div>
                         </div>
-                        <div class="text-end">
-                          <button
-                            class="btn btn-sm btn-outline-primary me-2"
-                            (click)="editVariant(product, variant)"
-                          >
-                            <svg
-                              [cIcon]="icons.cilPencil"
-                              size="sm"
-                              title="Editar"
-                            ></svg>
-                          </button>
-                          <button
-                            class="btn btn-sm btn-link text-danger"
-                            (click)="deleteVariant(product, variant)"
-                          >
-                            <svg
-                              [cIcon]="icons.cilTrash"
-                              size="sm"
-                              title="Eliminar"
-                            ></svg>
-                          </button>
-                        </div>
                       </div>
                     </div>
                   </div>
@@ -192,9 +88,18 @@
   *ngIf="warehouseDetail"
   [warehouseId]="warehouseDetail.id"
   [warehouseName]="warehouseDetail.name"
-  [isVisible]="isModalVisible"
+  [isVisible]="isModalInventoryVisible"
   [productToEdit]="productToEdit"
-  (onSave)="handleSave($event)"
-  (onClose)="handleClose($event)"
+  (onSave)="handleInventorySave($event)"
+  (onClose)="handleInventoryClose($event)"
 >
 </app-warehouse-product-modal>
+
+<app-warehouse-transfer-modal
+  *ngIf="warehouseDetail"
+  [isVisible]="isModalTransferVisible"
+  [warehouseId]="warehouseDetail.id"
+  (onSave)="handleTransferSave($event)"
+  (onClose)="handleTransferClose($event)"
+>
+</app-warehouse-transfer-modal>

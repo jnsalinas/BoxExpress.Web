@@ -8,14 +8,18 @@
         <table cTable>
           <thead>
             <tr>
-              <th>ID</th>
+              <th>Id</th>
               <th>Nombre</th>
+              <th>Dirección</th>
+              <th>Encargado</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let warehouse of warehouses">
               <td>{{ warehouse.id }}</td>
               <td>{{ warehouse.name }}</td>
+              <td>{{ warehouse.address }}</td>
+              <td>{{ warehouse.manager }}</td>
               <td>
                 <!-- <button
                   class="btn btn-sm btn-primary"

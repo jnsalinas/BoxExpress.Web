@@ -1,4 +1,4 @@
-<c-modal [visible]="isVisible" size="lg" backdrop="static" keyboard="false">
+<c-modal [visible]="isVisible" size="lg" backdrop="static" keyboard="false" scrollable>
   <c-modal-header>
     <h5 class="modal-title" *ngIf="productToEdit == null" >Agregar producto a {{ warehouseName }}</h5>
     <h5 class="modal-title" *ngIf="productToEdit">Editar producto a {{ warehouseName }}</h5>
@@ -91,7 +91,7 @@
                 formControlName="quantity"
                 type="number"
                 placeholder="Cantidad"
-                min="1"
+                min="0"
               />
               <input
                 class="form-control"

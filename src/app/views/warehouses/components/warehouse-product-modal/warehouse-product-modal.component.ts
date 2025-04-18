@@ -22,8 +22,9 @@ import {
   ModalFooterComponent,
 } from '@coreui/angular'; // Ajusta según cómo estés usando CoreUI
 import { IconDirective } from '@coreui/icons-angular';
-import { ProductDto } from 'src/app/models/product.dto';
-import { ProductVariantDto } from 'src/app/models/product-variant.dto';
+import { ProductDto } from '../../../../models/product.dto';
+import { ProductVariantDto } from '../../../../models/product-variant.dto';
+import { minLengthArray } from '../../../../shared/validators/custom-validators';
 
 @Component({
   selector: 'app-warehouse-product-modal',
@@ -115,7 +116,7 @@ export class WarehouseProductModalComponent implements OnInit {
       shopifyId: [''],
       sku: [''],
       price: [null],
-      variants: this.fb.array([this.createVariant()]), // Inicializar con una variante
+      variants: this.fb.array([this.createVariant()], [minLengthArray(1)]),
     });
   }
 
