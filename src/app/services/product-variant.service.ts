@@ -17,10 +17,10 @@ export class ProductVariantService extends BaseApiService<
     super(http, 'productvariants');
   }
 
-  autocomplete(query: string): Observable<ProductVariantAutocompleteDto[]> {
+  autocomplete(query: string, warehouseOriginId: number): Observable<ProductVariantAutocompleteDto[]> {
     return this.http
       .get<ApiResponse<ProductVariantAutocompleteDto[]>>(
-        `${environment.apiUrl}/productvariants/autocomplete?query=${query}`
+        `${environment.apiUrl}/productvariants/autocomplete?query=${query}&warehouseOriginId=${warehouseOriginId}`
       )
       .pipe(this.handleResponse());
   }

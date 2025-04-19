@@ -30,30 +30,25 @@
           <div class="row g-2 align-items-end">
             <div class="col-md-6">
               <label class="form-label">Variante</label>
-              <input
-                type="text"
-                class="form-control"
-                [value]="displayVariant(line.get('variantId')?.value)"
-                (input)="onVariantInput($event, i)"
-                placeholder="Buscar variante..."
-              />
-              <ul
-                class="list-group mt-1"
-                *ngIf="getVariantOptions(i).length > 0"
+
+              <ng-select
+                [items]="getVariantOptions(i)"
+                bindLabel="displayName"
+                bindValue="id"
+                [loading]="isLoadingVariant[i]"
+                formControlName="variantId"
+                (change)="onVariantSelected($event, i)"
+                [searchable]="true"
+                [typeahead]="variantInputSubjects[i]"
+                placeholder="Selecciona variante"
+                [virtualScroll]="true"
               >
-                <li
-                  class="list-group-item list-group-item-action"
-                  *ngFor="let variant of getVariantOptions(i)"
-                  (click)="line.get('variantId')?.setValue(variant.id)"
-                >
-                  {{ variant.name }}
-                </li>
-              </ul>
+              </ng-select>
+
               <div
                 *ngIf="
                   line.get('variantId')?.invalid &&
-                  line.get('variantId')?.touched
-                "
+                  line.get('variantId')?.touched"
                 class="text-danger mt-1"
               >
                 Variante requerida

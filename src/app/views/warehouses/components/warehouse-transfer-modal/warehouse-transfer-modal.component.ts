@@ -2,6 +2,8 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
+import { debounceTime } from 'rxjs/operators';
 import {
   ModalModule,
   ButtonModule,
@@ -15,9 +17,11 @@ import {
 import { IconDirective } from '@coreui/icons-angular';
 import { ProductVariantDto } from '../../../../models/product-variant.dto';
 import { WarehouseDto } from '../../../../models/warehouse.dto';
-import { WarehouseFilter } from 'src/app/models/warehouse-filter.model';
-import { WarehouseService } from 'src/app/services/warehouse.service';
-import { ProductVariantService } from 'src/app/services/product-variant.service';
+import { WarehouseFilter } from '../../../../models/warehouse-filter.model';
+import { WarehouseService } from '../../../../services/warehouse.service';
+import { ProductVariantService } from '../../../../services/product-variant.service';
+import { Subject } from 'rxjs';
+import { ProductVariantAutocompleteDto } from '../../../../models/product-variant-autocomplete.dto';
 
 @Component({
   selector: 'app-warehouse-transfer-modal',
@@ -36,19 +40,23 @@ import { ProductVariantService } from 'src/app/services/product-variant.service'
     ModalFooterComponent,
     ReactiveFormsModule,
     IconDirective,
+    NgSelectModule,
+    NgSelectComponent,
   ],
 })
 export class WarehouseTransferModalComponent implements OnInit {
   @Input() isVisible = false;
   @Input() variantsList: ProductVariantDto[] = [];
-  @Input() warehouseId: number | null = null;
+  @Input() warehouseId: number = 0;
   @Output() onSave = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
 
   form: FormGroup;
-  variantOptions: ProductVariantDto[][] = [];
+  variantInputSubjects: Subject<string>[] = [];
+  variantOptions: ProductVariantAutocompleteDto[][] = [];
   warehouses: WarehouseDto[] = [];
   loading = false;
+  isLoadingVariant: boolean[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -96,28 +104,71 @@ export class WarehouseTransferModalComponent implements OnInit {
 
     this.lines.push(line);
     this.variantOptions.push([]);
+    this.isLoadingVariant.push(false);
+
+    const subject = new Subject<string>();
+    subject.pipe(debounceTime(300)).subscribe((term) => {
+      this.fetchVariants(term, this.lines.length - 1);
+    });
+
+    this.variantInputSubjects.push(subject);
+  }
+
+  onVariantSearch(term: string, index: number): void {
+    this.variantInputSubjects[index].next(term);
+  }
+
+  private fetchVariants(term: string, index: number): void {
+    if (!term || term.length < 2) {
+      this.variantOptions[index] = [];
+      return;
+    }
+
+    this.isLoadingVariant[index] = true;
+    this.productVariantService.autocomplete(term, this.warehouseId).subscribe({
+      next: (matches) => {
+        this.variantOptions[index] = matches.filter(
+          (v) => !this.isDuplicate(v.id, index)
+        );
+        this.isLoadingVariant[index] = false;
+      },
+      error: (err) => {
+        console.error('Autocomplete error:', err);
+        this.isLoadingVariant[index] = false;
+      },
+    });
   }
 
   removeLine(index: number): void {
     this.lines.removeAt(index);
     this.variantOptions.splice(index, 1);
+    this.variantInputSubjects.splice(index, 1);
+    this.isLoadingVariant.splice(index, 1);
+  }
+
+  onVariantSelected(variantId: number, index: number): void {
+    console.log('Variant selected:', variantId);
+    if (this.isDuplicate(variantId, index)) {
+      this.lines.at(index).get('variantId')?.reset();
+      alert('Esta variante ya fue seleccionada en otra línea.');
+    }
   }
 
   onVariantInput(event: Event, index: number): void {
     const input = event.target as HTMLInputElement;
     const value = input.value.trim().toLowerCase();
-  
+
     if (value.length < 2) {
       this.variantOptions[index] = [];
       return;
     }
-  
-    this.productVariantService.autocomplete(value).subscribe({
+
+    this.productVariantService.autocomplete(value, this.warehouseId).subscribe({
       next: (matches) => {
         this.variantOptions[index] = matches.filter(
           (v) => !this.isDuplicate(v.id, index)
         );
-  
+
         const exact = matches.find((v) => v.name.toLowerCase() === value);
         if (exact) {
           this.lines.at(index).get('variantId')?.setValue(exact.id);
@@ -125,12 +176,14 @@ export class WarehouseTransferModalComponent implements OnInit {
       },
       error: (err) => {
         console.error('Autocomplete error:', err);
-      }
+      },
     });
   }
-  
 
-  getVariantOptions(index: number): ProductVariantDto[] {
+  getVariantOptions(index: number): ProductVariantAutocompleteDto[] {
+    this.variantOptions[index].forEach((option) => {
+      option.displayName = `${option.productName || ''} - ${option.name || ''} - ${option.availableUnits || ''}`;
+    });
     return this.variantOptions[index] || [];
   }
 
