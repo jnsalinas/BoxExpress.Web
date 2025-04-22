@@ -66,8 +66,8 @@ export class WarehousesComponent implements OnInit {
       // Aquí pones filtros si los necesitas
     };
     this.warehouseService.getAll(filter).subscribe({
-      next: (data) => {
-        this.warehouses = data;
+      next: (result) => {
+        this.warehouses = result.data;
         this.loading = false;
       },
       error: (err) => {

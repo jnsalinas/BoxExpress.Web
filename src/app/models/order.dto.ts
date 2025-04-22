@@ -1,4 +1,4 @@
-import { BaseDto } from './base.dto';
+import { BaseDto } from './common/base.dto';
 
 export interface OrderDto extends BaseDto {
   country?: string;
@@ -22,5 +22,5 @@ export interface OrderDto extends BaseDto {
   notes?: string;
   code?: string;
   deliveryFee?: number;
-  warehouseId?: number;
+  warehouseId?: number | null;
 }

@@ -14,13 +14,18 @@
       <th *ngIf="hasColumn('contains')">Contiene</th>
       <th *ngIf="hasColumn('city')">Ciudad</th>
       <th *ngIf="hasColumn('category')">Categoría</th>
+      <!-- Todo solo para el admin validar permisos -->
+      <th *ngIf="hasColumn('warehouseName')">Bodega</th>
       <th *ngIf="hasColumn('status')">Estado</th>
       <th *ngIf="hasColumn('actions')">Acciones</th>
     </tr>
   </thead>
 
   <tbody>
-    <tr *ngFor="let order of orders">
+    <tr
+      *ngFor="let order of orders"
+      [ngStyle]="{ 'border-left': '5px solid ' + getStatusColor(order.status) }"
+    >
       <td *ngIf="hasColumn('id')">{{ order.id }}</td>
       <td *ngIf="hasColumn('code')">{{ order.code }}</td>
       <td *ngIf="hasColumn('clientFullName')">{{ order.clientFullName }}</td>
@@ -37,7 +42,7 @@
           class="form-select form-select-sm"
           [(ngModel)]="order.warehouseId"
           (ngModelChange)="onWarehouseChange(order.id, $event)"
-          [disabled]="warehouseOptions.length === 0"
+          [disabled]="warehouseOptions.length === 0 || order.categoryId !== 1"
         >
           <option [value]="null" disabled>Seleccione...</option>
           <option
@@ -48,9 +53,12 @@
           </option>
         </select>
       </td>
+      <td *ngIf="hasColumn('warehouseName')">{{ order.warehouseName }}</td>
       <td *ngIf="hasColumn('status')">
-        {{ order.statusId | json }}
-        <span class="badge bg-info">{{ order.status }}</span>
+        <!-- <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
+          {{ order.status }}
+        </span> -->
+        <!-- <span class="badge bg-info">{{ order.status }}</span> -->
         <select
           class="form-select form-select-sm"
           [(ngModel)]="order.statusId"

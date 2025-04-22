@@ -58,8 +58,8 @@ export class WarehouseDetailComponent implements OnInit {
 
   loadWarehouseDetail(id: number = this.warehouseId): void {
     this.warehouseService.getById(id).subscribe({
-      next: (data) => {
-        this.warehouseDetail = data;
+      next: (result) => {
+        this.warehouseDetail = result;
         this.filteredProducts = this.warehouseDetail?.products ?? [];
         console.log('warehouseDetail', this.warehouseDetail);
 

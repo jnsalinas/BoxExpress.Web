@@ -73,8 +73,8 @@ export class WarehouseTransferModalComponent implements OnInit {
   loadWarehouses(): void {
     this.loading = true;
     this.warehouseService.getAll({}).subscribe({
-      next: (data) => {
-        this.warehouses = data.filter(
+      next: (result) => {
+        this.warehouses = result.data.filter(
           (warehouse) => warehouse.id !== this.warehouseId
         );
         this.loading = false;

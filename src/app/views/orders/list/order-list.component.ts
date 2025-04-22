@@ -55,7 +55,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class OrderListComponent implements OnInit {
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
-
   statusOptions: OrderStatusDto[] = [];
   categoryOptions: OrderCategoryDto[] = [];
 
@@ -92,9 +91,9 @@ export class OrderListComponent implements OnInit {
       categories: this.categoryOrderService.getAll(),
     }).subscribe({
       next: (responses) => {
-        this.statusOptions = responses.statuses;
-        this.categoryOptions = responses.categories;
-        this.warehouseOptions.push(...responses.warehouses);
+        this.statusOptions = responses.statuses.data;
+        this.categoryOptions = responses.categories.data;
+        this.warehouseOptions.push(...responses.warehouses.data);
         console.log('Warehouse options:', this.warehouseOptions);
         this.loading = false;
       },
@@ -108,9 +107,9 @@ export class OrderListComponent implements OnInit {
   loadOrders(filter: OrderFilter): void {
     this.loading = true;
     this.orderService.getAll(filter).subscribe({
-      next: (data) => {
-        this.orders = data;
-        this.ordersSubject.next(data); // Actualiza el BehaviorSubject con las órdenes
+      next: (result) => {
+        this.orders = result.data;
+        this.ordersSubject.next(result.data); // Actualiza el BehaviorSubject con las órdenes
         this.loading = false;
       },
       error: (err) => {
@@ -129,22 +128,22 @@ export class OrderListComponent implements OnInit {
     this.selectedOrderId = undefined;
   }
 
-  handleSave(data: any) {
-    console.log('Saved data:', data);
-    this.orderService
-      .addInventory(this.selectedOrderId!, data.products)
-      .subscribe({
-        next: (data) => {
-          console.log('Order created:', data);
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error saving order', err);
-          this.loading = false;
-        },
-      });
-    this.selectedOrderId = undefined;
-  }
+  // handleSave(data: any) {
+  //   console.log('Saved data:', data);
+  //   this.orderService
+  //     .addInventory(this.selectedOrderId!, data.products)
+  //     .subscribe({
+  //       next: (data) => {
+  //         console.log('Order created:', data);
+  //         this.loading = false;
+  //       },
+  //       error: (err) => {
+  //         console.error('Error saving order', err);
+  //         this.loading = false;
+  //       },
+  //     });
+  //   this.selectedOrderId = undefined;
+  // }
 
   handleActiveItemChange(index: string | number | undefined) {
     const validIndex = typeof index === 'number' ? index : Number(index);
@@ -185,6 +184,7 @@ export class OrderListComponent implements OnInit {
           { key: 'totalAmount', label: 'Valor' },
           { key: 'contains', label: 'Contiene' },
           { key: 'city', label: 'Ciudad' },
+          { key: 'warehouseName', label: 'Bodega' },
           { key: 'status', label: 'Estado' },
           { key: 'actions', label: 'Acciones' },
         ];
@@ -230,6 +230,7 @@ export class OrderListComponent implements OnInit {
     });
   }
 
+  //region category
   handleWarehouseChange(event: { orderId: number; warehouseId: number }) {
     let category = 'Express';
     if (event.warehouseId == 0) {
@@ -253,8 +254,12 @@ export class OrderListComponent implements OnInit {
           });
       },
       close: () => {
-        console.log('Acción close');
+        const order = this.orders.find((order) => order.id === event.orderId);
+        if (order) {
+          order.warehouseId = null;
+        }
       },
     });
   }
+  //#endregion
 }

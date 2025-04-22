@@ -1,5 +1,5 @@
 import { ProductDto } from './product.dto';
-import { BaseDto } from './base.dto';
+import { BaseDto } from './common/base.dto';
 
 export interface WarehouseDto extends BaseDto {
   cityId?: number;

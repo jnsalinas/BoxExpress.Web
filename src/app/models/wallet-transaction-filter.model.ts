@@ -1,3 +1,4 @@
-  export interface WalletTransactionFilter {
-  }
-  
+export interface WalletTransactionFilter {
+  orderId?: number;
+  storeId?: number;
+}
