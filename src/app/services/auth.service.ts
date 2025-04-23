@@ -3,6 +3,7 @@ import { BaseApiService } from './base-api.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../models/common/api-response';
 import { Observable } from 'rxjs';
+import {environment} from "../../environments/environment";
 
 
 @Injectable({ providedIn: 'root' })
@@ -10,10 +11,11 @@ export class AuthService extends BaseApiService<any, any> {
   constructor(http: HttpClient) {
     super(http, 'auth');
   }
-//https://run.mocky.io/v3/25e8c765-ac80-4e95-86fc-37ce20858cc2  https://run.mocky.io/v3/98a8b392-5d96-4af0-9234-d785d9a69222
+
   login(credentials: any): Observable<any> {
+    const url = `${environment.apiUrl.replace(/\/+$/, '')}/${environment.auth.replace(/^\/+/, '')}`;
     return this.http
-      .post<ApiResponse<any>>('https://run.mocky.io/v3/98a8b392-5d96-4af0-9234-d785d9a69222', credentials)
+      .post<ApiResponse<any>>(url, credentials)
       .pipe(this.handleResponse());
   }
 
