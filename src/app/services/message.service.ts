@@ -28,7 +28,6 @@ export class MessageService {
     this.toastr.warning(message, title || 'Advertencia');
   }
 
-  // Método auxiliar para recuperar el mensaje según la clave
   private getMessageByKey(key: string, messageObject: any): string {
     const keys = key.split('.');
     let result = messageObject;
@@ -37,7 +36,7 @@ export class MessageService {
       if (result && result[k]) {
         result = result[k];
       } else {
-        return key; // Si no se encuentra el mensaje, devuelve la clave
+        return key;
       }
     }
 
