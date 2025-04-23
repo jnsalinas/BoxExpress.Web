@@ -18,6 +18,16 @@ export class BaseApiService<T, F> {
     });
   }
 
+  export(filter: F): Observable<Blob> {
+    return this.http.post<Blob>(
+      `${environment.apiUrl}/${this.endpoint}/export`,
+      filter,
+      {
+        responseType: 'blob' as 'json',
+      }
+    );
+  }
+
   getAll(filter?: F): Observable<{ data: T[]; pagination: PaginationDto }> {
     return this.http
       .post<ApiResponse<{ data: T[]; pagination: PaginationDto }>>(
@@ -28,16 +38,18 @@ export class BaseApiService<T, F> {
         map((res: ApiResponse<{ data: T[]; pagination: PaginationDto }>) => {
           if (res.success) {
             console.log('Respuesta del servidor:', res.data);
-  
+
             // Aquí solo accedemos a 'res.data', que es el array de objetos
             if (res.data && Array.isArray(res.data)) {
               return {
                 data: res.data, // Datos de los elementos
-                pagination: res.pagination || {} as PaginationDto, // Información de paginación
+                pagination: res.pagination || ({} as PaginationDto), // Información de paginación
               };
             }
-  
-            throw new Error('La respuesta del servidor no contiene los datos esperados');
+
+            throw new Error(
+              'La respuesta del servidor no contiene los datos esperados'
+            );
           }
           throw new Error(res.message || 'Error en la respuesta del servidor');
         }),
@@ -47,8 +59,6 @@ export class BaseApiService<T, F> {
         })
       );
   }
-  
-  
 
   // Obtener un elemento por su ID
   getById(id: number): Observable<T> {

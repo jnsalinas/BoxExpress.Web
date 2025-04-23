@@ -1,3 +1,8 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando transacciones...'"
+></app-loading-overlay>
+
 <c-row>
   <c-col xs="12">
     <c-card class="mb-4">
@@ -63,6 +68,15 @@
             </button>
           </div>
         </form>
+        <button
+          type="button"
+          class="btn btn-outline-secondary d-flex align-items-center justify-content-center"
+          (click)="downloadExcel()"
+        >
+          <!-- Icono de exportación de CoreUI -->
+          <i class="cil-file-export me-2"></i>
+          Exportar
+        </button>
 
         <table cTable class="table table-hover">
           <thead>
@@ -94,6 +108,7 @@
         </table>
         <app-generic-pagination
           [pagination]="pagination"
+          [currentPage]="currentPage"
           (pageChange)="onPageChange($event)"
         >
         </app-generic-pagination>
