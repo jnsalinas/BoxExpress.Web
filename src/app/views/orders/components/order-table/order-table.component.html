@@ -17,6 +17,8 @@
       <!-- Todo solo para el admin validar permisos -->
       <th *ngIf="hasColumn('warehouseName')">Bodega</th>
       <th *ngIf="hasColumn('status')">Estado</th>
+      <th *ngIf="hasColumn('scheduledDate')">Fecha de entrega</th>
+      <th *ngIf="hasColumn('timeSlot')">Horario de entrega</th>
       <th *ngIf="hasColumn('actions')">Acciones</th>
     </tr>
   </thead>
@@ -71,13 +73,33 @@
           </option>
         </select>
       </td>
+      <td *ngIf="hasColumn('scheduledDate')">
+        <!-- <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
+          {{ order.status }}
+        </span> -->
+        <!-- <span class="badge bg-info">{{ order.status }}</span> -->
+        <select class="form-select form-select-sm"></select>
+      </td>
+      <td *ngIf="hasColumn('timeSlot')">
+        <!-- <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
+          {{ order.status }}
+        </span> -->
+        <!-- <span class="badge bg-info">{{ order.status }}</span> -->
+        <select class="form-select form-select-sm"></select>
+      </td>
       <!-- Acciones -->
-      <td *ngIf="hasColumn('actions')">
+      <td *ngIf="hasColumn('actions')" class="d-flex">
         <button
-          class="btn btn-sm btn-outline-primary"
+          class="btn btn-sm btn-outline-primary me-2"
           [routerLink]="[order.id]"
         >
           Ver Detalle
+        </button>
+        <button
+          class="btn btn-sm btn-outline-primary"
+          (click)="onScheduleOrder(order)"
+        >
+          Programar
         </button>
       </td>
     </tr>

@@ -14,7 +14,7 @@ import {
   ModalBodyComponent,
   ModalFooterComponent,
 } from '@coreui/angular';
-import { IconDirective } from '@coreui/icons-angular';
+// import { IconDirective } from '@coreui/icons-angular';
 import { ProductVariantDto } from '../../../../models/product-variant.dto';
 import { WarehouseDto } from '../../../../models/warehouse.dto';
 import { WarehouseFilter } from '../../../../models/warehouse-filter.model';
@@ -39,7 +39,7 @@ import { ProductVariantAutocompleteDto } from '../../../../models/product-varian
     ModalBodyComponent,
     ModalFooterComponent,
     ReactiveFormsModule,
-    IconDirective,
+    // IconDirective,
     NgSelectModule,
     NgSelectComponent,
   ],
@@ -51,7 +51,7 @@ export class WarehouseTransferModalComponent implements OnInit {
   @Output() onSave = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
 
-  form: FormGroup;
+  form: FormGroup = this.fb.group({});
   variantInputSubjects: Subject<string>[] = [];
   variantOptions: ProductVariantAutocompleteDto[][] = [];
   warehouses: WarehouseDto[] = [];
@@ -62,12 +62,18 @@ export class WarehouseTransferModalComponent implements OnInit {
     private fb: FormBuilder,
     private warehouseService: WarehouseService,
     private productVariantService: ProductVariantService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.form = this.fb.group({
       destinationWarehouseId: [null, Validators.required],
       lines: this.fb.array([]),
     });
     this.loadWarehouses();
+
+    if (this.lines.length === 0) {
+      this.addLine();
+    }
   }
 
   loadWarehouses(): void {
@@ -84,12 +90,6 @@ export class WarehouseTransferModalComponent implements OnInit {
         this.loading = false;
       },
     });
-  }
-
-  ngOnInit(): void {
-    if (this.lines.length === 0) {
-      this.addLine();
-    }
   }
 
   get lines(): FormArray {
@@ -182,7 +182,9 @@ export class WarehouseTransferModalComponent implements OnInit {
 
   getVariantOptions(index: number): ProductVariantAutocompleteDto[] {
     this.variantOptions[index].forEach((option) => {
-      option.displayName = `${option.productName || ''} - ${option.name || ''} - ${option.availableUnits || ''}`;
+      option.displayName = `${option.productName || ''} - ${
+        option.name || ''
+      } - ${option.availableUnits || ''}`;
     });
     return this.variantOptions[index] || [];
   }

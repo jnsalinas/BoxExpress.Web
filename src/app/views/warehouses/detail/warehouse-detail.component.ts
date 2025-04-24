@@ -33,7 +33,7 @@ import { WarehouseTransferModalComponent } from '../components/warehouse-transfe
     WarehouseProductModalComponent,
     WarehouseTransferModalComponent,
     TableDirective,
-    IconDirective
+    // IconDirective
   ],
   templateUrl: './warehouse-detail.component.html',
 })

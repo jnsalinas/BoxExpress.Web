@@ -14,6 +14,7 @@ import { OrderCategoryDto } from '../../../../models/order-category.dto';
 import { OrderStatusDto } from '../../../../models/order-status.dto';
 import { FormsModule } from '@angular/forms';
 import { WarehouseDto } from '../../../../models/warehouse.dto';
+import { OrderDto } from 'src/app/models/order.dto';
 
 @Component({
   standalone: true,
@@ -37,16 +38,21 @@ export class OrderTableComponent {
     warehouseId: number;
   }>();
 
+  @Output() scheduleOrder = new EventEmitter<OrderDto>();
+
   statusStyles: Record<string, { color: string; badgeClass: string }> = {
     'sin programar': { color: '#adb5bd', badgeClass: 'bg-secondary' },
-    'programado': { color: '#0d6efd', badgeClass: 'bg-primary' },
-    'entregado': { color: '#198754', badgeClass: 'bg-success' },
-    'cancelado': { color: '#dc3545', badgeClass: 'bg-danger' },
+    programado: { color: '#0d6efd', badgeClass: 'bg-primary' },
+    entregado: { color: '#198754', badgeClass: 'bg-success' },
+    cancelado: { color: '#dc3545', badgeClass: 'bg-danger' },
     'cancelado 1': { color: '#6f42c1', badgeClass: 'bg-purple' },
   };
 
   getStatusBadgeClass(status: string): string {
-    return this.statusStyles[status?.toLowerCase()]?.badgeClass || 'bg-light text-dark';
+    return (
+      this.statusStyles[status?.toLowerCase()]?.badgeClass ||
+      'bg-light text-dark'
+    );
   }
 
   getStatusColor(status: string): string {
@@ -60,10 +66,13 @@ export class OrderTableComponent {
 
   onWarehouseChange(orderId: number, warehouseId: number) {
     this.warehouseChanged.emit({ orderId, warehouseId });
+  }
 
+  onScheduleOrder(order: OrderDto) {
+    this.scheduleOrder.emit(order);
   }
 
   hasColumn(key: string): boolean {
-    return this.columns.some(col => col.key === key);
+    return this.columns.some((col) => col.key === key);
   }
 }

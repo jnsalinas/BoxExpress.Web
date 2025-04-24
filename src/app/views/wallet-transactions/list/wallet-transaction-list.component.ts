@@ -21,7 +21,10 @@ import {
 import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
 import { PaginationDto } from '../../../models/common/pagination.dto';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
-import { WalletTransactionFilter } from 'src/app/models/wallet-transaction-filter.model';
+import { WalletTransactionFilter } from '../../../models/wallet-transaction-filter.model';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { StoreDto } from '../../../models/store.dto';
+import { StoreService } from '../../../services/store.service';
 
 @Component({
   selector: 'app-wallet-transaction-list',
@@ -38,6 +41,7 @@ import { WalletTransactionFilter } from 'src/app/models/wallet-transaction-filte
     UtcDatePipe,
     GenericPaginationComponent,
     LoadingOverlayComponent,
+    NgSelectModule,
   ],
   templateUrl: './wallet-transaction-list.component.html',
   styleUrl: './wallet-transaction-list.component.scss',
@@ -50,21 +54,24 @@ export class WalletTransactionListComponent implements OnInit {
   currentPage: number = 1;
   transactions: WalletTransactionDto[] = [];
   isLoading: boolean = false;
+  stores: StoreDto[] = [];
 
   constructor(
     private walletTransactionService: WalletTransactionService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private storeService: StoreService
   ) {
     this.filtersForm = this.fb.group({
       startDate: [null],
       endDate: [null],
-      orderId: [''],
-      store: [''],
+      orderId: [null],
+      storeId: [null],
     });
   }
 
   ngOnInit(): void {
     this.loadTransactions();
+    this.loadStores();
   }
 
   resetFilters(): void {
@@ -93,17 +100,31 @@ export class WalletTransactionListComponent implements OnInit {
     });
   }
 
+  loadStores(): void {
+    this.isLoading = true;
+    this.storeService.getAll().subscribe({
+      next: (response) => {
+        console.log('Response:', response);
+        this.stores = response.data;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching transactions:', error);
+        this.isLoading = false;
+      },
+    });
+  }
+
   getFilters(): WalletTransactionFilter {
     const filters = this.filtersForm.value;
 
-    const payload = {
+    const payload: WalletTransactionFilter = {
       startDate: filters.startDate
         ? toUtcStartOfDayLocal(filters.startDate)
         : null,
       endDate: filters.endDate ? toUtcEndOfDayLocal(filters.endDate) : null,
       orderId: filters.orderId?.trim() || null,
-      store: filters.store?.trim() || null,
-      page: this.currentPage,
+      storeId: filters.storeId || null,
     };
     return payload;
   }

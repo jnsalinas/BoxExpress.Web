@@ -1,0 +1,78 @@
+<c-modal
+  [visible]="isVisible"
+  size="lg"
+  backdrop="static"
+  keyboard="false"
+  scrollable
+>
+  <c-modal-header>
+    <strong>Asignar entrega {{ order.id }}</strong>
+  </c-modal-header>
+
+  <c-modal-body>
+    <form [formGroup]="form">
+      <div class="row">
+        <!-- Estado -->
+        <div class="col-md-4 mb-3">
+          <label cLabel for="statusId" class="form-label">Estado</label>
+          <ng-select
+            [searchable]="false"
+            [appendTo]="'body'"
+            [items]="statusOptions"
+            bindLabel="name"
+            bindValue="id"
+            formControlName="statusId"
+            placeholder="Seleccione..."
+          >
+          </ng-select>
+        </div>
+
+        <!-- Fecha Programada -->
+        <div class="col-md-4 mb-3">
+          <label cLabel for="scheduledDate" class="form-label"
+            >Fecha Programada</label
+          >
+          <input
+            cFormControl
+            type="date"
+            id="scheduledDate"
+            formControlName="scheduledDate"
+            class="form-control"
+            [min]="today"
+          />
+        </div>
+
+        <!-- Franja Horaria -->
+        <div class="col-md-4 mb-3">
+          <label cLabel for="timeSlotId" class="form-label"
+            >Franja Horaria</label
+          >
+          <ng-select
+            [appendTo]="'body'"
+            [items]="timeSlotOptions"
+            bindLabel="label"
+            bindValue="id"
+            formControlName="timeSlotId"
+            placeholder="Seleccione..."
+          >
+            <ng-template ng-label-tmp let-item="item">
+              {{ item.startTime }} - {{ item.endTime }}
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.startTime }} - {{ item.endTime }}
+            </ng-template>
+          </ng-select>
+        </div>
+      </div>
+    </form>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button class="btn btn-secondary" type="button" (click)="close()">
+      Cancelar
+    </button>
+    <button class="btn btn-primary" type="submit" (click)="save()">
+      Guardar
+    </button>
+  </c-modal-footer>
+</c-modal>

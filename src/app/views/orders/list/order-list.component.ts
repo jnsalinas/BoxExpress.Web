@@ -9,6 +9,8 @@ import { OrderFilter } from '../../../models/order-filter.model';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { GenericModalComponent } from '../../../views/shared/components/generic-modal/generic-modal.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormLabelDirective, FormControlDirective } from '@coreui/angular';
 
 import {
   RowComponent,
@@ -23,6 +25,10 @@ import {
   TabsContentComponent,
   TabsListComponent,
 } from '@coreui/angular';
+import {
+  toUtcStartOfDayLocal,
+  toUtcEndOfDayLocal,
+} from '../../../shared/utils/date-utils';
 import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { WarehouseDto } from '../../../models/warehouse.dto';
 import { OrderTableComponent } from '../components/order-table/order-table.component';
@@ -30,6 +36,11 @@ import { BehaviorSubject, forkJoin } from 'rxjs';
 import { OrderCategoryDto } from '../../../models/order-category.dto';
 import { OrderStatusDto } from '../../../models/order-status.dto';
 import { FormsModule } from '@angular/forms';
+import { StoreService } from '../../../services/store.service';
+import { StoreDto } from '../../../models/store.dto';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
+import { OrderEditModalComponent } from '../components/order-edit-modal/order-edit-modal.component';
 
 @Component({
   standalone: true,
@@ -51,16 +62,22 @@ import { FormsModule } from '@angular/forms';
     OrderTableComponent,
     FormsModule,
     GenericModalComponent,
+    NgSelectModule,
+    ReactiveFormsModule,
+    LoadingOverlayComponent,
+    FormLabelDirective,
+    FormControlDirective,
+    OrderEditModalComponent,
   ],
 })
 export class OrderListComponent implements OnInit {
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
   statusOptions: OrderStatusDto[] = [];
   categoryOptions: OrderCategoryDto[] = [];
-
+  filtersForm: FormGroup = new FormGroup({});
+  isLoading: boolean = false;
   selectedOrderId: number | undefined;
   selectedOrderName: string = '';
-
   orders: OrderDto[] = [];
   warehouseOptions: WarehouseDto[] = [
     {
@@ -68,23 +85,32 @@ export class OrderListComponent implements OnInit {
       name: 'Tradicional',
     },
   ];
-  loading = false;
   activeTab: number = 0;
-
+  stores: StoreDto[] = [];
   private ordersSubject = new BehaviorSubject<OrderDto[]>([]); // Aquí almacenamos las órdenes
   orders$ = this.ordersSubject.asObservable(); // Observable para los componentes que escuchan cambios
+  orderSelected: OrderDto | null = null;
 
   constructor(
     private orderService: OrderService,
     private warehouseService: WarehouseService,
     private statusOrderService: OrderStatusService,
-    private categoryOrderService: OrderCategoryService
-  ) {}
+    private categoryOrderService: OrderCategoryService,
+    private storeService: StoreService,
+    private fb: FormBuilder
+  ) {
+    this.filtersForm = this.fb.group({
+      startDate: [null],
+      endDate: [null],
+      orderId: [null],
+      storeId: [null],
+    });
+  }
 
   ngOnInit(): void {
-    this.loadOrders({ categoryId: this.statusForActiveTab });
+    this.loadOrders();
 
-    this.loading = true;
+    this.isLoading = true;
     forkJoin({
       warehouses: this.warehouseService.getAll({}),
       statuses: this.statusOrderService.getAll(),
@@ -95,26 +121,56 @@ export class OrderListComponent implements OnInit {
         this.categoryOptions = responses.categories.data;
         this.warehouseOptions.push(...responses.warehouses.data);
         console.log('Warehouse options:', this.warehouseOptions);
-        this.loading = false;
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading data:', error);
-        this.loading = false;
+        this.isLoading = false;
       },
     });
   }
 
-  loadOrders(filter: OrderFilter): void {
-    this.loading = true;
-    this.orderService.getAll(filter).subscribe({
+  getFilters(): OrderFilter {
+    const filters = this.filtersForm.value;
+
+    const payload: OrderFilter = {
+      categoryId: this.statusForActiveTab,
+      startDate: filters.startDate
+        ? toUtcStartOfDayLocal(filters.startDate)
+        : null,
+      endDate: filters.endDate ? toUtcEndOfDayLocal(filters.endDate) : null,
+      orderId: filters.orderId?.trim() || null,
+      storeId: filters.storeId || null,
+    };
+    return payload;
+  }
+
+  loadOrders(): void {
+    this.isLoading = true;
+    this.orderService.getAll(this.getFilters()).subscribe({
       next: (result) => {
         this.orders = result.data;
         this.ordersSubject.next(result.data); // Actualiza el BehaviorSubject con las órdenes
-        this.loading = false;
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading orders', err);
-        this.loading = false;
+        this.isLoading = false;
+      },
+    });
+  }
+
+  loadStores(): void {
+    this.isLoading = true;
+    this.storeService.getAll().subscribe({
+      next: (response) => {
+        console.log('Response:', response);
+        this.stores = response.data;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error fetching transactions:', error);
+        this.isLoading = false;
       },
     });
   }
@@ -149,7 +205,7 @@ export class OrderListComponent implements OnInit {
     const validIndex = typeof index === 'number' ? index : Number(index);
     if (!isNaN(validIndex)) {
       this.activeTab = validIndex;
-      this.loadOrders({ categoryId: this.statusForActiveTab });
+      this.loadOrders();
     }
   }
 
@@ -186,6 +242,8 @@ export class OrderListComponent implements OnInit {
           { key: 'city', label: 'Ciudad' },
           { key: 'warehouseName', label: 'Bodega' },
           { key: 'status', label: 'Estado' },
+          { key: 'scheduledDate', label: 'Fecha de programación' },
+          { key: 'timeSlot', label: 'Fecha de programación' },
           { key: 'actions', label: 'Acciones' },
         ];
       case 2:
@@ -217,7 +275,7 @@ export class OrderListComponent implements OnInit {
           .changeStatus(event.orderId, event.statusId)
           .subscribe({
             next: (data) => {
-              this.loadOrders({ categoryId: this.statusForActiveTab });
+              this.loadOrders();
             },
             error: (err) => {
               console.error('Error changing warehouse', err);
@@ -230,7 +288,7 @@ export class OrderListComponent implements OnInit {
     });
   }
 
-  //region category
+  //#region category
   handleWarehouseChange(event: { orderId: number; warehouseId: number }) {
     let category = 'Express';
     if (event.warehouseId == 0) {
@@ -246,7 +304,7 @@ export class OrderListComponent implements OnInit {
           .subscribe({
             next: (data) => {
               console.log('Warehouse changed successfully:', data);
-              this.loadOrders({ categoryId: this.statusForActiveTab });
+              this.loadOrders();
             },
             error: (err) => {
               console.error('Error changing warehouse', err);
@@ -260,6 +318,34 @@ export class OrderListComponent implements OnInit {
         }
       },
     });
+  }
+  //#endregion
+
+  //#region filters
+  onFilter(): void {
+    console.log('Filters:', this.filtersForm.value);
+    this.loadOrders();
+  }
+
+  resetFilters(): void {
+    this.filtersForm.reset();
+    this.loadOrders();
+  }
+  //#endregion
+
+  //#region modal update
+
+  handleScheduleOrder(order: OrderDto) {
+    this.orderSelected = order;
+  }
+
+  onModalUpdateOrderSave(event: any) {
+    console.log('onModalUpdateOrderSave', event);
+  }
+
+  onModalUpdateOrderClose(event: any) {
+    console.log('onModalUpdateOrderClose', event);
+    this.orderSelected = null;
   }
   //#endregion
 }

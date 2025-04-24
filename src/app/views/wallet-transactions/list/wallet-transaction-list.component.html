@@ -24,15 +24,17 @@
               class="form-control"
             />
           </div>
-
           <div class="col-md-2">
             <label for="store" class="form-label">Tienda</label>
-            <input
-              type="text"
-              id="store"
-              formControlName="store"
-              class="form-control"
-            />
+            <ng-select
+              [items]="stores"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="storeId"
+              [searchable]="true"
+              placeholder="Seleccione una tienda"
+            >
+            </ng-select>
           </div>
           <div class="col-md-3">
             <label for="startDate" class="form-label">Fecha inicio</label>

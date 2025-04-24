@@ -37,9 +37,6 @@ export class BaseApiService<T, F> {
       .pipe(
         map((res: ApiResponse<{ data: T[]; pagination: PaginationDto }>) => {
           if (res.success) {
-            console.log('Respuesta del servidor:', res.data);
-
-            // Aquí solo accedemos a 'res.data', que es el array de objetos
             if (res.data && Array.isArray(res.data)) {
               return {
                 data: res.data, // Datos de los elementos
