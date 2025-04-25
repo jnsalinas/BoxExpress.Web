@@ -39,22 +39,27 @@ export class GenericModalComponent {
   public isVisible: boolean = false;
 
   // Método para mostrar el modal
-  show(config: { title?: string; body?: string; ok?: () => void; close?: () => void }) {
+  show(config: {
+    title?: string;
+    body?: string;
+    ok?: () => void;
+    close?: () => void;
+  }) {
     this.title = config.title ?? ''; // Establece el título
     this.body = config.body ?? ''; // Establece el contenido
     this.onOkCallback = config.ok ?? null; // Establece la función para "Aceptar"
     this.onCloseCallback = config.close ?? null; // Establece la función para "Cerrar"
-    this.isVisible = true;  // Abre el modal
+    this.isVisible = true; // Abre el modal
   }
 
   // Método para ocultar el modal
   hide() {
-    this.isVisible = false;  // Cierra el modal
+    this.isVisible = false; // Cierra el modal
   }
 
   // Método que se ejecuta al presionar "Cerrar"
   onClose() {
-    this.onCloseCallback?.();  // Llama a la función de cierre si está definida
+    this.onCloseCallback?.(); // Llama a la función de cierre si está definida
     this.close.emit(); // Emite el evento de cierre
     this.hide(); // Oculta el modal
   }
@@ -64,5 +69,12 @@ export class GenericModalComponent {
     this.onOkCallback?.(); // Llama a la función de "Aceptar" si está definida
     this.ok.emit(); // Emite el evento de "Aceptar"
     this.hide(); // Oculta el modal
+  }
+  
+  onVisibleChange(visible: boolean) {
+    if (!visible && this.isVisible) {
+      this.onClose();
+    }
+    this.isVisible = visible;
   }
 }

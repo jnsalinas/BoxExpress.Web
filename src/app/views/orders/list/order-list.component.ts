@@ -11,6 +11,7 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 import { GenericModalComponent } from '../../../views/shared/components/generic-modal/generic-modal.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormLabelDirective, FormControlDirective } from '@coreui/angular';
+import { freeSet } from '@coreui/icons';
 
 import {
   RowComponent,
@@ -18,7 +19,6 @@ import {
   CardComponent,
   CardHeaderComponent,
   CardBodyComponent,
-  TableDirective,
   TabDirective,
   TabPanelComponent,
   TabsComponent,
@@ -71,6 +71,7 @@ import { OrderEditModalComponent } from '../components/order-edit-modal/order-ed
   ],
 })
 export class OrderListComponent implements OnInit {
+  icons = freeSet;
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
   statusOptions: OrderStatusDto[] = [];
   categoryOptions: OrderCategoryDto[] = [];
@@ -115,10 +116,12 @@ export class OrderListComponent implements OnInit {
       warehouses: this.warehouseService.getAll({}),
       statuses: this.statusOrderService.getAll(),
       categories: this.categoryOrderService.getAll(),
+      stores: this.storeService.getAll(),
     }).subscribe({
       next: (responses) => {
         this.statusOptions = responses.statuses.data;
         this.categoryOptions = responses.categories.data;
+        this.stores = responses.stores.data;
         this.warehouseOptions.push(...responses.warehouses.data);
         console.log('Warehouse options:', this.warehouseOptions);
         this.isLoading = false;
@@ -160,46 +163,24 @@ export class OrderListComponent implements OnInit {
     });
   }
 
-  loadStores(): void {
-    this.isLoading = true;
-    this.storeService.getAll().subscribe({
-      next: (response) => {
-        console.log('Response:', response);
-        this.stores = response.data;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error fetching transactions:', error);
-        this.isLoading = false;
-      },
-    });
-  }
-
-  // openModal(order: OrderDto) {
-  //   this.selectedOrderId = order.id;
-  //   this.selectedOrderName = order.name;
+  // loadStores(): void {
+  //   this.isLoading = true;
+  //   this.storeService.getAll().subscribe({
+  //     next: (response) => {
+  //       console.log('Response:', response);
+  //       this.stores = response.data;
+  //       this.isLoading = false;
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching transactions:', error);
+  //       this.isLoading = false;
+  //     },
+  //   });
   // }
 
   handleClose(data: any) {
     this.selectedOrderId = undefined;
   }
-
-  // handleSave(data: any) {
-  //   console.log('Saved data:', data);
-  //   this.orderService
-  //     .addInventory(this.selectedOrderId!, data.products)
-  //     .subscribe({
-  //       next: (data) => {
-  //         console.log('Order created:', data);
-  //         this.loading = false;
-  //       },
-  //       error: (err) => {
-  //         console.error('Error saving order', err);
-  //         this.loading = false;
-  //       },
-  //     });
-  //   this.selectedOrderId = undefined;
-  // }
 
   handleActiveItemChange(index: string | number | undefined) {
     const validIndex = typeof index === 'number' ? index : Number(index);
@@ -245,6 +226,7 @@ export class OrderListComponent implements OnInit {
           { key: 'scheduledDate', label: 'Fecha de programación' },
           { key: 'timeSlot', label: 'Fecha de programación' },
           { key: 'actions', label: 'Acciones' },
+          { key: 'action-edit', label: 'Editar' },
         ];
       case 2:
         return [
@@ -261,8 +243,14 @@ export class OrderListComponent implements OnInit {
     return this.activeTab + 1;
   }
 
-  handleStatusChange(event: { orderId: number; statusId: number }) {
-    console.log(event.statusId);
+  handleStatusChange(event: {
+    orderId: number;
+    statusId: number;
+    previousStatusId: number;
+  }) {
+    const order = this.orders.find((o) => o.id === event.orderId);
+    if (order == null) return;
+
     const status = this.statusOptions.find(
       (status) => status.id === Number(event.statusId)
     );
@@ -279,11 +267,13 @@ export class OrderListComponent implements OnInit {
             },
             error: (err) => {
               console.error('Error changing warehouse', err);
+              order.statusId = event.previousStatusId;
             },
           });
       },
       close: () => {
         console.log('Acción close');
+        order.statusId = event.previousStatusId;
       },
     });
   }
@@ -335,15 +325,37 @@ export class OrderListComponent implements OnInit {
 
   //#region modal update
 
+  //#region schedule
   handleScheduleOrder(order: OrderDto) {
     this.orderSelected = order;
   }
 
-  onModalUpdateOrderSave(event: any) {
-    console.log('onModalUpdateOrderSave', event);
+  onModalScheduleSave(event: any) {
+    this.modal.show({
+      title: 'Aceptar cambios',
+      body: `¿Estás seguro de que desea realizar esta acción?`,
+      ok: () => {
+        this.isLoading = true;
+        if (this.orderSelected)
+          this.orderService.schedule(this.orderSelected.id, event).subscribe({
+            next: () => {
+              this.isLoading = false;
+              this.orderSelected = null;
+              this.loadOrders();
+            },
+            error: (error) => {
+              console.error('Error schedule:', error);
+              this.isLoading = false;
+            },
+          });
+      },
+      close: () => {
+        console.log('Acción close');
+      },
+    });
   }
 
-  onModalUpdateOrderClose(event: any) {
+  onModalScheduleClose(event: any) {
     console.log('onModalUpdateOrderClose', event);
     this.orderSelected = null;
   }

@@ -1,0 +1,30 @@
+{{ order | json }}
+
+<div class="row g-3">
+  <div class="col-md-6">
+    <label class="form-label">Tienda</label>
+    <input
+      type="text"
+      class="form-control"
+      [value]="order.storeName"
+      disabled
+    />
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Cliente</label>
+    <input
+      type="text"
+      class="form-control"
+      [value]="order.clientFullName"
+      disabled
+    />
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Categoría</label>
+    <input type="text" class="form-control" [value]="order.category" disabled />
+  </div>
+  <div class="col-md-6">
+    <label class="form-label">Estado</label>
+    <input type="text" class="form-control" [value]="order.status" disabled />
+  </div>
+</div>

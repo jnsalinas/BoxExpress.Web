@@ -1,0 +1,10 @@
+// Asegúrate de que quede por encima de los modales “normales” (por defecto 1050 y 1040)
+.confirm-modal {
+    // El propio modal
+    z-index: 1100 !important;
+  }
+  .confirm-modal .modal-backdrop {
+    // La capa de fondo
+    z-index: 1090 !important;
+  }
+  

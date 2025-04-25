@@ -1,1 +1,44 @@
-<p>order-detail works!</p>
+<app-loading-overlay *ngIf="isLoading" [loadingText]="'Cargando orden...'">
+</app-loading-overlay>
+
+<c-row *ngIf="!isLoading">
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Orden</strong> -> <small>Detalle</small>
+      </c-card-header>
+      <c-card-body>
+        <c-tabs
+          [activeItemKey]="activeTab"
+          (activeItemKeyChange)="handleActiveItemChange($event)"
+        >
+          <c-tabs-list variant="underline-border">
+            <button cTab [itemKey]="0">Información</button>
+            <button cTab [itemKey]="1">Productos</button>
+            <button cTab [itemKey]="2">Historial Estado</button>
+            <button cTab [itemKey]="3">Historial Categoría</button>
+          </c-tabs-list>
+
+          <c-tabs-content>
+            <c-tab-panel [itemKey]="0" class="p-3">
+              <app-order-info [order]="order" />
+              <!-- <app-order-info /> -->
+            </c-tab-panel>
+            <c-tab-panel [itemKey]="1" class="p-3">
+              <!-- <app-order-items [items]="orderItems" /> -->
+              <app-order-products />
+            </c-tab-panel>
+            <c-tab-panel [itemKey]="2" class="p-3">
+              <app-order-status-history [orderId]="order.id" />
+              <!-- <app-order-status-history /> -->
+            </c-tab-panel>
+            <c-tab-panel [itemKey]="3" class="p-3">
+              <app-order-category-history [orderId]="order.id" />
+              <!-- <app-order-category-history /> -->
+            </c-tab-panel>
+          </c-tabs-content>
+        </c-tabs>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

@@ -1,4 +1,8 @@
-<c-modal [visible]="isVisible">
+<c-modal
+  class="confirm-modal"
+  [visible]="isVisible"
+  (visibleChange)="onVisibleChange($event)"
+>
   <c-modal-header>
     <h5 cModalTitle>{{ title }}</h5>
     <button (click)="onClose()" cButtonClose></button>

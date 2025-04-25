@@ -23,7 +23,8 @@ export interface OrderDto extends BaseDto {
   code?: string;
   deliveryFee?: number;
   warehouseId?: number | null;
-  timeSlotStartTime?: string;
-  timeSlotEndTime?: string;
+  timeSlotStartTime?: Date;
+  timeSlotEndTime?: Date;
   timeSlotId?: number;
+  currencyCode?: string;
 }

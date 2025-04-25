@@ -17,6 +17,7 @@ import {
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
+import { freeSet } from '@coreui/icons';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -48,5 +49,6 @@ function isOverflown(element: HTMLElement) {
   ]
 })
 export class DefaultLayoutComponent {
+  icons = freeSet;
   public navItems = [...navItems];
 }

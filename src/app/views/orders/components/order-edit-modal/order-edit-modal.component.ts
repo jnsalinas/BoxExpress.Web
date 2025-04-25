@@ -19,8 +19,7 @@ import {
 import { TimeSlotService } from '../../../../services/time-slot.service';
 import { TimeSlotDto } from '../../../../models/time-slot.dto';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { OrderCategoryDto } from '../../../../models/order-category.dto';
-import { OrderStatusDto } from 'src/app/models/order-status.dto';
+import { OrderStatusDto } from '../../../../models/order-status.dto';
 
 @Component({
   standalone: true,
@@ -56,9 +55,10 @@ export class OrderEditModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.order.scheduledDate);
     this.form = this.fb.group({
-      statusId: [this.order.categoryId],
-      scheduledDate: [this.order.scheduledDate],
+      statusId: [this.order.statusId],
+      scheduledDate: [this.order.scheduledDate?.toString().split('T')[0]],
       timeSlotId: [this.order.timeSlotId],
     });
 

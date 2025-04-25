@@ -69,6 +69,7 @@ export class WarehouseTransferModalComponent implements OnInit {
       destinationWarehouseId: [null, Validators.required],
       lines: this.fb.array([]),
     });
+    
     this.loadWarehouses();
 
     if (this.lines.length === 0) {
