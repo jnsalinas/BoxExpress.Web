@@ -9,6 +9,7 @@ import { ApiResponse } from '../models/common/api-response';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { OrderScheduleUpdateDto } from '../models/order-schedule-update.dto';
+import { OrderItemDto } from '../models/order-item.dto';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
@@ -67,6 +68,14 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
     return this.http
       .get<ApiResponse<null>>(
         `${environment.apiUrl}/orders/${orderId}/category-history`
+      )
+      .pipe(this.handleResponse());
+  }
+
+  getProducts(orderId: number): Observable<OrderItemDto[]> {
+    return this.http
+      .get<ApiResponse<null>>(
+        `${environment.apiUrl}/orders/${orderId}/products`
       )
       .pipe(this.handleResponse());
   }

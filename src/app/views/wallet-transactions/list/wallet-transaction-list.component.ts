@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WalletTransactionDto } from '../../../models/wallet-transaction.dto';
 import { WalletTransactionService } from '../../../services/wallet-transaction.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { freeSet } from '@coreui/icons';
 import {
   RowComponent,
   ColComponent,
@@ -25,6 +26,7 @@ import { WalletTransactionFilter } from '../../../models/wallet-transaction-filt
 import { NgSelectModule } from '@ng-select/ng-select';
 import { StoreDto } from '../../../models/store.dto';
 import { StoreService } from '../../../services/store.service';
+import { IconDirective } from '@coreui/icons-angular';
 
 @Component({
   selector: 'app-wallet-transaction-list',
@@ -42,34 +44,35 @@ import { StoreService } from '../../../services/store.service';
     GenericPaginationComponent,
     LoadingOverlayComponent,
     NgSelectModule,
+    IconDirective
   ],
   templateUrl: './wallet-transaction-list.component.html',
   styleUrl: './wallet-transaction-list.component.scss',
 })
 export class WalletTransactionListComponent implements OnInit {
+  @Input() orderId: number | undefined;
+  @Input() showFilters: boolean = true;
   filtersForm: FormGroup = new FormGroup({});
-  // totalItems: number = 100;
-  // pageSize: number = 10;
   pagination: PaginationDto = {};
   currentPage: number = 1;
   transactions: WalletTransactionDto[] = [];
   isLoading: boolean = false;
   stores: StoreDto[] = [];
+  icons = freeSet;
 
   constructor(
     private walletTransactionService: WalletTransactionService,
     private fb: FormBuilder,
     private storeService: StoreService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.filtersForm = this.fb.group({
       startDate: [null],
       endDate: [null],
-      orderId: [null],
+      orderId: [this.orderId ?? null],
       storeId: [null],
     });
-  }
-
-  ngOnInit(): void {
     this.loadTransactions();
     this.loadStores();
   }
@@ -87,10 +90,8 @@ export class WalletTransactionListComponent implements OnInit {
     this.isLoading = true;
     this.walletTransactionService.getAll(this.getFilters()).subscribe({
       next: (response) => {
-        console.log('Response:', response);
         this.transactions = response.data;
         this.pagination = response.pagination;
-        console.log('Transactions:', this.transactions);
         this.isLoading = false;
       },
       error: (error) => {
@@ -104,7 +105,6 @@ export class WalletTransactionListComponent implements OnInit {
     this.isLoading = true;
     this.storeService.getAll().subscribe({
       next: (response) => {
-        console.log('Response:', response);
         this.stores = response.data;
         this.isLoading = false;
       },
@@ -123,8 +123,9 @@ export class WalletTransactionListComponent implements OnInit {
         ? toUtcStartOfDayLocal(filters.startDate)
         : null,
       endDate: filters.endDate ? toUtcEndOfDayLocal(filters.endDate) : null,
-      orderId: filters.orderId?.trim() || null,
+      orderId: filters.orderId ?? null,
       storeId: filters.storeId || null,
+      page: this.currentPage
     };
     return payload;
   }
@@ -143,7 +144,7 @@ export class WalletTransactionListComponent implements OnInit {
         const fileURL = URL.createObjectURL(response);
         const a = document.createElement('a');
         a.href = fileURL;
-        a.download = 'warehouses.xlsx';
+        a.download = 'Transacciones.xlsx';
         a.click();
         this.isLoading = false;
       });

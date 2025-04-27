@@ -9,9 +9,8 @@ import {
   ListGroupDirective,
   ListGroupItemDirective,
 } from '@coreui/angular';
-import { OrderStatusHistoryDto } from 'src/app/models/order-status-history.dto';
-import { OrderService } from 'src/app/services/order.service';
-
+import { OrderStatusHistoryDto } from '../../../../models/order-status-history.dto';
+import { OrderService } from '../../../../services/order.service';
 @Component({
   standalone: true,
   selector: 'app-order-status-history',

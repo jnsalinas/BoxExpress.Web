@@ -7,86 +7,91 @@
   <c-col xs="12">
     <c-card class="mb-4">
       <c-card-header>
-        <strong>Bodegas</strong> -> <small>Listado</small>
-      </c-card-header>
-      <c-card-body>
-        <form
-          [formGroup]="filtersForm"
-          (ngSubmit)="onFilter()"
-          class="mb-4 row g-3 align-items-end"
-        >
-          <div class="col-md-2">
-            <label for="orderId" class="form-label">ID Orden</label>
-            <input
-              type="text"
-              id="orderId"
-              formControlName="orderId"
-              class="form-control"
-            />
-          </div>
-          <div class="col-md-2">
-            <label for="store" class="form-label">Tienda</label>
-            <ng-select
-              [items]="stores"
-              bindLabel="name"
-              bindValue="id"
-              formControlName="storeId"
-              [searchable]="true"
-              placeholder="Seleccione una tienda"
-            >
-            </ng-select>
-          </div>
-          <div class="col-md-3">
-            <label for="startDate" class="form-label">Fecha inicio</label>
-            <input
-              type="date"
-              id="startDate"
-              formControlName="startDate"
-              class="form-control"
-            />
-          </div>
+        <strong>Wallet</strong> -> <small>Listado</small>
 
-          <div class="col-md-3">
-            <label for="endDate" class="form-label">Fecha fin</label>
-            <input
-              type="date"
-              id="endDate"
-              formControlName="endDate"
-              class="form-control"
-            />
-          </div>
-
-          <div class="col-md-1 d-grid">
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-          </div>
-
-          <div class="col-md-1 d-grid">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="resetFilters()"
-            >
-              Limpiar
-            </button>
-          </div>
-        </form>
         <button
           type="button"
-          class="btn btn-outline-secondary d-flex align-items-center justify-content-center"
+          class="float-end btn btn-primary"
           (click)="downloadExcel()"
         >
-          <!-- Icono de exportación de CoreUI -->
-          <i class="cil-file-export me-2"></i>
+          <svg [cIcon]="icons.cilCloudDownload"></svg>
           Exportar
         </button>
+        <!-- <button class="float-end btn btn-primary">
+          <svg [cIcon]="icons.cilCloudDownload"></svg>
+        </button> -->
+      </c-card-header>
+      <c-card-body>
+        <div>
+          <form
+            *ngIf="showFilters"
+            [formGroup]="filtersForm"
+            (ngSubmit)="onFilter()"
+            class="mb-4 row g-3 align-items-end"
+          >
+            <div class="col-md-2">
+              <label for="orderId" class="form-label">ID Orden</label>
+              <input
+                type="number"
+                id="orderId"
+                formControlName="orderId"
+                class="form-control"
+              />
+            </div>
+            <div class="col-md-2">
+              <label for="store" class="form-label">Tienda</label>
+              <ng-select
+                [items]="stores"
+                bindLabel="name"
+                bindValue="id"
+                formControlName="storeId"
+                [searchable]="true"
+                placeholder="Seleccione una tienda"
+              >
+              </ng-select>
+            </div>
+            <div class="col-md-3">
+              <label for="startDate" class="form-label">Fecha inicio</label>
+              <input
+                type="date"
+                id="startDate"
+                formControlName="startDate"
+                class="form-control"
+              />
+            </div>
 
+            <div class="col-md-3">
+              <label for="endDate" class="form-label">Fecha fin</label>
+              <input
+                type="date"
+                id="endDate"
+                formControlName="endDate"
+                class="form-control"
+              />
+            </div>
+
+            <div class="col-md-1 d-grid">
+              <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+
+            <div class="col-md-1 d-grid">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="resetFilters()"
+              >
+                Limpiar
+              </button>
+            </div>
+          </form>
+        </div>
         <table cTable class="table table-hover">
           <thead>
             <tr>
               <th scope="col">#</th>
               <th scope="col">Tienda</th>
               <th scope="col">Usuario</th>
-              <th scope="col">Descriopcion</th>
+              <th scope="col">Descripción</th>
               <th scope="col">Tipo de transacción</th>
               <th scope="col">Estado</th>
               <th scope="col">Fecha</th>

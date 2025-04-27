@@ -272,7 +272,6 @@ export class OrderListComponent implements OnInit {
           });
       },
       close: () => {
-        console.log('Acción close');
         order.statusId = event.previousStatusId;
       },
     });
@@ -356,7 +355,6 @@ export class OrderListComponent implements OnInit {
   }
 
   onModalScheduleClose(event: any) {
-    console.log('onModalUpdateOrderClose', event);
     this.orderSelected = null;
   }
   //#endregion

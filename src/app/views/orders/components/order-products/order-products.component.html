@@ -1,19 +1,29 @@
-<table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Producto</th>
-        <th>Variante</th>
-        <th>Cantidad</th>
-        <th>Precio unitario</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- <tr *ngFor="let item of products">
-        <td>{{ item.productVariant?.product?.name }}</td>
-        <td>{{ item.productVariant?.name }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>{{ item.unitPrice | currency }}</td>
-      </tr> -->
-    </tbody>
-  </table>
-  
+<c-row>
+  <c-col xs="12" sm="12" lg="12">
+    <c-card class="h-100">
+      <c-card-header>
+        <strong>Productos</strong>
+      </c-card-header>
+      <c-card-body class="overflow-auto" style="max-height: 500px">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Variante</th>
+              <th>Cantidad</th>
+              <th>Precio unitario</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of products">
+              <td>{{ item.productName }}</td>
+              <td>{{ item.productVariantName }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.unitPrice | currency }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

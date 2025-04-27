@@ -14,27 +14,28 @@
         >
           <c-tabs-list variant="underline-border">
             <button cTab [itemKey]="0">Información</button>
-            <button cTab [itemKey]="1">Productos</button>
-            <button cTab [itemKey]="2">Historial Estado</button>
-            <button cTab [itemKey]="3">Historial Categoría</button>
+            <button cTab [itemKey]="1">Historial Wallet</button>
           </c-tabs-list>
 
           <c-tabs-content>
             <c-tab-panel [itemKey]="0" class="p-3">
-              <app-order-info [order]="order" />
-              <!-- <app-order-info /> -->
+              <div class="mt-3 mb-3">
+                <app-order-products [orderId]="order.id"></app-order-products>
+              </div>
+              <div class="mt-3 mb-3">
+                <app-order-category-history
+                  [orderId]="order.id"
+                ></app-order-category-history>
+              </div>
+              <div class="mt-3 mb-3">
+                <app-order-info [order]="order"></app-order-info>
+              </div>
             </c-tab-panel>
             <c-tab-panel [itemKey]="1" class="p-3">
-              <!-- <app-order-items [items]="orderItems" /> -->
-              <app-order-products />
-            </c-tab-panel>
-            <c-tab-panel [itemKey]="2" class="p-3">
-              <app-order-status-history [orderId]="order.id" />
-              <!-- <app-order-status-history /> -->
-            </c-tab-panel>
-            <c-tab-panel [itemKey]="3" class="p-3">
-              <app-order-category-history [orderId]="order.id" />
-              <!-- <app-order-category-history /> -->
+              <app-wallet-transaction-list
+                [orderId]="order.id"
+                [showFilters]="false"
+              />
             </c-tab-panel>
           </c-tabs-content>
         </c-tabs>

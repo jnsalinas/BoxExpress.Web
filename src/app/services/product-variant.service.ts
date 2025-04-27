@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProductVariantDto } from '../models/product-variant.dto';
 import { ProductVariantAutocompleteDto } from '../models/product-variant-autocomplete.dto';
-import { WarehouseFilter } from '../models/warehouse-filter.model';
 import { BaseApiService } from './base-api.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../models/common/api-response';

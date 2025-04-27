@@ -85,4 +85,16 @@ export class OrderTableComponent {
   hasColumn(key: string): boolean {
     return this.columns.some((col) => col.key === key);
   }
+
+  getOrderContainsText(order: OrderDto): string {
+    if (order.orderItems?.length) {
+      return order.orderItems
+        .map(
+          (item) =>
+            (item.productName ?? '') + ' ' + (item.productVariantName ?? '')
+        )
+        .join(', ');
+    }
+    return order.contains || '';
+  }
 }
