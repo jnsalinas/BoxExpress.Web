@@ -51,7 +51,22 @@
           }}
         </td>
         <td *ngIf="hasColumn('contains')">
-          {{ getOrderContainsText(order) }}
+          <div
+            *ngIf="order.orderItems?.length; else showContains"
+            style="white-space: normal"
+          >
+            <div *ngFor="let item of order.orderItems; let last = last">
+              {{ item.productName }} {{ item.productVariantName }}
+              {{ item.quantity }}
+              <hr *ngIf="!last" style="margin: 8px 0" />
+            </div>
+          </div>
+
+          <ng-template #showContains>
+            <div>
+              {{ order.contains || "" }}
+            </div>
+          </ng-template>
         </td>
         <td *ngIf="hasColumn('city')">{{ order.city }}</td>
         <td *ngIf="hasColumn('category')">

@@ -61,7 +61,6 @@ export class WarehouseDetailComponent implements OnInit {
       next: (result) => {
         this.warehouseDetail = result;
         this.filteredProducts = this.warehouseDetail?.products ?? [];
-        console.log('warehouseDetail', this.warehouseDetail);
 
       },
       error: (err) => {
@@ -128,7 +127,6 @@ export class WarehouseDetailComponent implements OnInit {
   }
 
   handleTransferClose(data: any) {
-    console.log('Modal closed with data:', data);
     this.isModalTransferVisible = false;
   }
 

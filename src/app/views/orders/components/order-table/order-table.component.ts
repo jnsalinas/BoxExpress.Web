@@ -91,9 +91,13 @@ export class OrderTableComponent {
       return order.orderItems
         .map(
           (item) =>
-            (item.productName ?? '') + ' ' + (item.productVariantName ?? '')
+            (item.productName ?? '') +
+            ' ' +
+            (item.productVariantName ?? '') +
+            ' ' +
+            (item.quantity ?? '')
         )
-        .join(', ');
+        .join('\n');
     }
     return order.contains || '';
   }

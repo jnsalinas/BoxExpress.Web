@@ -41,6 +41,7 @@ import { StoreDto } from '../../../models/store.dto';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { OrderEditModalComponent } from '../components/order-edit-modal/order-edit-modal.component';
+import { IconDirective } from '@coreui/icons-angular';
 
 @Component({
   standalone: true,
@@ -68,6 +69,7 @@ import { OrderEditModalComponent } from '../components/order-edit-modal/order-ed
     FormLabelDirective,
     FormControlDirective,
     OrderEditModalComponent,
+    IconDirective,
   ],
 })
 export class OrderListComponent implements OnInit {
@@ -123,7 +125,6 @@ export class OrderListComponent implements OnInit {
         this.categoryOptions = responses.categories.data;
         this.stores = responses.stores.data;
         this.warehouseOptions.push(...responses.warehouses.data);
-        console.log('Warehouse options:', this.warehouseOptions);
         this.isLoading = false;
       },
       error: (error) => {
@@ -142,7 +143,7 @@ export class OrderListComponent implements OnInit {
         ? toUtcStartOfDayLocal(filters.startDate)
         : null,
       endDate: filters.endDate ? toUtcEndOfDayLocal(filters.endDate) : null,
-      orderId: filters.orderId?.trim() || null,
+      orderId: filters.orderId ?? null,
       storeId: filters.storeId || null,
     };
     return payload;
@@ -162,21 +163,6 @@ export class OrderListComponent implements OnInit {
       },
     });
   }
-
-  // loadStores(): void {
-  //   this.isLoading = true;
-  //   this.storeService.getAll().subscribe({
-  //     next: (response) => {
-  //       console.log('Response:', response);
-  //       this.stores = response.data;
-  //       this.isLoading = false;
-  //     },
-  //     error: (error) => {
-  //       console.error('Error fetching transactions:', error);
-  //       this.isLoading = false;
-  //     },
-  //   });
-  // }
 
   handleClose(data: any) {
     this.selectedOrderId = undefined;
@@ -292,7 +278,6 @@ export class OrderListComponent implements OnInit {
           .changeWarehouse(event.orderId, event.warehouseId)
           .subscribe({
             next: (data) => {
-              console.log('Warehouse changed successfully:', data);
               this.loadOrders();
             },
             error: (err) => {
@@ -312,7 +297,6 @@ export class OrderListComponent implements OnInit {
 
   //#region filters
   onFilter(): void {
-    console.log('Filters:', this.filtersForm.value);
     this.loadOrders();
   }
 
@@ -358,4 +342,21 @@ export class OrderListComponent implements OnInit {
     this.orderSelected = null;
   }
   //#endregion
+
+  downloadExcel() {
+    this.orderService.export(this.getFilters()).subscribe((response: Blob) => {
+      const fileURL = URL.createObjectURL(response);
+      const dateTimeString = new Date()
+        .toISOString()
+        .replace('T', '_')
+        .replace(/:/g, '-')
+        .substring(0, 16);
+
+      const a = document.createElement('a');
+      a.href = fileURL;
+      a.download = `Ordenes_${dateTimeString}.xlsx`;
+      a.click();
+      this.isLoading = false;
+    });
+  }
 }
