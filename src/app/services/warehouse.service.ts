@@ -24,4 +24,13 @@ export class WarehouseService extends BaseApiService<
       )
       .pipe(this.handleResponse());
   }
+
+  transfer(warehouseId: number, transferData: any): Observable<void> {
+    return this.http
+      .post<ApiResponse<null>>(
+        `${environment.apiUrl}/Warehouses/${warehouseId}/transfers`,
+        transferData
+      )
+      .pipe(this.handleResponse());
+  }
 }

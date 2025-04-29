@@ -8,8 +8,9 @@
             Agregar productos
           </button>
           <button class="btn btn-sm btn-primary" (click)="openTransferModal()">
-            Transferir productos
+            Transferir productos 
           </button>
+          <!-- Todo: transferir solo tiene permisos el administrador de bodegas -->
         </div>
       </c-card-header>
       <c-card-body>
@@ -103,3 +104,5 @@
   (onClose)="handleTransferClose($event)"
 >
 </app-warehouse-transfer-modal>
+<app-generic-modal></app-generic-modal>
+<!-- todo: mirar si este modal se puede poner en el router outlet en el template  -->
