@@ -199,7 +199,7 @@ export class OrderListComponent implements OnInit {
           { key: 'id', label: 'Guia' },
           { key: 'code', label: 'Orden' },
           { key: 'clientFullName', label: 'Cliente' },
-          { key: 'storeName', label: 'Tienda' }, //todo solo para admin
+          { key: 'storeName', label: 'Tienda' }, //todo: solo para admin
           { key: 'clientPhone', label: 'Teléfono' },
           { key: 'clientAddress', label: 'Dirección' },
           { key: 'notes', label: 'Notas' },

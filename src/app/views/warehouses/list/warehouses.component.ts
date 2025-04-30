@@ -30,7 +30,7 @@ import {
     RouterLink,
   ],
 })
-export class WarehousesComponent implements OnInit {
+export class WarehousesComponent implements OnInit { //todo: renombrar a WrehousesListComponent
   selectedWarehouseId: number | undefined;
 
   warehouses: WarehouseDto[] = [

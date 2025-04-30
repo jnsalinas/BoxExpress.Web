@@ -1,0 +1,73 @@
+<c-modal [visible]="isVisible" size="lg" backdrop="static">
+  <c-modal-header>
+    <h5 class="modal-title">Transferencia entre Bodegas</h5>
+  </c-modal-header>
+
+  <c-modal-body>
+    <div class="mt-4">
+      <c-card>
+        <c-card-body>
+          <h5 class="mb-3">Resumen de la Transferencia</h5>
+
+          
+          <div class="mb-3">
+            <strong>Bodega origen:</strong>
+            <span>
+              prueba
+              <!-- {{ selectedWarehouseName }} -->
+            </span>
+          </div>
+
+          <div class="mb-3">
+            <strong>Bodega destino:</strong>
+            <span>
+              prueba
+              <!-- {{ selectedWarehouseName }} -->
+            </span>
+          </div>
+
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Variante</th>
+                <th style="width: 150px">Cantidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <tr *ngFor="let item of summaryList">
+                <td>{{ item.name }}</td>
+                <td>{{ item.quantity }}</td>
+              </tr> -->
+            </tbody>
+          </table>
+
+          <!-- <div
+            *ngIf="summaryList.length === 0"
+            class="text-center text-muted mt-3"
+          > -->
+          No hay variantes agregadas aún.
+          <!-- </div> -->
+        </c-card-body>
+      </c-card>
+    </div>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button type="button" class="btn btn-secondary">
+        Cancelar
+      </button>
+    <!-- <button type="button" class="btn btn-secondary" (click)="close()">
+      Cancelar
+    </button> -->
+    <!-- 
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="save()"
+      [disabled]="form.invalid"
+    >
+      Transferir
+    </button> -->
+    <button type="button" class="btn btn-primary">Transferir</button>
+  </c-modal-footer>
+</c-modal>

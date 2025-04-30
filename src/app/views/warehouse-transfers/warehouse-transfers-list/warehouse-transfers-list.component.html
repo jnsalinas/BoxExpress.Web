@@ -1,0 +1,142 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando transacciones...'"
+></app-loading-overlay>
+
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Transferencias</strong> -> <small>Listado</small>
+        <!-- <button
+          type="button"
+          class="float-end btn btn-primary"
+          (click)="downloadExcel()"
+        >
+          <svg [cIcon]="icons.cilCloudDownload"></svg>
+          Exportar
+        </button> -->
+      </c-card-header>
+      <c-card-body>
+        <div>
+          <form
+            [formGroup]="filtersForm"
+            (ngSubmit)="onFilter()"
+            class="mb-4 row g-3 align-items-end"
+          >
+            <div class="col-md-3">
+              <label for="orderId" class="form-label">Origen</label>
+              <ng-select
+                [searchable]="false"
+                [items]="warehouseOptions"
+                bindLabel="name"
+                bindValue="id"
+                formControlName="warehouseOriginId"
+                placeholder="Seleccione..."
+              >
+              </ng-select>
+            </div>
+            <div class="col-md-3">
+              <label for="orderId" class="form-label">Destino</label>
+              <ng-select
+                [searchable]="false"
+                [items]="warehouseOptions"
+                bindLabel="name"
+                bindValue="id"
+                formControlName="warehouseDestinationId"
+                placeholder="Seleccione..."
+              >
+              </ng-select>
+            </div>
+            <div class="col-md-2">
+              <label for="startDate" class="form-label">Fecha inicio</label>
+              <input
+                type="date"
+                id="startDate"
+                formControlName="startDate"
+                class="form-control"
+              />
+            </div>
+
+            <div class="col-md-2">
+              <label for="endDate" class="form-label">Fecha fin</label>
+              <input
+                type="date"
+                id="endDate"
+                formControlName="endDate"
+                class="form-control"
+              />
+            </div>
+
+            <div class="col-md-1 d-grid">
+              <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+
+            <div class="col-md-1 d-grid">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="resetFilters()"
+              >
+                Limpiar
+              </button>
+            </div>
+          </form>
+        </div>
+        <table cTable class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Bodegas</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Creador</th>
+              <th scope="col">Aceptado por</th>
+              <th scope="col">Rechazado</th>
+              <th scope="col">Contiene</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let tx of warehouseInventoryTransfers; let i = index">
+              <th scope="row">{{ tx.id }}</th>
+              <td>{{ tx.fromWarehouse }} → {{ tx.toWarehouse }}</td>
+              <td>{{ tx.createdAt | date : "short" }}</td>
+              <td>{{ getStatusLabel(tx.status) }}</td>
+              <td>{{ tx.creator }}</td>
+              <td>{{ tx.acceptedBy }}</td>
+              <td>{{ tx.rejectionReason }}</td>
+              <td>
+                <div *ngFor="let item of tx.transferDetails; let last = last">
+                  {{ item.product }} {{ item.productVariant }}
+                  {{ item.quantity }}
+                  <hr *ngIf="!last" style="margin: 8px 0" />
+                </div>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary me-2">
+                  <svg [cIcon]="icons.cilPencil"></svg>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <app-generic-pagination
+          [pagination]="pagination"
+          [currentPage]="currentPage"
+          (pageChange)="onPageChange($event)"
+        >
+        </app-generic-pagination>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
+
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando transferencias...'"
+>
+</app-loading-overlay>
+
+<app-warehouse-transfer-modal-detail [isVisible]="true">
+</app-warehouse-transfer-modal-detail>
