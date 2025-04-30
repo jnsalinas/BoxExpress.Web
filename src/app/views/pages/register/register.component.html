@@ -4,33 +4,297 @@
       <c-col lg="7" md="9" xl="6">
         <c-card class="mx-4">
           <c-card-body class="p-4">
-            <form cForm>
+            <!-- Formulario reactivo -->
+            <form [formGroup]="registerForm" (ngSubmit)="register()">
               <h1>Register</h1>
               <p class="text-body-secondary">Create your account</p>
+
+              <!-- Username (First Name) -->
               <c-input-group class="mb-3">
                 <span cInputGroupText>
                   <svg cIcon name="cilUser"></svg>
                 </span>
-                <input autoComplete="name" cFormControl placeholder="Username" />
+                <div class="form-group">
+                  <input
+                    formControlName="firstName"
+                    type="text"
+                    [ngClass]="{'input-error': registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched}"
+                    class="form-control"
+                    placeholder="First Name"
+                  />
+                  <div
+                    *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
               </c-input-group>
-              <c-input-group class="mb-3">
-                <span cInputGroupText>&#64;</span>
-                <input autoComplete="email" cFormControl placeholder="Email" />
-              </c-input-group>
+
+              <!-- Last Name -->
               <c-input-group class="mb-3">
                 <span cInputGroupText>
-                  <svg cIcon name="cilLockLocked"></svg>
+                  <svg cIcon name="cilUser"></svg>
                 </span>
-                <input autoComplete="new-password" cFormControl placeholder="Password" type="password" />
+                <div class="form-group">
+                  <input
+                    formControlName="lastName"
+                    type="text"
+                    [ngClass]="{'input-error': registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched}"
+                    class="form-control"
+                    placeholder="Last Name"
+                  />
+                  <div
+                    *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
               </c-input-group>
+
+              <!-- Email -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilEnvelopeClosed"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    autoComplete="email"
+                    formControlName="email"
+                    type="email"
+                    [ngClass]="{'input-error': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+                    class="form-control"
+                    placeholder="Email"
+                  />
+                  <div
+                    *ngIf="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- Phone -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg [cIcon]="icons.cilMobile"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    autoComplete="tel"
+                    formControlName="phone"
+                    [ngClass]="{'input-error': registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched}"
+                    class="form-control"
+                    placeholder="Phone"
+                  />
+                  <div
+                    *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- Country ID -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg [cIcon]="icons.cilLocationPin"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    formControlName="countryId"
+                    type="number"
+                    [ngClass]="{'input-error': registerForm.get('countryId')?.invalid && registerForm.get('countryId')?.touched}"
+                    class="form-control"
+                    placeholder="Country ID"
+                  />
+                  <div
+                    *ngIf="registerForm.get('countryId')?.invalid && registerForm.get('countryId')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- City ID -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg [cIcon]="icons.cilHome"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    formControlName="cityId"
+                    type="number"
+                    [ngClass]="{'input-error': registerForm.get('cityId')?.invalid && registerForm.get('cityId')?.touched}"
+                    class="form-control"
+                    placeholder="City ID"
+                  />
+                  <div
+                    *ngIf="registerForm.get('cityId')?.invalid && registerForm.get('cityId')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- Pickup Address -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg [cIcon]="icons.cilHome"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    formControlName="pickupAddress"
+                    [ngClass]="{'input-error': registerForm.get('pickupAddress')?.invalid && registerForm.get('pickupAddress')?.touched}"
+                    class="form-control"
+                    placeholder="Pickup Address"
+                  />
+                  <div
+                    *ngIf="registerForm.get('pickupAddress')?.invalid && registerForm.get('pickupAddress')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- Company Name -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg [cIcon]="icons.cilFactory"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    formControlName="companyName"
+                    [ngClass]="{'input-error': registerForm.get('companyName')?.invalid && registerForm.get('companyName')?.touched}"
+                    class="form-control"
+                    placeholder="Company Name"
+                  />
+                  <div
+                    *ngIf="registerForm.get('companyName')?.invalid && registerForm.get('companyName')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- Legal Name -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilDescription"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    formControlName="legalName"
+                    [ngClass]="{'input-error': registerForm.get('legalName')?.invalid && registerForm.get('legalName')?.touched}"
+                    class="form-control"
+                    placeholder="Legal Name"
+                  />
+                  <div
+                    *ngIf="registerForm.get('legalName')?.invalid && registerForm.get('legalName')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- Document Number -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilFile"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    formControlName="documentNumber"
+                    [ngClass]="{'input-error': registerForm.get('documentNumber')?.invalid && registerForm.get('documentNumber')?.touched}"
+                    class="form-control"
+                    placeholder="Document Number"
+                  />
+                  <div
+                    *ngIf="registerForm.get('documentNumber')?.invalid && registerForm.get('documentNumber')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- Store Name -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg [cIcon]="icons.cilCart"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    formControlName="storeName"
+                    [ngClass]="{'input-error': registerForm.get('storeName')?.invalid && registerForm.get('storeName')?.touched}"
+                    class="form-control"
+                    placeholder="Store Name"
+                  />
+                  <div
+                    *ngIf="registerForm.get('storeName')?.invalid && registerForm.get('storeName')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- Balance -->
+              <c-input-group class="mb-3">
+                <span cInputGroupText>
+                  <svg cIcon name="cilDollar"></svg>
+                </span>
+                <div class="form-group">
+                  <input
+                    formControlName="balance"
+                    type="number"
+                    [ngClass]="{'input-error': registerForm.get('balance')?.invalid && registerForm.get('balance')?.touched}"
+                    class="form-control"
+                    placeholder="Balance"
+                  />
+                  <div
+                    *ngIf="registerForm.get('balance')?.invalid && registerForm.get('balance')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
+              </c-input-group>
+
+              <!-- Password -->
               <c-input-group class="mb-4">
                 <span cInputGroupText>
                   <svg cIcon name="cilLockLocked"></svg>
                 </span>
-                <input autoComplete="new-password" cFormControl placeholder="Repeat password" type="password" />
+                <div class="form-group">
+                  <input
+                    autoComplete="new-password"
+                    formControlName="password"
+                    type="password"
+                    [ngClass]="{'input-error': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
+                    class="form-control"
+                    placeholder="Password"
+                  />
+                  <div
+                    *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                    class="my-error-message"
+                  >
+                    Este campo es obligatorio
+                  </div>
+                </div>
               </c-input-group>
+
+              <!-- Botón para enviar el formulario -->
               <div class="d-grid">
-                <button cButton color="success">Create Account</button>
+                <button cButton color="success" type="submit">Create Account</button>
               </div>
             </form>
           </c-card-body>

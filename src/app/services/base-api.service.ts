@@ -8,7 +8,6 @@ import { PaginationDto } from '../models/common/pagination.dto';
 export class BaseApiService<T, F> {
   constructor(protected http: HttpClient, protected endpoint: string) {}
 
-  // Manejo común de la respuesta, solo extrae los datos cuando success es true
   protected handleResponse<R>() {
     return map((res: ApiResponse<R>) => {
       if (res.success) {
@@ -71,18 +70,14 @@ export class BaseApiService<T, F> {
       );
   }
 
-  // Crear un nuevo elemento
-  create(data: T): Observable<T> {
+  create(data: T, action: string = ''): Observable<T> {
+    const url = action
+      ? `${environment.apiUrl}/${this.endpoint}/${action}`
+      : `${environment.apiUrl}/${this.endpoint}`;
+
     return this.http
-      .post<ApiResponse<T>>(`${environment.apiUrl}/${this.endpoint}`, data)
-      .pipe(
-        map((res: ApiResponse<T>) => {
-          if (res.success) {
-            return res.data!; // Extraemos solo la propiedad 'data'
-          }
-          throw new Error(res.message || 'Error al crear el dato');
-        })
-      );
+      .post<ApiResponse<T>>(url, data, )
+      .pipe(this.handleResponse());
   }
 
   // Actualizar un elemento por su ID

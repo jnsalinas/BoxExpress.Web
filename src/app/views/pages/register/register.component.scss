@@ -1,0 +1,84 @@
+.error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.my-error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+}
+
+.input-error {
+  border: 1px solid red !important;
+  box-sizing: border-box;
+}
+
+/* Estilos mejorados para los input groups */
+c-input-group {
+  display: flex !important;
+  width: 100% !important;
+  position: relative;
+  margin-bottom: 1.5rem !important; /* Aumentar el margen inferior para dar espacio a los mensajes de error */
+}
+
+c-input-group span[cInputGroupText] {
+  display: flex;
+  align-items: center;
+  height: 38px; /* Altura fija para los íconos */
+  background-color: #f0f0f0;
+  border: 1px solid #ced4da;
+  border-right: none;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  position: relative; /* Para posicionar el mensaje de error de forma absoluta */
+}
+
+.form-control {
+  width: 100%;
+  height: 38px; /* Altura fija para los inputs */
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+/* Asegura que c-input-group mantenga los elementos en línea horizontal */
+c-input-group.mb-3, c-input-group.mb-4 {
+  flex-direction: row !important;
+  align-items: flex-start !important; /* Alinea los elementos en la parte superior */
+}
+
+/* Asegura que el botón tenga el ancho completo */
+.d-grid {
+  width: 100%;
+}
+
+.d-grid button {
+  width: 100%;
+  height: 38px; /* Altura consistente para el botón */
+}
+
+/* Estilos adicionales para mejorar la apariencia */
+c-card-body {
+  padding: 1.5rem !important;
+}
+
+/* Corrige la alineación de los iconos SVG dentro del span */
+c-input-group span[cInputGroupText] svg {
+  margin: 0 auto;
+}
+
+/* Ajuste para el último input group (password) */
+c-input-group.mb-4 {
+  margin-bottom: 2rem !important;
+}
