@@ -1,8 +1,11 @@
 export interface WalletTransactionDto {
-  storeName?: string;
+  store?: string;
   amount?: number;
   id?: number;
   description?: string;
   relatedOrderId?: number;
   userName?: string;
+  orderStatus?: string;
+  transactionType?: string;
+  createdAt?: Date;
 }

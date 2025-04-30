@@ -1,4 +1,5 @@
-import { BaseDto } from './base.dto';
+import { BaseDto } from './common/base.dto';
+import { OrderItemDto } from './order-item.dto';
 
 export interface OrderDto extends BaseDto {
   country?: string;
@@ -19,8 +20,14 @@ export interface OrderDto extends BaseDto {
   category?: string;
   categoryId?: number;
   storeName?: string;
+  storeId?: number;
   notes?: string;
   code?: string;
   deliveryFee?: number;
-  warehouseId?: number;
+  warehouseId?: number | null;
+  timeSlotStartTime?: Date;
+  timeSlotEndTime?: Date;
+  timeSlotId?: number;
+  currencyCode?: string;
+  orderItems?: OrderItemDto[]
 }

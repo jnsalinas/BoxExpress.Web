@@ -1,0 +1,18 @@
+<c-pagination aria-label="Page navigation example">
+  <li cPageItem>
+    <a cPageLink (click)="onPageChange(currentPage - 1)">Anterior</a>
+  </li>
+
+  <li *ngFor="let page of [].constructor(totalPages); let i = index" cPageItem>
+    <a
+      cPageLink
+      (click)="onPageChange(i + 1)"
+      [class.active]="i + 1 === currentPage"
+      >{{ i + 1 }}</a
+    >
+  </li>
+
+  <li cPageItem>
+    <a cPageLink (click)="onPageChange(currentPage + 1)">Siguiente</a>
+  </li>
+</c-pagination>

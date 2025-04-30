@@ -9,6 +9,9 @@ import { OrderFilter } from '../../../models/order-filter.model';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { GenericModalComponent } from '../../../views/shared/components/generic-modal/generic-modal.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormLabelDirective, FormControlDirective } from '@coreui/angular';
+import { freeSet } from '@coreui/icons';
 
 import {
   RowComponent,
@@ -16,13 +19,16 @@ import {
   CardComponent,
   CardHeaderComponent,
   CardBodyComponent,
-  TableDirective,
   TabDirective,
   TabPanelComponent,
   TabsComponent,
   TabsContentComponent,
   TabsListComponent,
 } from '@coreui/angular';
+import {
+  toUtcStartOfDayLocal,
+  toUtcEndOfDayLocal,
+} from '../../../shared/utils/date-utils';
 import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { WarehouseDto } from '../../../models/warehouse.dto';
 import { OrderTableComponent } from '../components/order-table/order-table.component';
@@ -30,6 +36,12 @@ import { BehaviorSubject, forkJoin } from 'rxjs';
 import { OrderCategoryDto } from '../../../models/order-category.dto';
 import { OrderStatusDto } from '../../../models/order-status.dto';
 import { FormsModule } from '@angular/forms';
+import { StoreService } from '../../../services/store.service';
+import { StoreDto } from '../../../models/store.dto';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
+import { OrderEditModalComponent } from '../components/order-edit-modal/order-edit-modal.component';
+import { IconDirective } from '@coreui/icons-angular';
 
 @Component({
   standalone: true,
@@ -51,17 +63,24 @@ import { FormsModule } from '@angular/forms';
     OrderTableComponent,
     FormsModule,
     GenericModalComponent,
+    NgSelectModule,
+    ReactiveFormsModule,
+    LoadingOverlayComponent,
+    FormLabelDirective,
+    FormControlDirective,
+    OrderEditModalComponent,
+    IconDirective,
   ],
 })
 export class OrderListComponent implements OnInit {
+  icons = freeSet;
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
-
   statusOptions: OrderStatusDto[] = [];
   categoryOptions: OrderCategoryDto[] = [];
-
+  filtersForm: FormGroup = new FormGroup({});
+  isLoading: boolean = false;
   selectedOrderId: number | undefined;
   selectedOrderName: string = '';
-
   orders: OrderDto[] = [];
   warehouseOptions: WarehouseDto[] = [
     {
@@ -69,80 +88,83 @@ export class OrderListComponent implements OnInit {
       name: 'Tradicional',
     },
   ];
-  loading = false;
   activeTab: number = 0;
-
+  stores: StoreDto[] = [];
   private ordersSubject = new BehaviorSubject<OrderDto[]>([]); // Aquí almacenamos las órdenes
   orders$ = this.ordersSubject.asObservable(); // Observable para los componentes que escuchan cambios
+  orderSelected: OrderDto | null = null;
 
   constructor(
     private orderService: OrderService,
     private warehouseService: WarehouseService,
     private statusOrderService: OrderStatusService,
-    private categoryOrderService: OrderCategoryService
-  ) {}
+    private categoryOrderService: OrderCategoryService,
+    private storeService: StoreService,
+    private fb: FormBuilder
+  ) {
+    this.filtersForm = this.fb.group({
+      startDate: [null],
+      endDate: [null],
+      orderId: [null],
+      storeId: [null],
+    });
+  }
 
   ngOnInit(): void {
-    this.loadOrders({ categoryId: this.statusForActiveTab });
+    this.loadOrders();
 
-    this.loading = true;
+    this.isLoading = true;
     forkJoin({
       warehouses: this.warehouseService.getAll({}),
       statuses: this.statusOrderService.getAll(),
       categories: this.categoryOrderService.getAll(),
+      stores: this.storeService.getAll(),
     }).subscribe({
       next: (responses) => {
-        this.statusOptions = responses.statuses;
-        this.categoryOptions = responses.categories;
-        this.warehouseOptions.push(...responses.warehouses);
-        console.log('Warehouse options:', this.warehouseOptions);
-        this.loading = false;
+        this.statusOptions = responses.statuses.data;
+        this.categoryOptions = responses.categories.data;
+        this.stores = responses.stores.data;
+        this.warehouseOptions.push(...responses.warehouses.data);
+        this.isLoading = false;
       },
       error: (error) => {
         console.error('Error loading data:', error);
-        this.loading = false;
+        this.isLoading = false;
       },
     });
   }
 
-  loadOrders(filter: OrderFilter): void {
-    this.loading = true;
-    this.orderService.getAll(filter).subscribe({
-      next: (data) => {
-        this.orders = data;
-        this.ordersSubject.next(data); // Actualiza el BehaviorSubject con las órdenes
-        this.loading = false;
+  getFilters(): OrderFilter {
+    const filters = this.filtersForm.value;
+
+    const payload: OrderFilter = {
+      categoryId: this.statusForActiveTab,
+      startDate: filters.startDate
+        ? toUtcStartOfDayLocal(filters.startDate)
+        : null,
+      endDate: filters.endDate ? toUtcEndOfDayLocal(filters.endDate) : null,
+      orderId: filters.orderId ?? null,
+      storeId: filters.storeId || null,
+    };
+    return payload;
+  }
+
+  loadOrders(): void {
+    this.isLoading = true;
+    this.orderService.getAll(this.getFilters()).subscribe({
+      next: (result) => {
+        this.orders = result.data;
+        this.ordersSubject.next(result.data); // Actualiza el BehaviorSubject con las órdenes
+        this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading orders', err);
-        this.loading = false;
+        this.isLoading = false;
       },
     });
   }
 
-  // openModal(order: OrderDto) {
-  //   this.selectedOrderId = order.id;
-  //   this.selectedOrderName = order.name;
-  // }
-
   handleClose(data: any) {
-    this.selectedOrderId = undefined;
-  }
-
-  handleSave(data: any) {
-    console.log('Saved data:', data);
-    this.orderService
-      .addInventory(this.selectedOrderId!, data.products)
-      .subscribe({
-        next: (data) => {
-          console.log('Order created:', data);
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('Error saving order', err);
-          this.loading = false;
-        },
-      });
     this.selectedOrderId = undefined;
   }
 
@@ -150,7 +172,7 @@ export class OrderListComponent implements OnInit {
     const validIndex = typeof index === 'number' ? index : Number(index);
     if (!isNaN(validIndex)) {
       this.activeTab = validIndex;
-      this.loadOrders({ categoryId: this.statusForActiveTab });
+      this.loadOrders();
     }
   }
 
@@ -185,8 +207,12 @@ export class OrderListComponent implements OnInit {
           { key: 'totalAmount', label: 'Valor' },
           { key: 'contains', label: 'Contiene' },
           { key: 'city', label: 'Ciudad' },
+          { key: 'warehouseName', label: 'Bodega' },
           { key: 'status', label: 'Estado' },
+          { key: 'scheduledDate', label: 'Fecha de programación' },
+          { key: 'timeSlot', label: 'Fecha de programación' },
           { key: 'actions', label: 'Acciones' },
+          { key: 'action-edit', label: 'Editar' },
         ];
       case 2:
         return [
@@ -203,8 +229,14 @@ export class OrderListComponent implements OnInit {
     return this.activeTab + 1;
   }
 
-  handleStatusChange(event: { orderId: number; statusId: number }) {
-    console.log(event.statusId);
+  handleStatusChange(event: {
+    orderId: number;
+    statusId: number;
+    previousStatusId: number;
+  }) {
+    const order = this.orders.find((o) => o.id === event.orderId);
+    if (order == null) return;
+
     const status = this.statusOptions.find(
       (status) => status.id === Number(event.statusId)
     );
@@ -217,19 +249,21 @@ export class OrderListComponent implements OnInit {
           .changeStatus(event.orderId, event.statusId)
           .subscribe({
             next: (data) => {
-              this.loadOrders({ categoryId: this.statusForActiveTab });
+              this.loadOrders();
             },
             error: (err) => {
               console.error('Error changing warehouse', err);
+              order.statusId = event.previousStatusId;
             },
           });
       },
       close: () => {
-        console.log('Acción close');
+        order.statusId = event.previousStatusId;
       },
     });
   }
 
+  //#region category
   handleWarehouseChange(event: { orderId: number; warehouseId: number }) {
     let category = 'Express';
     if (event.warehouseId == 0) {
@@ -244,8 +278,7 @@ export class OrderListComponent implements OnInit {
           .changeWarehouse(event.orderId, event.warehouseId)
           .subscribe({
             next: (data) => {
-              console.log('Warehouse changed successfully:', data);
-              this.loadOrders({ categoryId: this.statusForActiveTab });
+              this.loadOrders();
             },
             error: (err) => {
               console.error('Error changing warehouse', err);
@@ -253,8 +286,77 @@ export class OrderListComponent implements OnInit {
           });
       },
       close: () => {
+        const order = this.orders.find((order) => order.id === event.orderId);
+        if (order) {
+          order.warehouseId = null;
+        }
+      },
+    });
+  }
+  //#endregion
+
+  //#region filters
+  onFilter(): void {
+    this.loadOrders();
+  }
+
+  resetFilters(): void {
+    this.filtersForm.reset();
+    this.loadOrders();
+  }
+  //#endregion
+
+  //#region modal update
+
+  //#region schedule
+  handleScheduleOrder(order: OrderDto) {
+    this.orderSelected = order;
+  }
+
+  onModalScheduleSave(event: any) {
+    this.modal.show({
+      title: 'Aceptar cambios',
+      body: `¿Estás seguro de que desea realizar esta acción?`,
+      ok: () => {
+        this.isLoading = true;
+        if (this.orderSelected)
+          this.orderService.schedule(this.orderSelected.id, event).subscribe({
+            next: () => {
+              this.isLoading = false;
+              this.orderSelected = null;
+              this.loadOrders();
+            },
+            error: (error) => {
+              console.error('Error schedule:', error);
+              this.isLoading = false;
+            },
+          });
+      },
+      close: () => {
         console.log('Acción close');
       },
+    });
+  }
+
+  onModalScheduleClose(event: any) {
+    this.orderSelected = null;
+  }
+  //#endregion
+
+  downloadExcel() {
+    this.orderService.export(this.getFilters()).subscribe((response: Blob) => {
+      const fileURL = URL.createObjectURL(response);
+      const dateTimeString = new Date()
+        .toISOString()
+        .replace('T', '_')
+        .replace(/:/g, '-')
+        .substring(0, 16);
+
+      const a = document.createElement('a');
+      a.href = fileURL;
+      a.download = `Ordenes_${dateTimeString}.xlsx`;
+      a.click();
+      this.isLoading = false;
     });
   }
 }

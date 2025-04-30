@@ -8,7 +8,10 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class WarehouseService extends BaseApiService<WarehouseDto, WarehouseFilter> {
+export class WarehouseService extends BaseApiService<
+  WarehouseDto,
+  WarehouseFilter
+> {
   constructor(http: HttpClient) {
     super(http, 'warehouses');
   }
@@ -19,8 +22,15 @@ export class WarehouseService extends BaseApiService<WarehouseDto, WarehouseFilt
         `${environment.apiUrl}/Warehouses/${warehouseId}/inventory`,
         inventoryData
       )
-      .pipe(
-        this.handleResponse()
-      );
+      .pipe(this.handleResponse());
+  }
+
+  transfer(warehouseId: number, transferData: any): Observable<void> {
+    return this.http
+      .post<ApiResponse<null>>(
+        `${environment.apiUrl}/Warehouses/${warehouseId}/transfers`,
+        transferData
+      )
+      .pipe(this.handleResponse());
   }
 }

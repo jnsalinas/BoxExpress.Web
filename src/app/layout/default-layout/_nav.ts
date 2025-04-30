@@ -13,7 +13,7 @@ export const navItems: INavData[] = [
   {
     name: 'Ordenes',
     url: '/orders',
-    iconComponent: { name: 'cil-speedometer' },
+    iconComponent: { name: 'cil-paper-plane' },
     // badge: {
     //   color: 'info',
     //   text: 'NEW'
@@ -22,7 +22,7 @@ export const navItems: INavData[] = [
   {
     name: 'Wallet',
     url: '/wallet',
-    iconComponent: { name: 'cil-speedometer' },
+    iconComponent: { name: 'cil-notes' },
     // badge: {
     //   color: 'info',
     //   text: 'NEW'

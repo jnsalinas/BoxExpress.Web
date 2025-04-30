@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
@@ -18,6 +18,7 @@ import { ProductVariantDto } from '../../../models/product-variant.dto';
 import { IconDirective } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
 import { WarehouseTransferModalComponent } from '../components/warehouse-transfer-modal/warehouse-transfer-modal.component';
+import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 
 @Component({
   selector: 'app-warehouse-detail',
@@ -33,16 +34,18 @@ import { WarehouseTransferModalComponent } from '../components/warehouse-transfe
     WarehouseProductModalComponent,
     WarehouseTransferModalComponent,
     TableDirective,
-    IconDirective
+    GenericModalComponent
+    // IconDirective
   ],
   templateUrl: './warehouse-detail.component.html',
 })
 export class WarehouseDetailComponent implements OnInit {
+  @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
   private route = inject(ActivatedRoute);
   isModalInventoryVisible = false;
   isModalTransferVisible = false;
   productToEdit: ProductDto | null = null;
-  warehouseId: number = parseInt(this.route.snapshot.paramMap.get('id') ?? '0')
+  warehouseId: number = parseInt(this.route.snapshot.paramMap.get('id') ?? '0');
   warehouseDetail: WarehouseDetailDto | undefined;
   filteredProducts: ProductDto[] | null = null;
   searchTerm: string = '';
@@ -58,11 +61,9 @@ export class WarehouseDetailComponent implements OnInit {
 
   loadWarehouseDetail(id: number = this.warehouseId): void {
     this.warehouseService.getById(id).subscribe({
-      next: (data) => {
-        this.warehouseDetail = data;
+      next: (result) => {
+        this.warehouseDetail = result;
         this.filteredProducts = this.warehouseDetail?.products ?? [];
-        console.log('warehouseDetail', this.warehouseDetail);
-
       },
       error: (err) => {
         console.error('Error loading warehouses', err);
@@ -87,12 +88,12 @@ export class WarehouseDetailComponent implements OnInit {
 
   //#region Inventory
   openInventoryModal(productDto: ProductDto | null = null) {
-    if(productDto){
+    if (productDto) {
       this.productToEdit = productDto;
     }
     this.isModalInventoryVisible = true;
   }
-  
+
   handleInventoryClose(data: any) {
     console.log('Modal closed with data:', data);
     this.isModalInventoryVisible = false;
@@ -118,37 +119,42 @@ export class WarehouseDetailComponent implements OnInit {
   }
 
   editProduct(product: ProductDto) {
-    this.openInventoryModal(product)
+    this.openInventoryModal(product);
   }
   //#endregion
 
   //#region Transfer
-  openTransferModal() { 
+  openTransferModal() {
     this.isModalTransferVisible = true;
   }
 
   handleTransferClose(data: any) {
-    console.log('Modal closed with data:', data);
     this.isModalTransferVisible = false;
   }
 
   handleTransferSave(data: any) {
-    console.log('Saved data:', data);
-    this.loading = true;
-    // this.warehouseService
-    //   .addInventory(this.warehouseId!, data.products)
-    //   .subscribe({
-    //     next: (data) => {
-    //       console.log('Warehouse created:', data);
-    //       this.loading = false;
-    //       this.handleInventoryClose(null);
-    //     },
-    //     error: (err) => {
-    //       console.error('Error loading warehouses', err);
-    //       this.handleInventoryClose(null);
-    //     },
-    //   });
+    this.modal.show({
+      title: 'Aceptar transferencia',
+      body: `¿Estás seguro de que desea crear la transferencia?`,
+      ok: () => {
+        console.log('Saved data:', data);
+        this.loading = true;
+        this.warehouseService.transfer(this.warehouseId!, data).subscribe({
+          next: (data) => {
+            console.log('Warehouse transfer:', data);
+            this.loading = false;
+            this.handleTransferClose(null);
+          },
+          error: (err) => {
+            console.error('Error loading warehouses', err);
+            this.handleTransferClose(null);
+          },
+        });
+      },
+      close: () => {
+
+      },
+    });
   }
   //#endregion
-  
 }

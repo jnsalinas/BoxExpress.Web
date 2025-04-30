@@ -5,7 +5,10 @@ import { WalletTransactionDto } from '../models/wallet-transaction.dto';
 import { WalletTransactionFilter } from '../models/wallet-transaction-filter.model';
 
 @Injectable({ providedIn: 'root' })
-export class WalletTransactionService extends BaseApiService<WalletTransactionDto, WalletTransactionFilter> {
+export class WalletTransactionService extends BaseApiService<
+  WalletTransactionDto,
+  WalletTransactionFilter
+> {
   constructor(http: HttpClient) {
     super(http, 'wallettransactions');
   }

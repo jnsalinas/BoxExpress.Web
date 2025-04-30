@@ -1,1 +1,45 @@
-<p>order-detail works!</p>
+<app-loading-overlay *ngIf="isLoading" [loadingText]="'Cargando orden...'">
+</app-loading-overlay>
+
+<c-row *ngIf="!isLoading">
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Orden</strong> -> <small>Detalle</small>
+      </c-card-header>
+      <c-card-body>
+        <c-tabs
+          [activeItemKey]="activeTab"
+          (activeItemKeyChange)="handleActiveItemChange($event)"
+        >
+          <c-tabs-list variant="underline-border">
+            <button cTab [itemKey]="0">Información</button>
+            <button cTab [itemKey]="1">Historial Wallet</button>
+          </c-tabs-list>
+
+          <c-tabs-content>
+            <c-tab-panel [itemKey]="0" class="p-3">
+              <div class="mt-3 mb-3">
+                <app-order-products [orderId]="order.id"></app-order-products>
+              </div>
+              <div class="mt-3 mb-3">
+                <app-order-category-history
+                  [orderId]="order.id"
+                ></app-order-category-history>
+              </div>
+              <div class="mt-3 mb-3">
+                <app-order-info [order]="order"></app-order-info>
+              </div>
+            </c-tab-panel>
+            <c-tab-panel [itemKey]="1" class="p-3">
+              <app-wallet-transaction-list
+                [orderId]="order.id"
+                [showFilters]="false"
+              />
+            </c-tab-panel>
+          </c-tabs-content>
+        </c-tabs>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

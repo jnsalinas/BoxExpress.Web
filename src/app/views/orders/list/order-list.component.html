@@ -1,10 +1,84 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando ordenes...'"
+></app-loading-overlay>
 <c-row>
   <c-col xs="12">
     <c-card class="mb-4">
       <c-card-header>
         <strong>Órdenes</strong> -> <small>Listado</small>
+        <button
+          type="button"
+          class="float-end btn btn-primary"
+          (click)="downloadExcel()"
+        >
+          <svg [cIcon]="icons.cilCloudDownload"></svg>
+          Exportar
+        </button>
       </c-card-header>
       <c-card-body>
+        <form
+          [formGroup]="filtersForm"
+          (ngSubmit)="onFilter()"
+          class="mb-4 row g-3 align-items-end"
+        >
+          <div class="col-md-2">
+            <label cLabel for="orderId" class="form-label">ID Orden</label>
+            <input
+              cFormControl
+              type="number"
+              id="orderId"
+              formControlName="orderId"
+              class="form-control"
+            />
+          </div>
+          <div class="col-md-2">
+            <label for="store" class="form-label">Tienda</label>
+            <ng-select
+              cFormControl
+              [items]="stores"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="storeId"
+              [searchable]="true"
+              placeholder="Seleccione una tienda"
+            >
+            </ng-select>
+          </div>
+          <div class="col-md-3">
+            <label for="startDate" class="form-label">Fecha inicio</label>
+            <input
+              type="date"
+              id="startDate"
+              formControlName="startDate"
+              class="form-control"
+            />
+          </div>
+
+          <div class="col-md-3">
+            <label for="endDate" class="form-label">Fecha fin</label>
+            <input
+              type="date"
+              id="endDate"
+              formControlName="endDate"
+              class="form-control"
+            />
+          </div>
+
+          <div class="col-md-1 d-grid">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+          </div>
+
+          <div class="col-md-1 d-grid">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="resetFilters()"
+            >
+              Limpiar
+            </button>
+          </div>
+        </form>
         <c-tabs
           [activeItemKey]="activeTab"
           (activeItemKeyChange)="handleActiveItemChange($event)"
@@ -30,57 +104,22 @@
                 [warehouseOptions]="warehouseOptions"
                 (statusChanged)="handleStatusChange($event)"
                 (warehouseChanged)="handleWarehouseChange($event)"
+                (scheduleOrder)="handleScheduleOrder($event)"
               />
             </c-tab-panel>
           </c-tabs-content>
         </c-tabs>
-
-        <!-- <table cTable>
-          <thead>
-            <tr>
-              <th>Guia</th>
-              <th>Orden</th>
-              <th>Cliente</th>
-              <th>Tienda</th>
-              <th>Telefono</th>
-              <th>Direccion</th>
-              <th>Notas</th>
-              <th>Flete</th>
-              <th>Valor total</th>
-              <th>Contiene</th>
-              <th>Ciudad</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let order of orders">
-              <td>{{ order.id }}</td>
-              <td>{{ order.code }}</td>
-              <td>{{ order.clientFullName }}</td>
-              <td>{{ order.storeName }}</td>
-              <td>{{ order.clientPhone }}</td>
-              <td>{{ order.clientAddress }}</td>
-              <td>{{ order.notes }}</td>
-              <td>{{ order.deliveryFee }}</td>
-              <td>{{ order.totalAmount }}</td>
-              <td>{{ order.contains }}</td>
-              <td>{{ order.city }}</td>
-              <td>{{ order.status }}</td>
-              <td>
-                <button
-                  class="btn btn-sm btn-outline-primary"
-                  [routerLink]="[order.id]"
-                >
-                  Ver Detalle
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table> -->
       </c-card-body>
     </c-card>
   </c-col>
 </c-row>
 
 <app-generic-modal></app-generic-modal>
+<app-order-edit-modal
+  *ngIf="orderSelected"
+  [order]="orderSelected"
+  [isVisible]="orderSelected != null"
+  [statusOptions]="statusOptions"
+  (onSave)="onModalScheduleSave($event)"
+  (onClose)="onModalScheduleClose($event)"
+></app-order-edit-modal>

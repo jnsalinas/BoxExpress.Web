@@ -1,77 +1,140 @@
 <!-- Se dejan las columnas "fijas" ya que al hacerlo de forma dinamica con swtich o ngif dentro de un ngfor de columnas para hacer el render de los td cuando se pone ngmodule y ngchange se muere el binding y no carga la pagina  -->
-<table cTable>
-  <thead>
-    <tr>
-      <th *ngIf="hasColumn('id')">Guía</th>
-      <th *ngIf="hasColumn('code')">Orden</th>
-      <th *ngIf="hasColumn('clientFullName')">Cliente</th>
-      <th *ngIf="hasColumn('storeName')">Tienda</th>
-      <th *ngIf="hasColumn('clientPhone')">Teléfono</th>
-      <th *ngIf="hasColumn('clientAddress')">Dirección</th>
-      <th *ngIf="hasColumn('notes')">Notas</th>
-      <th *ngIf="hasColumn('deliveryFee')">Flete</th>
-      <th *ngIf="hasColumn('totalAmount')">Valor total</th>
-      <th *ngIf="hasColumn('contains')">Contiene</th>
-      <th *ngIf="hasColumn('city')">Ciudad</th>
-      <th *ngIf="hasColumn('category')">Categoría</th>
-      <th *ngIf="hasColumn('status')">Estado</th>
-      <th *ngIf="hasColumn('actions')">Acciones</th>
-    </tr>
-  </thead>
+<div style="overflow-x: auto; width: 100%">
+  <table cTable>
+    <thead>
+      <tr>
+        <th *ngIf="hasColumn('id')">Guía</th>
+        <th *ngIf="hasColumn('code')">Orden</th>
+        <th *ngIf="hasColumn('clientFullName')">Cliente</th>
+        <th *ngIf="hasColumn('storeName')">Tienda</th>
+        <th *ngIf="hasColumn('clientPhone')">Teléfono</th>
+        <th *ngIf="hasColumn('clientAddress')">Dirección</th>
+        <th *ngIf="hasColumn('notes')">Notas</th>
+        <th *ngIf="hasColumn('deliveryFee')">Flete</th>
+        <th *ngIf="hasColumn('totalAmount')">Valor total</th>
+        <th *ngIf="hasColumn('contains')">Contiene</th>
+        <th *ngIf="hasColumn('city')">Ciudad</th>
+        <th *ngIf="hasColumn('category')">Categoría</th>
+        <!-- Todo solo para el admin validar permisos -->
+        <th *ngIf="hasColumn('warehouseName')">Bodega</th>
+        <th *ngIf="hasColumn('status')">Estado</th>
+        <th *ngIf="hasColumn('scheduledDate')">Fecha programada</th>
+        <!-- <th *ngIf="hasColumn('timeSlot')">Horario de entrega</th> -->
+        <th *ngIf="hasColumn('actions')">Acciones</th>
+      </tr>
+    </thead>
 
-  <tbody>
-    <tr *ngFor="let order of orders">
-      <td *ngIf="hasColumn('id')">{{ order.id }}</td>
-      <td *ngIf="hasColumn('code')">{{ order.code }}</td>
-      <td *ngIf="hasColumn('clientFullName')">{{ order.clientFullName }}</td>
-      <td *ngIf="hasColumn('storeName')">{{ order.storeName }}</td>
-      <td *ngIf="hasColumn('clientPhone')">{{ order.clientPhone }}</td>
-      <td *ngIf="hasColumn('clientAddress')">{{ order.clientAddress }}</td>
-      <td *ngIf="hasColumn('notes')">{{ order.notes }}</td>
-      <td *ngIf="hasColumn('deliveryFee')">{{ order.deliveryFee }}</td>
-      <td *ngIf="hasColumn('totalAmount')">{{ order.totalAmount }}</td>
-      <td *ngIf="hasColumn('contains')">{{ order.contains }}</td>
-      <td *ngIf="hasColumn('city')">{{ order.city }}</td>
-      <td *ngIf="hasColumn('category')">
-        <select
-          class="form-select form-select-sm"
-          [(ngModel)]="order.warehouseId"
-          (ngModelChange)="onWarehouseChange(order.id, $event)"
-          [disabled]="warehouseOptions.length === 0"
-        >
-          <option [value]="null" disabled>Seleccione...</option>
-          <option
-            *ngFor="let warehouse of warehouseOptions"
-            [value]="warehouse.id"
+    <tbody>
+      <tr
+        *ngFor="let order of orders"
+        [ngStyle]="{
+          'border-left': '5px solid ' + getStatusColor(order.status)
+        }"
+      >
+        <td *ngIf="hasColumn('id')">{{ order.id }}</td>
+        <td *ngIf="hasColumn('code')">{{ order.code }}</td>
+        <td *ngIf="hasColumn('clientFullName')">{{ order.clientFullName }}</td>
+        <td *ngIf="hasColumn('storeName')">{{ order.storeName }}</td>
+        <td *ngIf="hasColumn('clientPhone')">{{ order.clientPhone }}</td>
+        <td *ngIf="hasColumn('clientAddress')">{{ order.clientAddress }}</td>
+        <td *ngIf="hasColumn('notes')">{{ order.notes }}</td>
+        <td *ngIf="hasColumn('deliveryFee')">
+          {{
+            order.deliveryFee
+              | currency : order.curencyCode : "symbol" : "1.0-0"
+          }}
+        </td>
+        <td *ngIf="hasColumn('totalAmount')">
+          {{
+            order.totalAmount
+              | currency : order.curencyCode : "symbol" : "1.0-0"
+          }}
+        </td>
+        <td *ngIf="hasColumn('contains')">
+          <div
+            *ngIf="order.orderItems?.length; else showContains"
+            style="white-space: normal"
           >
-            {{ warehouse.name }}
-          </option>
-        </select>
-      </td>
-      <td *ngIf="hasColumn('status')">
-        {{ order.statusId | json }}
-        <span class="badge bg-info">{{ order.status }}</span>
-        <select
-          class="form-select form-select-sm"
-          [(ngModel)]="order.statusId"
-          (ngModelChange)="onStatusChange(order.id, $event)"
-          [disabled]="statusOptions.length === 0"
-        >
-          <option [value]="null" disabled>Seleccione...</option>
-          <option *ngFor="let status of statusOptions" [value]="status.id">
-            {{ status.name }}
-          </option>
-        </select>
-      </td>
-      <!-- Acciones -->
-      <td *ngIf="hasColumn('actions')">
-        <button
-          class="btn btn-sm btn-outline-primary"
-          [routerLink]="[order.id]"
-        >
-          Ver Detalle
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+            <div *ngFor="let item of order.orderItems; let last = last">
+              {{ item.productName }} {{ item.productVariantName }}
+              {{ item.quantity }}
+              <hr *ngIf="!last" style="margin: 8px 0" />
+            </div>
+          </div>
+
+          <ng-template #showContains>
+            <div>
+              {{ order.contains || "" }}
+            </div>
+          </ng-template>
+        </td>
+        <td *ngIf="hasColumn('city')">{{ order.city }}</td>
+        <td *ngIf="hasColumn('category')">
+          <select
+            class="form-select form-select-sm"
+            [(ngModel)]="order.warehouseId"
+            (ngModelChange)="onWarehouseChange(order.id, $event)"
+            [disabled]="warehouseOptions.length === 0 || order.categoryId !== 1"
+          >
+            <option [value]="null" disabled>Seleccione...</option>
+            <option
+              *ngFor="let warehouse of warehouseOptions"
+              [value]="warehouse.id"
+            >
+              {{ warehouse.name }}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="hasColumn('warehouseName')">{{ order.warehouseName }}</td>
+        <td *ngIf="hasColumn('status')" style="min-width: 155px">
+          <!-- <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
+          {{ order.status }}
+        </span> -->
+          <!-- <span class="badge bg-info">{{ order.status }}</span> -->
+          <select
+            [ngClass]="getStatusBadgeClass(order.status)"
+            class="form-select form-select-sm"
+            [(ngModel)]="order.statusId"
+            (ngModelChange)="onStatusChange(order.id, $event)"
+            [disabled]="statusOptions.length === 0"
+            (mousedown)="previousStatusId = order.statusId"
+          >
+            <option [value]="null" disabled>Seleccione...</option>
+            <option *ngFor="let status of statusOptions" [value]="status.id">
+              {{ status.name }}
+            </option>
+          </select>
+        </td>
+        <td *ngIf="hasColumn('scheduledDate')" style="min-width: 125px">
+          {{ order.scheduledDate | date : "MM-dd-yyyy" }}
+          <br />
+
+          <strong
+            >{{ order.timeSlotStartTime | slice : 0 : 5 }} -
+            {{ order.timeSlotEndTime | slice : 0 : 5 }}
+          </strong>
+        </td>
+        <!-- <td *ngIf="hasColumn('timeSlot')">
+        {{ order.timeSlotStartTime | slice : 0 : 5 }} -
+        {{ order.timeSlotEndTime | slice : 0 : 5 }}
+      </td> -->
+        <!-- Acciones -->
+        <td *ngIf="hasColumn('actions')" class="d-flex">
+          <button
+            class="btn btn-sm btn-outline-primary me-2"
+            [routerLink]="[order.id]"
+          >
+            <svg [cIcon]="icons.cilPencil"></svg>
+          </button>
+          <button
+            *ngIf="hasColumn('action-edit')"
+            class="btn btn-sm btn-outline-primary"
+            (click)="onScheduleOrder(order)"
+          >
+            <svg cIcon name="cilCalendar"></svg>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

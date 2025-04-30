@@ -6,37 +6,37 @@
   <c-modal-body>
     <form [formGroup]="form">
       <div class="mb-3">
-        <label for="destinationWarehouseId" class="form-label"
+        <label for="toWarehouseId" class="form-label"
           >Bodega destino</label
         >
-        <select
-          id="destinationWarehouseId"
-          class="form-select"
-          formControlName="destinationWarehouseId"
+        <ng-select
+          id="toWarehouseId"
+          placeholder="Selecciona la bodega"
+          searchable="false"
+          formControlName="toWarehouseId"
+          [items]="warehouses"
+          bindValue="id"
+          bindLabel="name"
+          (change)="onWarehouseChange($event)"
         >
-          <option value="" disabled selected>Seleccione una bodega</option>
-          <option *ngFor="let warehouse of warehouses" [value]="warehouse.id">
-            {{ warehouse.name }}
-          </option>
-        </select>
+        </ng-select>
       </div>
 
-      <div formArrayName="lines">
+      <div formArrayName="transferDetails">
         <div
-          *ngFor="let line of lines.controls; let i = index"
+          *ngFor="let variant of transferDetails.controls; let i = index"
           [formGroupName]="i"
           class="border rounded p-3 mb-3"
         >
           <div class="row g-2 align-items-end">
-            <div class="col-md-6">
+            <div class="col-md-7">
               <label class="form-label">Variante</label>
-
               <ng-select
                 [items]="getVariantOptions(i)"
                 bindLabel="displayName"
                 bindValue="id"
                 [loading]="isLoadingVariant[i]"
-                formControlName="variantId"
+                formControlName="productVariantId"
                 (change)="onVariantSelected($event, i)"
                 [searchable]="true"
                 [typeahead]="variantInputSubjects[i]"
@@ -44,62 +44,81 @@
                 [virtualScroll]="true"
               >
               </ng-select>
-
-              <div
-                *ngIf="
-                  line.get('variantId')?.invalid &&
-                  line.get('variantId')?.touched"
-                class="text-danger mt-1"
-              >
-                Variante requerida
-              </div>
-              <div
-                *ngIf="isDuplicate(line.get('variantId')?.value, i)"
-                class="text-warning mt-1"
-              >
-                Variante duplicada
-              </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
               <label class="form-label">Cantidad</label>
               <input
                 type="number"
                 class="form-control"
                 formControlName="quantity"
-                min="1"
+                [attr.min]="1"
+                [attr.max]="transferDetails.at(i).get('max')?.value"
+                [class.is-invalid]="
+                  transferDetails.at(i).get('quantity')?.invalid &&
+                  transferDetails.at(i).get('quantity')?.touched
+                "
               />
             </div>
 
             <div class="col-md-2 text-end">
-              icon remove?
-
               <button
                 type="button"
                 class="btn btn-danger"
-                (click)="removeLine(i)"
-                *ngIf="lines.length > 1"
+                (click)="removeProductVariant(i)"
+                *ngIf="transferDetails.length > 1"
               >
-                <!-- <c-icon name="cil-x" /> -->
-                icon remove?
+                <svg [cIcon]="icons.cilXCircle"></svg>
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      <button type="button" class="btn btn-secondary w-100" (click)="addLine()">
-        <!-- <c-icon name="cil-plus" />  -->
-        icon Agregar Variante
+      <button
+        type="button"
+        class="btn btn-secondary w-100"
+        (click)="addProductVariant()"
+      >
+        <svg [cIcon]="icons.cilPlus"></svg>
+        Agregar Variante
       </button>
 
       <div class="mt-4">
-        <h6>Resumen</h6>
-        <ul class="list-group">
-          <li class="list-group-item" *ngFor="let item of getSummary()">
-            {{ item.name }} - Cantidad: {{ item.quantity }}
-          </li>
-        </ul>
+        <c-card>
+          <c-card-body>
+            <h5 class="mb-3">Resumen de la Transferencia</h5>
+
+            <div class="mb-3">
+              <strong>Bodega destino:</strong>
+              <span>
+                {{ selectedWarehouseName }}
+              </span>
+            </div>
+
+            <table class="table table-hover align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Variante</th>
+                  <th style="width: 150px">Cantidad</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of summaryList">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.quantity }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div
+              *ngIf="summaryList.length === 0"
+              class="text-center text-muted mt-3"
+            >
+              No hay variantes agregadas aún.
+            </div>
+          </c-card-body>
+        </c-card>
       </div>
     </form>
   </c-modal-body>
@@ -108,8 +127,13 @@
     <button type="button" class="btn btn-secondary" (click)="close()">
       Cancelar
     </button>
-    <!-- <button type="button" class="btn btn-primary" (click)="save()" [disabled]="form.invalid"> -->
-    <button type="button" class="btn btn-primary" (click)="save()">
+
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="save()"
+      [disabled]="form.invalid"
+    >
       Transferir
     </button>
   </c-modal-footer>

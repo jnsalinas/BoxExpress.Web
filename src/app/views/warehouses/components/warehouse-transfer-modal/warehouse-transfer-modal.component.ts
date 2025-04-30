@@ -14,15 +14,13 @@ import {
   ModalBodyComponent,
   ModalFooterComponent,
 } from '@coreui/angular';
-import { IconDirective } from '@coreui/icons-angular';
-import { ProductVariantDto } from '../../../../models/product-variant.dto';
 import { WarehouseDto } from '../../../../models/warehouse.dto';
-import { WarehouseFilter } from '../../../../models/warehouse-filter.model';
 import { WarehouseService } from '../../../../services/warehouse.service';
 import { ProductVariantService } from '../../../../services/product-variant.service';
 import { Subject } from 'rxjs';
 import { ProductVariantAutocompleteDto } from '../../../../models/product-variant-autocomplete.dto';
-
+import { freeSet } from '@coreui/icons';
+import { IconDirective } from '@coreui/icons-angular';
 @Component({
   selector: 'app-warehouse-transfer-modal',
   standalone: true,
@@ -46,35 +44,53 @@ import { ProductVariantAutocompleteDto } from '../../../../models/product-varian
 })
 export class WarehouseTransferModalComponent implements OnInit {
   @Input() isVisible = false;
-  @Input() variantsList: ProductVariantDto[] = [];
   @Input() warehouseId: number = 0;
   @Output() onSave = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<any>();
 
-  form: FormGroup;
+  variantsList: ProductVariantAutocompleteDto[] = [];
+  form: FormGroup = this.fb.group({});
   variantInputSubjects: Subject<string>[] = [];
   variantOptions: ProductVariantAutocompleteDto[][] = [];
   warehouses: WarehouseDto[] = [];
   loading = false;
   isLoadingVariant: boolean[] = [];
+  icons = freeSet;
+  summaryList: { id: number; name: string; quantity: number }[] = [];
+  selectedWarehouseName: string = '';
 
   constructor(
     private fb: FormBuilder,
     private warehouseService: WarehouseService,
     private productVariantService: ProductVariantService
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.form = this.fb.group({
-      destinationWarehouseId: [null, Validators.required],
-      lines: this.fb.array([]),
+      toWarehouseId: [null, Validators.required],
+      transferDetails: this.fb.array([]),
     });
+
     this.loadWarehouses();
+
+    if (this.transferDetails.length === 0) {
+      this.addProductVariant();
+    }
+
+    this.form.valueChanges.subscribe(() => {
+      this.updateSummary();
+    });
+  }
+
+  onWarehouseChange(event: WarehouseDto) {
+    this.selectedWarehouseName = event ? event.name : 'No seleccionada';
   }
 
   loadWarehouses(): void {
     this.loading = true;
     this.warehouseService.getAll({}).subscribe({
-      next: (data) => {
-        this.warehouses = data.filter(
+      next: (result) => {
+        this.warehouses = result.data.filter(
           (warehouse) => warehouse.id !== this.warehouseId
         );
         this.loading = false;
@@ -86,32 +102,36 @@ export class WarehouseTransferModalComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    if (this.lines.length === 0) {
-      this.addLine();
-    }
+  get transferDetails(): FormArray {
+    return this.form.get('transferDetails') as FormArray;
   }
 
-  get lines(): FormArray {
-    return this.form.get('lines') as FormArray;
-  }
-
-  addLine(): void {
-    const line = this.fb.group({
-      variantId: [null, Validators.required],
+  addProductVariant(): void {
+    const variant = this.fb.group({
+      productVariantId: [null, Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
+      max: [null],
     });
 
-    this.lines.push(line);
+    const index = this.transferDetails.length;
+
+    this.transferDetails.push(variant);
     this.variantOptions.push([]);
     this.isLoadingVariant.push(false);
 
     const subject = new Subject<string>();
     subject.pipe(debounceTime(300)).subscribe((term) => {
-      this.fetchVariants(term, this.lines.length - 1);
+      this.fetchVariants(term, index);
     });
 
     this.variantInputSubjects.push(subject);
+  }
+
+  removeProductVariant(index: number): void {
+    this.transferDetails.removeAt(index);
+    this.variantOptions.splice(index, 1);
+    this.variantInputSubjects.splice(index, 1);
+    this.isLoadingVariant.splice(index, 1);
   }
 
   onVariantSearch(term: string, index: number): void {
@@ -130,6 +150,13 @@ export class WarehouseTransferModalComponent implements OnInit {
         this.variantOptions[index] = matches.filter(
           (v) => !this.isDuplicate(v.id, index)
         );
+
+        for (const match of matches) {
+          if (!this.variantsList.find((v) => v.id === match.id)) {
+            this.variantsList.push(match);
+          }
+        }
+
         this.isLoadingVariant[index] = false;
       },
       error: (err) => {
@@ -139,98 +166,88 @@ export class WarehouseTransferModalComponent implements OnInit {
     });
   }
 
-  removeLine(index: number): void {
-    this.lines.removeAt(index);
-    this.variantOptions.splice(index, 1);
-    this.variantInputSubjects.splice(index, 1);
-    this.isLoadingVariant.splice(index, 1);
-  }
-
-  onVariantSelected(variantId: number, index: number): void {
-    console.log('Variant selected:', variantId);
-    if (this.isDuplicate(variantId, index)) {
-      this.lines.at(index).get('variantId')?.reset();
+  onVariantSelected(
+    variant: ProductVariantAutocompleteDto,
+    index: number
+  ): void {
+    if (this.isDuplicate(variant.id, index)) {
+      this.transferDetails.at(index).get('productVariantId')?.reset();
       alert('Esta variante ya fue seleccionada en otra línea.');
     }
-  }
 
-  onVariantInput(event: Event, index: number): void {
-    const input = event.target as HTMLInputElement;
-    const value = input.value.trim().toLowerCase();
+    if (variant) {
+      const maxAvailable = variant.availableUnits ?? 1; // por si quantity viene undefined
+      const quantityControl = this.transferDetails.at(index).get('quantity');
+      const maxControl = this.transferDetails.at(index).get('max');
 
-    if (value.length < 2) {
-      this.variantOptions[index] = [];
-      return;
+      if (quantityControl) {
+        quantityControl.setValidators([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(maxAvailable),
+        ]);
+        quantityControl.updateValueAndValidity();
+      }
+
+      if (maxControl) {
+        maxControl.setValue(maxAvailable);
+      }
     }
-
-    this.productVariantService.autocomplete(value, this.warehouseId).subscribe({
-      next: (matches) => {
-        this.variantOptions[index] = matches.filter(
-          (v) => !this.isDuplicate(v.id, index)
-        );
-
-        const exact = matches.find((v) => v.name.toLowerCase() === value);
-        if (exact) {
-          this.lines.at(index).get('variantId')?.setValue(exact.id);
-        }
-      },
-      error: (err) => {
-        console.error('Autocomplete error:', err);
-      },
-    });
   }
 
   getVariantOptions(index: number): ProductVariantAutocompleteDto[] {
+    console.log(this.variantOptions, index);
     this.variantOptions[index].forEach((option) => {
-      option.displayName = `${option.productName || ''} - ${option.name || ''} - ${option.availableUnits || ''}`;
+      option.displayName = `${option.productName || ''} - ${
+        option.name || ''
+      } - ${option.availableUnits || ''}`;
     });
     return this.variantOptions[index] || [];
   }
 
-  displayVariant(variantId: number | null): string {
-    const variant = this.variantsList.find((v) => v.id === variantId);
-    return variant ? variant.name : '';
-  }
-
-  isDuplicate(variantId: number, currentIndex: number): boolean {
-    return this.lines.controls.some(
+  isDuplicate(productVariantId: number, currentIndex: number): boolean {
+    return this.transferDetails.controls.some(
       (control, index) =>
-        index !== currentIndex && control.get('variantId')?.value === variantId
+        index !== currentIndex && control.get('productVariantId')?.value === productVariantId
     );
   }
 
-  getSummary(): { name: string; quantity: number }[] {
-    return this.lines.controls
+  private updateSummary(): void {
+    console.log('updateSummary;', this.transferDetails.controls);
+    this.summaryList = this.transferDetails.controls
       .map((control) => {
-        const variantId = control.get('variantId')?.value;
+        const productVariantId = control.get('productVariantId')?.value;
         const quantity = control.get('quantity')?.value;
-        const variant = this.variantsList.find((v) => v.id === variantId);
-        return variant ? { name: variant.name, quantity } : null;
+        const variant = this.variantsList.find((v) => v.id === productVariantId)!;
+        return productVariantId
+          ? { id: productVariantId, name: variant.displayName, quantity }
+          : null;
       })
-      .filter((item): item is { name: string; quantity: number } => !!item);
+      .filter(
+        (item): item is { id: number; name: string; quantity: number } => !!item
+      );
+
+    console.log(this.summaryList);
   }
 
   save(): void {
-    this.onSave.emit(this.form.value); //todo quitar
-
     if (this.form.valid) {
       this.onSave.emit(this.form.value);
-      this.resetForm();
+      // this.resetForm(); todo: descomentar
     } else {
       console.log('Formulario inválido:', this.form.value);
     }
   }
 
   close(): void {
-    console.log('Modal closed');
-    // this.resetForm();
     this.onClose.emit();
   }
 
   private resetForm(): void {
     this.form.reset();
-    this.lines.clear();
+    this.transferDetails.clear();
     this.variantOptions = [];
-    this.addLine();
+    this.summaryList = [];
+    this.addProductVariant();
   }
 }

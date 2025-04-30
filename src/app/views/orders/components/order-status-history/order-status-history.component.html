@@ -1,0 +1,20 @@
+<c-row>
+  <c-col xs="12" sm="12" lg="12">
+    <c-card class="h-100">
+      <c-card-header>
+        <strong>Historial de Estados</strong>
+      </c-card-header>
+      <c-card-body class="overflow-auto" style="max-height: 500px">
+        <ul cListGroup>
+          <li *ngFor="let status of orderStatusHistory" cListGroupItem>
+            <strong>{{ status.creator }} {{ status.createdAt | date : "short" }}</strong
+            >:
+            <span class="text-muted">
+              {{ status.oldStatus }} → {{ status.newStatus }}
+            </span>
+          </li>
+        </ul>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

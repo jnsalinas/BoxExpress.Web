@@ -1,4 +1,4 @@
-import { BaseDto } from './base.dto';
+import { BaseDto } from './common/base.dto';
 
 export class ProductVariantAutocompleteDto implements BaseDto {
   id: number = 0;
