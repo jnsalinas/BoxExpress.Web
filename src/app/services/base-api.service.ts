@@ -30,9 +30,13 @@ export class BaseApiService<T, F> {
       .pipe(this.handleResponse());
   }
 
-  create(data: T): Observable<T> {
+  create(data: T, action: string = ''): Observable<T> {
+    const url = action
+      ? `${environment.apiUrl}/${this.endpoint}/${action}`
+      : `${environment.apiUrl}/${this.endpoint}`;
+
     return this.http
-      .post<ApiResponse<T>>(`${environment.apiUrl}/${this.endpoint}`, data)
+      .post<ApiResponse<T>>(url, data, )
       .pipe(this.handleResponse());
   }
 

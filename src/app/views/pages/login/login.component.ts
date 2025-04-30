@@ -19,6 +19,8 @@ import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {MessageService} from "../../../services/message.service";
+import {HTTP_INTERCEPTORS} from "@angular/common/http";
+import {AuthInterceptor} from "../../../services/http-interceptors/auth.interceptor";
 
 @Component({
   selector: 'app-login',
@@ -41,7 +43,12 @@ import {MessageService} from "../../../services/message.service";
     ButtonDirective,
     NgStyle,
     FormsModule
-  ]
+  ],
+  providers:[{
+    provide: HTTP_INTERCEPTORS,
+    useClass: AuthInterceptor,
+    multi: true
+  }]
 })
 export class LoginComponent {
   username: string = '';
@@ -79,5 +86,9 @@ export class LoginComponent {
         this.messageService.showError('login.authError');
       }
     });
+  }
+
+  register(): void{
+    this.router.navigate(['/register'])
   }
 }
