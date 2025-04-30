@@ -13,7 +13,6 @@ export class RegisterService extends BaseApiService<any, any> {
   }
 
   register(storeData: any): Observable<any> {
-    console.log('Registro con datos:', storeData);
     return this.create(storeData, 'create');
   }
 }

@@ -79,7 +79,6 @@ export class RegisterComponent {
         this.messageService.showSuccess("hola","bien registrado")
       },
       error: (error) => {
-        console.log("este es el error: ", error)
         this.messageService.showError("error al realizar el registro: ", error)
       }
     })
