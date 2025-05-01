@@ -1,0 +1,33 @@
+<c-card class="mb-4">
+    <c-card-header>
+      <strong>Resumen de Transferencia</strong>
+    </c-card-header>
+    <c-card-body>
+      <c-row class="mb-3">
+        <c-col><strong>Desde:</strong> {{ warehouseInventoryTransfer?.fromWarehouse }}</c-col>
+        <c-col><strong>Hacia:</strong> {{ warehouseInventoryTransfer?.toWarehouse }}</c-col>
+      </c-row>
+  
+      <table cTable striped responsive hover>
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Variante</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of warehouseInventoryTransfer?.transferDetails">
+            <td>{{ item.product }}</td>
+            <td>{{ item.productVariant }}</td>
+            <td>{{ item.quantity }}</td>
+          </tr>
+        </tbody>
+        <!-- product?: string;
+        productVariant?: string;
+        productVariantId?: number;
+        quantity?: number; -->
+      </table>
+    </c-card-body>
+  </c-card>
+  

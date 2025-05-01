@@ -164,10 +164,6 @@ export class OrderListComponent implements OnInit {
     });
   }
 
-  handleClose(data: any) {
-    this.selectedOrderId = undefined;
-  }
-
   handleActiveItemChange(index: string | number | undefined) {
     const validIndex = typeof index === 'number' ? index : Number(index);
     if (!isNaN(validIndex)) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { WarehouseInventoryTransferService } from '../../../services/warehouse-inventory-transfer.service';
 import { WarehouseInventoryTransferDto } from 'src/app/models/warehouse-inventory-transfer.dto';
 import {
@@ -30,6 +30,7 @@ import {
   toUtcEndOfDayLocal,
 } from '../../../shared/utils/date-utils';
 import { WarehouseTransferModalDetailComponent } from '../components/warehouse-transfer-modal-detail/warehouse-transfer-modal-detail.component';
+import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 
 @Component({
   selector: 'app-warehouse-transfers-list',
@@ -47,12 +48,14 @@ import { WarehouseTransferModalDetailComponent } from '../components/warehouse-t
     LoadingOverlayComponent,
     NgSelectModule,
     IconDirective,
-    WarehouseTransferModalDetailComponent
+    WarehouseTransferModalDetailComponent,
+    GenericModalComponent,
   ],
   templateUrl: './warehouse-transfers-list.component.html',
   styleUrl: './warehouse-transfers-list.component.scss',
 })
 export class WarehouseTransfersListComponent implements OnInit {
+  @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
   isLoading: boolean = false;
   warehouseInventoryTransfers: WarehouseInventoryTransferDto[] = [];
   warehouseOptions: WarehouseDto[] = [];
@@ -60,6 +63,7 @@ export class WarehouseTransfersListComponent implements OnInit {
   pagination: PaginationDto = {};
   icons = freeSet;
   filtersForm: FormGroup = new FormGroup({});
+  warehouseInventoryTransfer: WarehouseInventoryTransferDto | null = null;
 
   constructor(
     private warehouseInventoryTransferService: WarehouseInventoryTransferService,
@@ -74,11 +78,11 @@ export class WarehouseTransfersListComponent implements OnInit {
       warehouseDestinationId: [null],
       warehouseOriginId: [null],
     });
-    this.loadWarehouseInventoryTransferDto();
+    this.loadWarehouseInventoryTransfer();
     this.loadWarehouse();
   }
 
-  loadWarehouseInventoryTransferDto() {
+  loadWarehouseInventoryTransfer() {
     this.isLoading = true;
     this.warehouseInventoryTransferService.getAll(this.getFilters()).subscribe({
       next: (response) => {
@@ -105,7 +109,7 @@ export class WarehouseTransfersListComponent implements OnInit {
   onPageChange(page: number): void {
     console.log('Page changed:', page);
     this.currentPage = page;
-    this.loadWarehouseInventoryTransferDto();
+    this.loadWarehouseInventoryTransfer();
   }
 
   getFilters(): WarehouseInventoryTransferFilter {
@@ -127,11 +131,61 @@ export class WarehouseTransfersListComponent implements OnInit {
   }
 
   onFilter(): void {
-    this.loadWarehouseInventoryTransferDto();
+    this.loadWarehouseInventoryTransfer();
   }
 
   resetFilters(): void {
     this.filtersForm.reset();
-    this.loadWarehouseInventoryTransferDto();
+    this.loadWarehouseInventoryTransfer();
+  }
+
+  showDetail(itemSelected: WarehouseInventoryTransferDto) {
+    this.warehouseInventoryTransfer = itemSelected;
+  }
+
+  onModalDetailClose(event?: any) {
+    this.warehouseInventoryTransfer = null;
+  }
+
+  onModalAccept(event: any) {
+    if (this.warehouseInventoryTransfer != null) {
+      this.modal.show({
+        title: 'Aceptar transferencia',
+        body: `¿Estás seguro de que desea aceptar la transferencia?`,
+        ok: () => {
+          this.warehouseInventoryTransferService
+            .accept(this.warehouseInventoryTransfer!.id)
+            .subscribe({
+              next: (response) => {
+                console.log(response, 'response accept');
+                this.onModalDetailClose();
+                this.loadWarehouseInventoryTransfer();
+              },
+            });
+        },
+        close: () => {},
+      });
+    }
+  }
+
+  onModalReject(event: any) {
+    if (this.warehouseInventoryTransfer != null) {
+      this.modal.show({
+        title: 'Rechazar transferencia',
+        body: `¿Estás seguro de que desea rechazar la transferencia?`,
+        ok: () => {
+          this.warehouseInventoryTransferService
+            .reject(this.warehouseInventoryTransfer!.id)
+            .subscribe({
+              next: (response) => {
+                console.log(response, 'response accept');
+                this.onModalDetailClose();
+                this.loadWarehouseInventoryTransfer();
+              },
+            });
+        },
+        close: () => {},
+      });
+    }
   }
 }

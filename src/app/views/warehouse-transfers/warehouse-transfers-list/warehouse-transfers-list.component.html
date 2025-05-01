@@ -83,7 +83,7 @@
             </div>
           </form>
         </div>
-        <table cTable class="table table-hover">
+        <table cTable striped responsive hover>
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -114,7 +114,10 @@
                 </div>
               </td>
               <td>
-                <button class="btn btn-sm btn-outline-primary me-2">
+                <button
+                  class="btn btn-sm btn-outline-primary me-2"
+                  (click)="showDetail(tx)"
+                >
                   <svg [cIcon]="icons.cilPencil"></svg>
                 </button>
               </td>
@@ -138,5 +141,13 @@
 >
 </app-loading-overlay>
 
-<app-warehouse-transfer-modal-detail [isVisible]="true">
+<app-warehouse-transfer-modal-detail
+  *ngIf="warehouseInventoryTransfer"
+  [warehouseInventoryTransfer]="warehouseInventoryTransfer"
+  (onClose)="onModalDetailClose($event)"
+  (onSave)="onModalAccept($event)"
+  (onReject)="onModalReject($event)"
+>
 </app-warehouse-transfer-modal-detail>
+
+<app-generic-modal></app-generic-modal>
