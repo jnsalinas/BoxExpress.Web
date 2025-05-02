@@ -44,7 +44,7 @@ import { IconDirective } from '@coreui/icons-angular';
     GenericPaginationComponent,
     LoadingOverlayComponent,
     NgSelectModule,
-    IconDirective
+    IconDirective,
   ],
   templateUrl: './wallet-transaction-list.component.html',
   styleUrl: './wallet-transaction-list.component.scss',
@@ -125,7 +125,7 @@ export class WalletTransactionListComponent implements OnInit {
       endDate: filters.endDate ? toUtcEndOfDayLocal(filters.endDate) : null,
       orderId: filters.orderId ?? null,
       storeId: filters.storeId || null,
-      page: this.currentPage
+      page: this.currentPage,
     };
     return payload;
   }

@@ -38,6 +38,15 @@ export const navItems: INavData[] = [
     // }
   },
   {
+    name: 'Retiros',
+    url: '/withdrawal-requests',
+    iconComponent: { name: 'cil-notes' },
+    // badge: {
+    //   color: 'info',
+    //   text: 'NEW'
+    // }
+  },
+  {
     name: 'Dashboard',
     url: '/dashboard',
     iconComponent: { name: 'cil-speedometer' },

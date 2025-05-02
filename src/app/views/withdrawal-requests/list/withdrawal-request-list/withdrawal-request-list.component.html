@@ -1,6 +1,6 @@
 <app-loading-overlay
   *ngIf="isLoading"
-  [loadingText]="'Cargando transacciones...'"
+  [loadingText]="'Cargando retiros...'"
 ></app-loading-overlay>
 
 <c-row>
@@ -17,11 +17,20 @@
           <svg [cIcon]="icons.cilCloudDownload"></svg>
           Exportar
         </button>
+
+        <button
+          type="button"
+          class="float-end btn btn-primary"
+          (click)="showModal()"
+        >
+          <svg [cIcon]="icons.cilPlus"></svg>
+          Crear retiro
+        </button>
       </c-card-header>
 
       <c-card-body>
         <div>
-          <form
+          <!-- <form
             *ngIf="showFilters"
             [formGroup]="filtersForm"
             (ngSubmit)="onFilter()"
@@ -81,33 +90,48 @@
                 Limpiar
               </button>
             </div>
-          </form>
+          </form> -->
         </div>
         <table cTable class="table table-hover">
           <thead>
             <tr>
               <th scope="col">#</th>
+              <th scope="col">Fecha de creacion </th>
               <th scope="col">Tienda</th>
-              <th scope="col">Usuario</th>
-              <th scope="col">Descripción</th>
-              <th scope="col">Tipo de transacción</th>
+              <th scope="col">Valor</th>
+              <th scope="col">AccountHolder</th>
+              <th scope="col">Documento</th>
+              <th scope="col">Banco</th>
+              <th scope="col">Numero de cuenta</th>
+              <th scope="col">Descripcion</th>
               <th scope="col">Estado</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Monto</th>
-              <th scope="col">Id Orden</th>
+              <th scope="col">Fecha de aceptacio </th>
+
+              <!-- public int StoreId { get; set; }
+    public string? Store { get; set; } = null!;
+    public decimal? Amount { get; set; }
+    public string? AccountHolder { get; set; }
+    public string? Document { get; set; }
+    public string? Bank { get; set; }
+    public string? AccountNumber { get; set; }
+    public string? Description { get; set; }
+    public int? Status { get; set; }
+    public DateTime? ProcessedAt { get; set; } -->
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let tx of transactions; let i = index">
+            <tr *ngFor="let tx of withdrawalRequests; let i = index">
               <th scope="row">{{ tx.id || "-" }}</th>
               <td>{{ tx.store || "-" }}</td>
-              <td>{{ tx.userName || "-" }}</td>
-              <td>{{ tx.description || "-" }}</td>
-              <td>{{ tx.transactionType }}</td>
-              <td>{{ tx.orderStatus }}</td>
-              <td>{{ tx.createdAt | utcDate }}</td>
-              <td>{{ tx.amount }}</td>
-              <td>{{ tx.relatedOrderId || "-" }}</td>
+              <td>{{ tx.createdAt | utcDate  }}</td>
+              <td>{{ tx.amount || "-" }}</td>
+              <td>{{ tx.accountHolder }}</td>
+              <td>{{ tx.document }}</td>
+              <td>{{ tx.bank }}</td>
+              <td>{{ tx.accountNumber }} 
+              <td>{{ tx.description }}</td>
+              <td>{{ getStatusLabel(tx.status) }}</td>
+              <td>{{ tx.processedAt || "-" }}</td>
             </tr>
           </tbody>
         </table>
@@ -121,3 +145,10 @@
     </c-card>
   </c-col>
 </c-row>
+
+<app-withdrawal-request-modal
+  [isVisible]="isModalVisible"
+  [availableBalance]="availableBalance"
+  (closeModal)="closeModal()"
+  (submitWithdrawal)="handleWithdrawal($event)"
+></app-withdrawal-request-modal>
