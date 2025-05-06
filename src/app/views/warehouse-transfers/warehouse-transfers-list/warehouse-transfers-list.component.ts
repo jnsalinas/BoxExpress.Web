@@ -75,8 +75,9 @@ export class WarehouseTransfersListComponent implements OnInit {
     this.filtersForm = this.fb.group({
       startDate: [null],
       endDate: [null],
-      warehouseDestinationId: [null],
-      warehouseOriginId: [null],
+      toWarehouseId: [null],
+      fromWarehouseId: [null],
+      statusId: [null],
     });
     this.loadWarehouseInventoryTransfer();
     this.loadWarehouse();
@@ -119,8 +120,9 @@ export class WarehouseTransfersListComponent implements OnInit {
         ? toUtcStartOfDayLocal(filters.startDate)
         : null,
       endDate: filters.endDate ? toUtcEndOfDayLocal(filters.endDate) : null,
-      warehouseOriginId: filters.warehouseOriginId ?? null,
-      warehouseDestinationId: filters.warehouseDestinationId ?? null,
+      fromWarehouseId: filters.fromWarehouseId ?? null,
+      toWarehouseId: filters.toWarehouseId ?? null,
+      statusId: filters.statusId ?? null,
       page: this.currentPage,
     };
     return payload;

@@ -11,4 +11,5 @@ export interface WithdrawalRequestDto extends BaseDto {
   description?: string;
   status?: number;
   processedAt?: Date;
+  documentTypeId?: number;
 }

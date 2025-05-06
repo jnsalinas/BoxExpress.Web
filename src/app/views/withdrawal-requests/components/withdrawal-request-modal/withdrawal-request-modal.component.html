@@ -6,22 +6,63 @@
   scrollable
 >
   <c-modal-header>
-    <strong>Nuevo Retiro</strong>
+    <strong *ngIf="(form.value.id ?? 0) === 0">Nuevo Retiro</strong>
+    <strong *ngIf="(form.value.id ?? 0) !== 0">Gestionar Retiro</strong>
   </c-modal-header>
 
   <c-modal-body>
-    <p><strong>Balance disponible: </strong>{{ availableBalance | currency:'COP' }}</p>
+    <p>
+      <strong>Balance disponible: </strong
+      >{{ availableBalance | currency : "COP" }}
+    </p>
 
     <form [formGroup]="form">
       <div class="row">
+        <div class="col-md-12 mb-3">
+          <label class="form-label">Tienda</label>
+          <ng-select
+            [items]="stores"
+            bindLabel="name"
+            bindValue="id"
+            formControlName="storeId"
+            [searchable]="true"
+            placeholder="Seleccione una tienda"
+          >
+          </ng-select>
+        </div>
+      </div>
+
+      <div class="row">
         <div class="col-md-6 mb-3">
           <label class="form-label">Monto</label>
-          <input type="number" class="form-control" formControlName="amount" [max]="availableBalance" />
+          <input
+            type="number"
+            class="form-control"
+            formControlName="amount"
+            [max]="availableBalance"
+          />
         </div>
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Titular de la cuenta</label>
-          <input type="text" class="form-control" formControlName="accountHolder" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="accountHolder"
+          />
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Tipo de documento</label>
+          <ng-select
+            [items]="documentTypes"
+            bindLabel="name"
+            bindValue="id"
+            formControlName="documentTypeId"
+            [searchable]="false"
+            placeholder="Seleccione un tipo de documento"
+          >
+          </ng-select>
         </div>
 
         <div class="col-md-6 mb-3">
@@ -36,12 +77,27 @@
 
         <div class="col-md-6 mb-3">
           <label class="form-label">Número de cuenta</label>
-          <input type="text" class="form-control" formControlName="accountNumber" />
+          <input
+            type="text"
+            class="form-control"
+            formControlName="accountNumber"
+          />
         </div>
 
         <div class="col-md-12 mb-3">
           <label class="form-label">Descripción</label>
-          <textarea class="form-control" formControlName="description"></textarea>
+          <textarea
+            class="form-control"
+            formControlName="description"
+          ></textarea>
+        </div>
+
+        <div class="col-md-12 mb-3">
+          <label class="form-label">Gestion</label>
+          <textarea
+            class="form-control"
+            formControlName="reason"
+          ></textarea>
         </div>
       </div>
     </form>
@@ -51,8 +107,30 @@
     <button class="btn btn-secondary" type="button" (click)="close()">
       Cancelar
     </button>
-    <button class="btn btn-primary" type="button" (click)="save()" [disabled]="form.invalid">
+    <button
+      *ngIf="!isPending && (form.value.id ?? 0) === 0"
+      class="btn btn-primary"
+      type="button"
+      (click)="save()"
+      [disabled]="form.invalid"
+    >
       Guardar
+    </button>
+    <button
+      *ngIf="isPending"
+      type="button"
+      class="btn btn-success"
+      (click)="approve()"
+    >
+      Aprobar
+    </button>
+    <button
+      *ngIf="isPending"
+      type="button"
+      class="btn btn-danger"
+      (click)="reject()"
+    >
+      Rechazar
     </button>
   </c-modal-footer>
 </c-modal>

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { freeSet } from '@coreui/icons';
@@ -15,7 +15,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { UtcDatePipe } from '../../../../shared/pipes/utc-date.pipe';
 import { GenericPaginationComponent } from '../../../../shared/components/generic-pagination/generic-pagination.component';
 import { LoadingOverlayComponent } from '../../../../shared/components/loading-overlay/loading-overlay.component';
-import { NgSelectModule } from '@ng-select/ng-select';
+import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
 import { IconDirective } from '@coreui/icons-angular';
 import { WithdrawalRequestService } from '../../../../services/withdrawal-request.service';
 import { PaginationDto } from '../../../../models/common/pagination.dto';
@@ -25,6 +25,10 @@ import {
   WithdrawalRequestStatusText,
 } from '../../../../constants/withdrawal-request-status';
 import { WithdrawalRequestModalComponent } from '../../components/withdrawal-request-modal/withdrawal-request-modal.component';
+import { GenericModalComponent } from '../../../../views/shared/components/generic-modal/generic-modal.component';
+import { StoreService } from '../../../../services/store.service';
+import { StoreDto } from '../../../../models/store.dto';
+import { W } from '@angular/router/router_module.d-6zbCxc1T';
 
 @Component({
   selector: 'app-withdrawal-request-list',
@@ -43,39 +47,36 @@ import { WithdrawalRequestModalComponent } from '../../components/withdrawal-req
     NgSelectModule,
     IconDirective,
     WithdrawalRequestModalComponent,
+    GenericModalComponent,
+    NgSelectModule,
   ],
   templateUrl: './withdrawal-request-list.component.html',
   styleUrl: './withdrawal-request-list.component.scss',
 })
 export class WithdrawalRequestListComponent implements OnInit {
+  @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
   isLoading: boolean = false;
   filtersForm: FormGroup = new FormGroup({});
   pagination: PaginationDto = {};
   withdrawalRequests: WithdrawalRequestDto[] = [];
   isModalVisible = false;
-  availableBalance = 1500000; // puedes obtenerlo del backend
+  availableBalance = 1500000; // todo: obtener de backend cuando abre el modal
   currentPage: number = 1;
   icons = freeSet;
+  withdrawalRequestSelected: WithdrawalRequestDto | null = null;
 
   constructor(
     private fb: FormBuilder,
-    private WithdrawalRequestService: WithdrawalRequestService
+    private withdrawalRequestService: WithdrawalRequestService
   ) {}
 
   ngOnInit(): void {
-    // this.filtersForm = this.fb.group({
-    //   startDate: [null],
-    //   endDate: [null],
-    //   orderId: [this.orderId ?? null],
-    //   storeId: [null],
-    // });
     this.loadWithdrawalRequest();
   }
 
   loadWithdrawalRequest() {
     this.isLoading = true;
-    this.isLoading = true;
-    this.WithdrawalRequestService.getAll(this.getFilters()).subscribe({
+    this.withdrawalRequestService.getAll(this.getFilters()).subscribe({
       next: (response) => {
         this.withdrawalRequests = response.data;
         this.pagination = response.pagination;
@@ -88,9 +89,7 @@ export class WithdrawalRequestListComponent implements OnInit {
     });
   }
 
-  onPageChange(event: any){
-
-  }
+  onPageChange(event: any) {}
 
   getStatusLabel(status?: WithdrawalRequestStatus): string {
     return WithdrawalRequestStatusText[status!] ?? 'Desconocido';
@@ -102,18 +101,95 @@ export class WithdrawalRequestListComponent implements OnInit {
     return {};
   }
 
-  showModal() {
+  showModal(withdrawalRequest: WithdrawalRequestDto | null = null) {
+    this.withdrawalRequestSelected = withdrawalRequest;
     this.isModalVisible = true;
   }
 
-  closeModal() {
+  handleWithdrawalRequestClose() {
     this.isModalVisible = false;
   }
 
-  handleWithdrawal(data: any) {
-    console.log('Retiro enviado', data);
-    // TODO: Lógica para enviar la solicitud al backend
-    this.closeModal();
+  handleWithdrawalRequestSave(data: WithdrawalRequestDto) {
+    this.isLoading = true;
+    this.modal.show({
+      title: 'Creacion de retiro',
+      body: `¿Estás seguro de que desea solicitar el retiro?`,
+      ok: () => {
+        this.withdrawalRequestService.create(data).subscribe({
+          next: (data) => {
+            //todo mostrar mensaje de crecion
+            console.log('data', data);
+            this.loadWithdrawalRequest();
+            this.isLoading = false;
+            this.handleWithdrawalRequestClose();
+          },
+          error: (err) => {
+            console.error('Error changing warehouse', err);
+          },
+        });
+      },
+      close: () => {
+        // this.loadWithdrawalRequest();
+        this.isLoading = false;
+      },
+    });
   }
 
+  handleWithdrawalRequestApprove(payload: { id: number; reason: string }) {
+    console.log('handleWithdrawalRequestApprove', payload.id);
+    this.isLoading = true;
+    this.modal.show({
+      title: 'Aprobacion de retiro',
+      body: `¿Estás seguro de que desea aprobar el retiro?`,
+      ok: () => {
+        this.withdrawalRequestService
+          .approve(payload.id, { reason: payload.reason })
+          .subscribe({
+            next: (data) => {
+              //todo mostrar mensaje de crecion
+              console.log('data', data);
+              this.loadWithdrawalRequest();
+              this.isLoading = false;
+            },
+            error: (err) => {
+              console.error('Error changing warehouse', err);
+            },
+          });
+      },
+      close: () => {
+        // this.loadWithdrawalRequest();
+        this.isLoading = false;
+      },
+    });
+  }
+
+  handleWithdrawalRequestReject(payload: { id: number; reason: string }) {
+    console.log(payload);
+    console.log('handleWithdrawalRequestReject', payload.id);
+    this.isLoading = true;
+    this.modal.show({
+      title: 'Rechazo de retiro',
+      body: `¿Estás seguro de que desea rechazar el retiro?`,
+      ok: () => {
+        this.withdrawalRequestService
+          .reject(payload.id, { reason: payload.reason })
+          .subscribe({
+            next: (data) => {
+              //todo mostrar mensaje de crecion
+              console.log('data', data);
+              this.loadWithdrawalRequest();
+              this.isLoading = false;
+            },
+            error: (err) => {
+              console.error('Error changing warehouse', err);
+            },
+          });
+      },
+      close: () => {
+        // this.loadWithdrawalRequest();
+        this.isLoading = false;
+      },
+    });
+  }
 }

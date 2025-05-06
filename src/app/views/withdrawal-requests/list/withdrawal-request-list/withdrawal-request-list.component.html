@@ -96,16 +96,16 @@
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Fecha de creacion </th>
+              <th scope="col">Fecha de creacion</th>
               <th scope="col">Tienda</th>
               <th scope="col">Valor</th>
-              <th scope="col">AccountHolder</th>
+              <th scope="col">Titular</th>
               <th scope="col">Documento</th>
               <th scope="col">Banco</th>
               <th scope="col">Numero de cuenta</th>
               <th scope="col">Descripcion</th>
               <th scope="col">Estado</th>
-              <th scope="col">Fecha de aceptacio </th>
+              <th scope="col">Fecha de aceptacion</th>
 
               <!-- public int StoreId { get; set; }
     public string? Store { get; set; } = null!;
@@ -122,16 +122,24 @@
           <tbody>
             <tr *ngFor="let tx of withdrawalRequests; let i = index">
               <th scope="row">{{ tx.id || "-" }}</th>
+              <td>{{ tx.createdAt | utcDate }}</td>
               <td>{{ tx.store || "-" }}</td>
-              <td>{{ tx.createdAt | utcDate  }}</td>
               <td>{{ tx.amount || "-" }}</td>
               <td>{{ tx.accountHolder }}</td>
               <td>{{ tx.document }}</td>
               <td>{{ tx.bank }}</td>
-              <td>{{ tx.accountNumber }} 
+              <td>{{ tx.accountNumber }}</td>
               <td>{{ tx.description }}</td>
               <td>{{ getStatusLabel(tx.status) }}</td>
-              <td>{{ tx.processedAt || "-" }}</td>
+              <td>{{ tx.processedAt | utcDate }}</td>
+              <td class="d-flex">
+                <button
+                  class="btn btn-sm btn-outline-primary"
+                  (click)="showModal(tx)"
+                >
+                  <svg cIcon name="cilCheck"></svg>
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -149,6 +157,11 @@
 <app-withdrawal-request-modal
   [isVisible]="isModalVisible"
   [availableBalance]="availableBalance"
-  (closeModal)="closeModal()"
-  (submitWithdrawal)="handleWithdrawal($event)"
+  [withdrawalRequest]="withdrawalRequestSelected"
+  (onClose)="handleWithdrawalRequestClose()"
+  (onSave)="handleWithdrawalRequestSave($event)"
+  (onApprove)="handleWithdrawalRequestApprove($event)"
+  (onReject)="handleWithdrawalRequestReject($event)"
 ></app-withdrawal-request-modal>
+
+<app-generic-modal></app-generic-modal>

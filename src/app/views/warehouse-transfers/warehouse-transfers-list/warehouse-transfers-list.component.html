@@ -24,30 +24,40 @@
             (ngSubmit)="onFilter()"
             class="mb-4 row g-3 align-items-end"
           >
-            <div class="col-md-3">
+            <div class="col-md-2">
               <label for="orderId" class="form-label">Origen</label>
               <ng-select
                 [searchable]="false"
                 [items]="warehouseOptions"
                 bindLabel="name"
                 bindValue="id"
-                formControlName="warehouseOriginId"
+                formControlName="fromWarehouseId"
                 placeholder="Seleccione..."
               >
               </ng-select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <label for="orderId" class="form-label">Destino</label>
               <ng-select
                 [searchable]="false"
                 [items]="warehouseOptions"
                 bindLabel="name"
                 bindValue="id"
-                formControlName="warehouseDestinationId"
+                formControlName="toWarehouseId"
                 placeholder="Seleccione..."
               >
               </ng-select>
             </div>
+            <div class="col-md-2">
+              <label for="statusId" class="form-label">Estado</label>
+              <input
+                type="number"
+                id="statusId"
+                formControlName="statusId"
+                class="form-control"
+              />
+            </div>
+
             <div class="col-md-2">
               <label for="startDate" class="form-label">Fecha inicio</label>
               <input
