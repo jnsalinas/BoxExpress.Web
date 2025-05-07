@@ -47,6 +47,15 @@ export const navItems: INavData[] = [
     // }
   },
   {
+    name: 'Balance',
+    url: '/stores',
+    iconComponent: { name: 'cil-notes' },
+    // badge: {
+    //   color: 'info',
+    //   text: 'NEW'
+    // }
+  },
+  {
     name: 'Dashboard',
     url: '/dashboard',
     iconComponent: { name: 'cil-speedometer' },

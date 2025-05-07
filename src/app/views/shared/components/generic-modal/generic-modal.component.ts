@@ -27,16 +27,15 @@ import {
   styleUrls: ['./generic-modal.component.scss'],
 })
 export class GenericModalComponent {
+  @Input() isVisible: boolean = false;
   @Input() title: string = ''; // Título del modal
   @Input() body: string = ''; // Contenido del modal
+  @Input() isConfirmDisabled: boolean = false; // Título del modal
   @Output() close = new EventEmitter<void>(); // Evento para cerrar el modal
   @Output() ok = new EventEmitter<void>(); // Evento para aceptar cambios
 
   private onOkCallback: (() => void) | null = null; // Callback de "Aceptar"
   private onCloseCallback: (() => void) | null = null; // Callback de "Cerrar"
-
-  // Control de visibilidad del modal
-  public isVisible: boolean = false;
 
   // Método para mostrar el modal
   show(config: {
@@ -70,7 +69,7 @@ export class GenericModalComponent {
     this.ok.emit(); // Emite el evento de "Aceptar"
     this.hide(); // Oculta el modal
   }
-  
+
   onVisibleChange(visible: boolean) {
     if (!visible && this.isVisible) {
       this.onClose();

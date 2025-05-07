@@ -12,4 +12,5 @@ export interface WarehouseInventoryTransferDto extends BaseDto {
   status?: WarehouseTransferStatus;
   acceptedBy?: string;
   rejectionReason?: string;
+  statusName?: string;
 }

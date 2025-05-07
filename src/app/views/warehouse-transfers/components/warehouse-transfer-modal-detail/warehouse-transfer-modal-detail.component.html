@@ -7,6 +7,68 @@
     <div class="mt-4">
       <c-card>
         <c-card-body>
+          <c-row>
+            <c-col col="6">
+              <strong>Desde:</strong>
+              <div>{{ warehouseInventoryTransfer?.fromWarehouse }}</div>
+            </c-col>
+            <c-col col="6">
+              <strong>Hacia:</strong>
+              <div>{{ warehouseInventoryTransfer?.toWarehouse }}</div>
+            </c-col>
+          </c-row>
+
+          <c-row class="mt-3">
+            <c-col col="6">
+              <strong>Creado por:</strong>
+              <div>{{ warehouseInventoryTransfer?.creator }}</div>
+            </c-col>
+            <c-col col="6">
+              <strong>Estado:</strong>
+              <div>
+                <span class="badge bg-info">
+                  {{ warehouseInventoryTransfer?.statusName }}
+                </span>
+              </div>
+            </c-col>
+          </c-row>
+
+          <c-row class="mt-3">
+            <c-col col="6">
+              <strong>Fecha de creación:</strong>
+              <div>
+                {{ warehouseInventoryTransfer?.createdAt | utcDate }}
+              </div>
+            </c-col>
+            <c-col col="6" *ngIf="warehouseInventoryTransfer?.updatedAt">
+              <strong>Última actualización:</strong>
+              <div>
+                {{ warehouseInventoryTransfer?.updatedAt | utcDate }}
+              </div>
+            </c-col>
+          </c-row>
+
+          <c-row class="mt-3" *ngIf="warehouseInventoryTransfer?.acceptedBy">
+            <c-col col="6">
+              <strong>Gestionada por:</strong>
+              <div>{{ warehouseInventoryTransfer?.acceptedBy }}</div>
+            </c-col>
+          </c-row>
+
+          <c-row
+            class="mt-3"
+            *ngIf="warehouseInventoryTransfer?.rejectionReason"
+          >
+            <c-col>
+              <strong>Motivo de rechazo:</strong>
+              <div class="text-danger">
+                {{ warehouseInventoryTransfer?.rejectionReason }}
+              </div>
+            </c-col>
+          </c-row>
+
+          <hr class="my-4" />
+
           <app-warehouse-transfer-summary
             *ngIf="warehouseInventoryTransfer"
             [warehouseInventoryTransfer]="warehouseInventoryTransfer"

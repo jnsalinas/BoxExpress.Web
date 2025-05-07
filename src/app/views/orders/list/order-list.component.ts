@@ -136,9 +136,8 @@ export class OrderListComponent implements OnInit {
 
   getFilters(): OrderFilter {
     const filters = this.filtersForm.value;
-
     const payload: OrderFilter = {
-      categoryId: this.statusForActiveTab,
+      categoryId: this.activeTab,
       startDate: filters.startDate
         ? toUtcStartOfDayLocal(filters.startDate)
         : null,
@@ -221,9 +220,9 @@ export class OrderListComponent implements OnInit {
     }
   }
 
-  get statusForActiveTab(): number {
-    return this.activeTab + 1;
-  }
+  // get statusForActiveTab(): number {
+  //   return this.activeTab;
+  // }
 
   handleStatusChange(event: {
     orderId: number;

@@ -29,6 +29,7 @@ import { GenericModalComponent } from '../../../../views/shared/components/gener
 import { StoreService } from '../../../../services/store.service';
 import { StoreDto } from '../../../../models/store.dto';
 import { W } from '@angular/router/router_module.d-6zbCxc1T';
+import { WithdrawalRequestFilter } from 'src/app/models/withdrawal-request-filter.model';
 
 @Component({
   selector: 'app-withdrawal-request-list',
@@ -60,7 +61,6 @@ export class WithdrawalRequestListComponent implements OnInit {
   pagination: PaginationDto = {};
   withdrawalRequests: WithdrawalRequestDto[] = [];
   isModalVisible = false;
-  availableBalance = 1500000; // todo: obtener de backend cuando abre el modal
   currentPage: number = 1;
   icons = freeSet;
   withdrawalRequestSelected: WithdrawalRequestDto | null = null;
@@ -89,7 +89,11 @@ export class WithdrawalRequestListComponent implements OnInit {
     });
   }
 
-  onPageChange(event: any) {}
+  onPageChange(page: number): void {
+    console.log('Page changed:', page);
+    this.currentPage = page;
+    this.loadWithdrawalRequest();
+  }
 
   getStatusLabel(status?: WithdrawalRequestStatus): string {
     return WithdrawalRequestStatusText[status!] ?? 'Desconocido';
@@ -97,8 +101,12 @@ export class WithdrawalRequestListComponent implements OnInit {
 
   downloadExcel() {}
 
-  getFilters() {
-    return {};
+  getFilters(): WithdrawalRequestFilter {
+    const filters = this.filtersForm.value;
+    const payload: WithdrawalRequestFilter = {
+      page: this.currentPage,
+    };
+    return payload;
   }
 
   showModal(withdrawalRequest: WithdrawalRequestDto | null = null) {

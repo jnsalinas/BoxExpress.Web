@@ -6,6 +6,7 @@ import { WarehouseInventoryTransferDto } from '../models/warehouse-inventory-tra
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../models/common/api-response';
 import { environment } from 'src/environments/environment';
+import { WithdrawalRequestRejectDto } from '../models/withdrawal-request-reject.dto';
 
 @Injectable({ providedIn: 'root' })
 export class WarehouseInventoryTransferService extends BaseApiService<
@@ -25,11 +26,14 @@ export class WarehouseInventoryTransferService extends BaseApiService<
       .pipe(this.handleResponse());
   }
 
-  reject(WarehouseInventoryTransferId: number): Observable<void> {
+  reject(
+    WarehouseInventoryTransferId: number,
+    reason: WithdrawalRequestRejectDto
+  ): Observable<void> {
     return this.http
       .post<ApiResponse<null>>(
         `${environment.apiUrl}/warehouseinventorytransfers/${WarehouseInventoryTransferId}/reject`,
-        {}
+        reason
       )
       .pipe(this.handleResponse());
   }

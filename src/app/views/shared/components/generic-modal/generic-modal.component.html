@@ -7,9 +7,19 @@
     <h5 cModalTitle>{{ title }}</h5>
     <button (click)="onClose()" cButtonClose></button>
   </c-modal-header>
-  <c-modal-body>{{ body }}</c-modal-body>
+  <c-modal-body>
+    <ng-content select="[custom-body]"></ng-content>
+    {{ body }}</c-modal-body
+  >
   <c-modal-footer>
     <button (click)="onClose()" cButton color="secondary">Cancelar</button>
-    <button cButton color="primary" (click)="onOk()">Guardar</button>
+    <button
+      cButton
+      color="primary"
+      (click)="onOk()"
+      [disabled]="isConfirmDisabled"
+    >
+      Guardar
+    </button>
   </c-modal-footer>
 </c-modal>

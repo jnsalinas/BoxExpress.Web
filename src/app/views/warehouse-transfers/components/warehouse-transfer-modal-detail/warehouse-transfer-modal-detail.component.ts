@@ -19,11 +19,14 @@ import {
   ModalHeaderComponent,
   ModalModule,
   ThemeDirective,
+  RowComponent,
+  ColComponent,
 } from '@coreui/angular';
 import { IconDirective } from '@coreui/icons-angular';
-import { WarehouseTransferStatus } from 'src/app/constants/warehouse-transfer-status';
-import { WarehouseInventoryTransferDto } from 'src/app/models/warehouse-inventory-transfer.dto';
-import { WarehouseTransferSummaryComponent } from 'src/app/views/shared/components/warehouse-transfer/warehouse-transfer-summary/warehouse-transfer-summary.component';
+import { WarehouseTransferStatus } from '../../../../constants/warehouse-transfer-status';
+import { WarehouseInventoryTransferDto } from '../../../..//models/warehouse-inventory-transfer.dto';
+import { WarehouseTransferSummaryComponent } from '../../../shared/components/warehouse-transfer/warehouse-transfer-summary/warehouse-transfer-summary.component';
+import { UtcDatePipe } from '../../../../shared/pipes/utc-date.pipe';
 
 @Component({
   selector: 'app-warehouse-transfer-modal-detail',
@@ -42,6 +45,9 @@ import { WarehouseTransferSummaryComponent } from 'src/app/views/shared/componen
     WarehouseTransferSummaryComponent,
     ButtonDirective,
     ThemeDirective,
+    ColComponent,
+    RowComponent,
+    UtcDatePipe
   ],
   templateUrl: './warehouse-transfer-modal-detail.component.html',
   styleUrl: './warehouse-transfer-modal-detail.component.scss',
@@ -51,7 +57,7 @@ export class WarehouseTransferModalDetailComponent {
   @Output() onClose = new EventEmitter<any>();
   @Output() onSave = new EventEmitter<any>();
   @Output() onReject = new EventEmitter<any>();
-  
+
   isPending() {
     return (
       this.warehouseInventoryTransfer.status == WarehouseTransferStatus.Pending

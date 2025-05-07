@@ -23,7 +23,7 @@ export class BaseApiService<T, F> {
       filter,
       {
         responseType: 'blob' as 'json',
-      }
+      } 
     );
   }
 
