@@ -25,6 +25,7 @@ import {HTTP_INTERCEPTORS, HttpClient} from "@angular/common/http";
 import {AuthInterceptor} from "../../../services/http-interceptors/auth.interceptor";
 import {AuthService} from "../../../services/auth.service";
 import {CommonModule} from "@angular/common";
+import {environment} from "../../../../environments/environment";
 
 @Component({
   selector: 'app-register',
@@ -40,7 +41,9 @@ export class RegisterComponent {
   confirmPassword: string = '';
   errorMessage: string = '';
   isLoading: boolean = false;
-  registerForm: FormGroup
+  registerForm: FormGroup;
+  private passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
+
   constructor(
     private fb: FormBuilder,
     private registerService: RegisterService,
@@ -53,15 +56,15 @@ export class RegisterComponent {
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
-      countryId: [null, Validators.required],
-      cityId: [null, Validators.required],
       pickupAddress: ['', Validators.required],
       companyName: ['', Validators.required],
       legalName: ['', Validators.required],
       documentNumber: ['', Validators.required],
       storeName: ['', Validators.required],
       balance: [0, Validators.required],
-      password: ['', Validators.required],
+      password: ['',[
+        Validators.pattern(this.passwordPattern),
+        Validators.required]],
     })
   }
 
@@ -74,10 +77,18 @@ export class RegisterComponent {
       return;
     }
     const data =  this.registerForm.value;
-    this.registerService.register(data).subscribe({
+    const storeData = {
+      ...data,
+      cityId: environment.defaultValues.cityId,
+      countryId: environment.defaultValues.countryId
+    }
+
+    console.log('este es el store data: ', storeData)
+    this.registerService.register(storeData).subscribe({
       next  : ()=> {
         this.messageService.showSuccess("hola","bien registrado")
-      },
+        this.router.navigate(['/dashboard']);
+        },
       error: (error) => {
         this.messageService.showError("error al realizar el registro: ", error)
       }

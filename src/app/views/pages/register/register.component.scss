@@ -82,3 +82,16 @@ c-input-group span[cInputGroupText] svg {
 c-input-group.mb-4 {
   margin-bottom: 2rem !important;
 }
+.input-group {
+  margin-bottom: 0.5rem;
+}
+
+.input-group-text {
+  padding: 0.375rem 0.75rem;
+}
+
+.input-group-text svg {
+  height: 1rem;
+  width: 1rem;
+}
+

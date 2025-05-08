@@ -5,59 +5,71 @@
         <c-card-group>
           <c-card class="p-4">
             <c-card-body>
-              <form cForm>
-                <h1>Login</h1>
-                <p class="text-body-secondary">Sign In to your account</p>
+              <form [formGroup]="loginForm" (ngSubmit)="login()">
+                <h1>Inicio de Sesión</h1>
+                <p class="text-body-secondary">Ingresa con tu cuenta</p>
                 <c-input-group class="mb-3">
                   <span cInputGroupText>
                     <svg cIcon name="cilUser"></svg>
                   </span>
-                  <input
-                    cFormControl
-                    name="username"
-                    [(ngModel)]="username"
-                    placeholder="Username"
-                  />
+                  <div class="form-group">
+                    <input
+                      formControlName="username"
+                      type="text"
+                      [ngClass]="{'input-error': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
+                      class="form-control"
+                      placeholder="Usuario"
+                    />
+                    <div *ngIf="loginForm.get('username')?.touched">
+                      <div *ngIf="loginForm.get('username')?.errors?.['required']" class="my-error-message">
+                        Este campo es obligatorio.
+                      </div>
+
+                      <div *ngIf="!loginForm.get('username')?.errors?.['required'] && loginForm.get('username')?.errors?.['email']" class="my-error-message">
+                        Ingresa un correo válido.
+                      </div>
+                    </div>
+                  </div>
                 </c-input-group>
+
                 <c-input-group class="mb-4">
                   <span cInputGroupText>
                     <svg cIcon name="cilLockLocked"></svg>
                   </span>
-                  <input
-                    autoComplete="current-password"
-                    cFormControl
-                    name="password"
-                    [(ngModel)]="password"
-                    placeholder="Password"
-                    type="password"
-                  />
+                  <div class="form-group">
+                    <input
+                      formControlName="password"
+                      type="password"
+                      [ngClass]="{'input-error': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+                      class="form-control"
+                      placeholder="Contraseña"
+                    />
+                    <div *ngIf="loginForm.get('password')?.errors?.['required']" class="my-error-message">
+                      Este campo es obligatorio.
+                    </div>
+
+                    <div *ngIf="!loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.errors?.['pattern']" class="my-error-message">
+                      Ingresa una contraseña valida
+                    </div>
+                  </div>
+
                 </c-input-group>
                 <c-row>
                   <c-col xs="6">
                     <button cButton class="px-4" color="primary" type="button" (click)="login()">
-                      Login
+                      Ingresar
                     </button>
                   </c-col>
                   <c-col class="text-right" xs="6">
-                    <button cButton class="px-0" color="link">
-                      Forgot password?
-                    </button>
                   </c-col>
                 </c-row>
               </form>
             </c-card-body>
           </c-card>
-          <c-card [ngStyle]="{'minWidth.%': 44}" class="text-white bg-primary py-5">
-            <c-card-body class="text-center">
+          <c-card [ngStyle]="{'minWidth.%': 44}" class="bg-primary ">
+            <c-card-body class="p-0">
               <div>
-                <h2>Sign up</h2>
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                  tempor incididunt ut labore et dolore magna aliqua.
-                </p>
-                <button [active]="true" cButton class="mt-3" color="primary" (click)="register()">
-                  Register Now!
-                </button>
+                <img src="assets/images/boxExpress.jpeg" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
               </div>
             </c-card-body>
           </c-card>

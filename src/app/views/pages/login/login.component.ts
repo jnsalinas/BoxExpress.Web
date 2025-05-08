@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgStyle } from '@angular/common';
+import {CommonModule, NgStyle} from '@angular/common';
 import { IconDirective } from '@coreui/icons-angular';
 import {
   ContainerComponent,
@@ -17,7 +17,7 @@ import {
 } from '@coreui/angular';
 import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
-import {FormsModule} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MessageService} from "../../../services/message.service";
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
 import {AuthInterceptor} from "../../../services/http-interceptors/auth.interceptor";
@@ -42,48 +42,61 @@ import {AuthInterceptor} from "../../../services/http-interceptors/auth.intercep
     FormControlDirective,
     ButtonDirective,
     NgStyle,
-    FormsModule
-  ],
-  providers:[{
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true
-  }]
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule
+  ]
 })
 export class LoginComponent {
   username: string = '';
   password: string = '';
   errorMessage: string = '';
   isLoading: boolean = false;
+  loginForm: FormGroup
 
   constructor(private authService: AuthService,
               private router: Router,
-              private messageService: MessageService
-              ) {}
+              private fb: FormBuilder,
+              private messageService: MessageService,
+              ) {
+    this.loginForm = this.fb.group({
+      username: ['',[ Validators.required, Validators.email]],
+      password: ['', Validators.required],
+      /*password:[
+        '',
+        [
+          Validators.required,
+          Validators.pattern(
+            '^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$'
+          )
 
+        ]],*/
+    })
+  }
 
   login(): void {
-    if (!this.username || !this.password) {
-      this.errorMessage = 'Por favor, ingrese usuario y contraseña.';
-      this.messageService.showError('login.emptyFields');
+
+    if(this.loginForm.invalid){
+      this.loginForm.markAllAsTouched();
+      this.messageService.showError("El formulario no tiene los datos completos", "Error")
       return;
     }
 
     this.isLoading = true;
-    const credentials = { username: this.username, password: this.password };
+    const credentials = this.loginForm.value;
+    console.log('estas son las credenciales: ', credentials)
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
         if(response) {
           this.authService.saveToken(response.token);
-          this.messageService.showSuccess('login');
           this.router.navigate(['/dashboard']);
         }
       },
       error: (error) => {
         this.isLoading = false;
         this.errorMessage = 'Error en el servidor de autenticación.';
-        this.messageService.showError('login.authError');
+        this.messageService.showError('login.invalidCredentials');
       }
     });
   }
