@@ -10,8 +10,8 @@
         <th *ngIf="hasColumn('clientPhone')">Teléfono</th>
         <th *ngIf="hasColumn('clientAddress')">Dirección</th>
         <th *ngIf="hasColumn('notes')">Notas</th>
-        <th *ngIf="hasColumn('deliveryFee')">Flete</th>
         <th *ngIf="hasColumn('totalAmount')">Valor total</th>
+        <th *ngIf="hasColumn('deliveryFee')">Flete</th>
         <th *ngIf="hasColumn('contains')">Contiene</th>
         <th *ngIf="hasColumn('city')">Ciudad</th>
         <th *ngIf="hasColumn('category')">Categoría</th>
@@ -38,18 +38,19 @@
         <td *ngIf="hasColumn('clientPhone')">{{ order.clientPhone }}</td>
         <td *ngIf="hasColumn('clientAddress')">{{ order.clientAddress }}</td>
         <td *ngIf="hasColumn('notes')">{{ order.notes }}</td>
-        <td *ngIf="hasColumn('deliveryFee')">
-          {{
-            order.deliveryFee
-              | currency : order.curencyCode : "symbol" : "1.0-0"
-          }}
-        </td>
         <td *ngIf="hasColumn('totalAmount')">
           {{
             order.totalAmount
               | currency : order.curencyCode : "symbol" : "1.0-0"
           }}
         </td>
+        <td *ngIf="hasColumn('deliveryFee')">
+          {{
+            order.deliveryFee
+              | currency : order.curencyCode : "symbol" : "1.0-0"
+          }}
+        </td>
+
         <td *ngIf="hasColumn('contains')">
           <div
             *ngIf="order.orderItems?.length; else showContains"
@@ -74,7 +75,9 @@
             class="form-select form-select-sm"
             [(ngModel)]="order.warehouseId"
             (ngModelChange)="onWarehouseChange(order.id, $event)"
-            [disabled]="warehouseOptions.length === 0 || order.categoryId !== 1"
+            [disabled]="
+              warehouseOptions.length === 0 || order.categoryId !== null
+            "
           >
             <option [value]="null" disabled>Seleccione...</option>
             <option

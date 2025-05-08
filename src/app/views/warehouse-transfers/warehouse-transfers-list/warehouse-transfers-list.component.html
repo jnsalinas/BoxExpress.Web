@@ -8,14 +8,14 @@
     <c-card class="mb-4">
       <c-card-header>
         <strong>Transferencias</strong> -> <small>Listado</small>
-        <!-- <button
+        <button
           type="button"
           class="float-end btn btn-primary"
           (click)="downloadExcel()"
         >
           <svg [cIcon]="icons.cilCloudDownload"></svg>
           Exportar
-        </button> -->
+        </button>
       </c-card-header>
       <c-card-body>
         <div>
@@ -50,12 +50,15 @@
             </div>
             <div class="col-md-2">
               <label for="statusId" class="form-label">Estado</label>
-              <input
-                type="number"
-                id="statusId"
+              <ng-select
+                [searchable]="false"
+                [items]="statusOptions"
+                bindLabel="label"
+                bindValue="value"
                 formControlName="statusId"
-                class="form-control"
-              />
+                placeholder="Seleccione..."
+              >
+              </ng-select>
             </div>
 
             <div class="col-md-2">
@@ -111,7 +114,7 @@
             <tr *ngFor="let tx of warehouseInventoryTransfers; let i = index">
               <th scope="row">{{ tx.id }}</th>
               <td>{{ tx.fromWarehouse }} → {{ tx.toWarehouse }}</td>
-              <td>{{ tx.createdAt | date : "short" }}</td>
+              <td>{{ tx.createdAt | utcDate }}</td>
               <td>{{ getStatusLabel(tx.status) }}</td>
               <td>{{ tx.creator }}</td>
               <td>{{ tx.acceptedBy }}</td>
@@ -160,4 +163,45 @@
 >
 </app-warehouse-transfer-modal-detail>
 
-<app-generic-modal></app-generic-modal>
+<app-generic-modal> </app-generic-modal>
+
+<app-generic-modal
+  [isVisible]="showRejectModal"
+  [title]="'Rechazar transferencia'"
+  (ok)="onConfirmReject()"
+  (close)="onCancelReject()"
+  [isConfirmDisabled]="rejectForm.invalid"
+>
+  <div custom-body>
+    <form [formGroup]="rejectForm">
+      <div class="form-group">
+        <textarea
+          id="rejectionReason"
+          class="form-control"
+          formControlName="rejectionReason"
+          rows="3"
+          placeholder="Motivo del rechazo"
+        ></textarea>
+        <div
+          *ngIf="
+            rejectForm.get('rejectionReason')?.invalid &&
+            rejectForm.get('rejectionReason')?.touched
+          "
+        >
+          <small
+            class="text-danger"
+            *ngIf="rejectForm.get('rejectionReason')?.errors?.['required']"
+          >
+            Este campo es obligatorio.
+          </small>
+          <small
+            class="text-danger"
+            *ngIf="rejectForm.get('rejectionReason')?.errors?.['minlength']"
+          >
+            El motivo debe tener al menos 5 caracteres.
+          </small>
+        </div>
+      </div>
+    </form>
+  </div>
+</app-generic-modal>

@@ -1,0 +1,92 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando balance...'"
+></app-loading-overlay>
+
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>Balance</strong>
+        <!-- -> <small>Con balance disponible</small> -->
+      </c-card-header>
+
+      <c-card-body>
+        <form
+          [formGroup]="filtersForm"
+          (ngSubmit)="onFilter()"
+          class="mb-4 row g-3 align-items-end"
+        >
+          <div class="col-md-4">
+            <label for="startDate" class="form-label">Nombre</label>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              class="form-control"
+            />
+          </div>
+
+          <div class="col-md-1 d-grid">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+          </div>
+
+          <div class="col-md-1 d-grid">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="resetFilters()"
+            >
+              Limpiar
+            </button>
+          </div>
+        </form>
+        <table cTable class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Ciudad</th>
+              <th scope="col">País</th>
+              <th scope="col">Balance</th>
+              <th scope="col">Disponible para retiro</th>
+              <th scope="col">Pendiente por retiro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let store of stores; let i = index">
+              <td>{{ store.id }}</td>
+              <td>{{ store.name || "-" }}</td>
+              <td>{{ store.city || "-" }}</td>
+              <td>{{ store.country || "-" }}</td>
+              <td>
+                {{
+                  store.balance ?? 0
+                    | currency : "COP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  store.availableToWithdraw ?? 0
+                    | currency : "COP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+              <td>
+                {{
+                  store.pendingWithdrawals ?? 0
+                    | currency : "COP" : "symbol-narrow" : "1.0-0"
+                }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <app-generic-pagination
+          [pagination]="pagination"
+          [currentPage]="currentPage"
+          (pageChange)="onPageChange($event)"
+        >
+        </app-generic-pagination>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

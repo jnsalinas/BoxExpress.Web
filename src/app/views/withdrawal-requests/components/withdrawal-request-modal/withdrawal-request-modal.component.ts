@@ -34,7 +34,7 @@ import { WithdrawalRequestStatus } from 'src/app/constants/withdrawal-request-st
 })
 export class WithdrawalRequestModalComponent implements OnInit {
   @Input() isVisible = false;
-  @Input() availableBalance: number = 0;
+  @Input() storeId!: number;
   @Output() onClose = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<any>();
   @Output() onApprove = new EventEmitter<{ id: number; reason: string }>();
@@ -44,6 +44,7 @@ export class WithdrawalRequestModalComponent implements OnInit {
   form: FormGroup = new FormGroup({});
   isLoading: boolean = false;
   isPending: boolean = false;
+  store?: StoreDto;
 
   constructor(
     private fb: FormBuilder,
@@ -53,6 +54,11 @@ export class WithdrawalRequestModalComponent implements OnInit {
 
   private _withdrawalRequest: WithdrawalRequestDto | null = null;
   @Input() set withdrawalRequest(value: WithdrawalRequestDto | null) {
+    this.storeService.getById(this.storeId).subscribe({
+      next: (response) => {
+        this.store = response;
+      },
+    });
     this._withdrawalRequest = value;
     if (value && this.form) {
       this.form.patchValue(value);
@@ -143,5 +149,9 @@ export class WithdrawalRequestModalComponent implements OnInit {
       id: this.form.value.id,
       reason: this.form.value.reason,
     });
+  }
+
+  onStoreChange(selectedStore: StoreDto) {
+    this.store = selectedStore;
   }
 }

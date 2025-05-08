@@ -11,9 +11,8 @@
   </c-modal-header>
 
   <c-modal-body>
-    <p>
-      <strong>Balance disponible: </strong
-      >{{ availableBalance | currency : "COP" }}
+    <p *ngIf="store">
+      <strong>Balance disponible: </strong>{{ store.balance | currency }}
     </p>
 
     <form [formGroup]="form">
@@ -27,6 +26,7 @@
             formControlName="storeId"
             [searchable]="true"
             placeholder="Seleccione una tienda"
+            (change)="onStoreChange($event)"
           >
           </ng-select>
         </div>
@@ -39,8 +39,11 @@
             type="number"
             class="form-control"
             formControlName="amount"
-            [max]="availableBalance"
+            [max]="store?.balance ?? 0"
           />
+          <div *ngIf="form.get('amount')?.errors?.['max']" class="text-danger">
+            El monto no puede ser mayor a {{ store?.balance ?? 0 | currency }}
+          </div>
         </div>
 
         <div class="col-md-6 mb-3">
@@ -94,10 +97,7 @@
 
         <div class="col-md-12 mb-3">
           <label class="form-label">Gestion</label>
-          <textarea
-            class="form-control"
-            formControlName="reason"
-          ></textarea>
+          <textarea class="form-control" formControlName="reason"></textarea>
         </div>
       </div>
     </form>

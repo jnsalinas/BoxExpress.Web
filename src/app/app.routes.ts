@@ -35,6 +35,10 @@ export const routes: Routes = [
         loadChildren: () => import('./views/withdrawal-requests/routes').then((m) => m.routes)
       },
       {
+        path: 'stores',
+        loadChildren: () => import('./views/stores/routes').then((m) => m.routes)
+      },
+      {
         path: 'dashboard',
         loadChildren: () => import('./views/dashboard/routes').then((m) => m.routes)
       },

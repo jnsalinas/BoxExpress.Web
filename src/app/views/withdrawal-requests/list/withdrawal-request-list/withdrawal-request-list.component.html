@@ -106,17 +106,6 @@
               <th scope="col">Descripcion</th>
               <th scope="col">Estado</th>
               <th scope="col">Fecha de aceptacion</th>
-
-              <!-- public int StoreId { get; set; }
-    public string? Store { get; set; } = null!;
-    public decimal? Amount { get; set; }
-    public string? AccountHolder { get; set; }
-    public string? Document { get; set; }
-    public string? Bank { get; set; }
-    public string? AccountNumber { get; set; }
-    public string? Description { get; set; }
-    public int? Status { get; set; }
-    public DateTime? ProcessedAt { get; set; } -->
             </tr>
           </thead>
           <tbody>
@@ -156,7 +145,7 @@
 
 <app-withdrawal-request-modal
   [isVisible]="isModalVisible"
-  [availableBalance]="availableBalance"
+  [storeId]="1"
   [withdrawalRequest]="withdrawalRequestSelected"
   (onClose)="handleWithdrawalRequestClose()"
   (onSave)="handleWithdrawalRequestSave($event)"
