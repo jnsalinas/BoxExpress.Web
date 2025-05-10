@@ -8,6 +8,7 @@
               <form [formGroup]="loginForm" (ngSubmit)="login()">
                 <h1>Inicio de Sesión</h1>
                 <p class="text-body-secondary">Ingresa con tu cuenta</p>
+
                 <c-input-group class="mb-3">
                   <span cInputGroupText>
                     <svg cIcon name="cilUser"></svg>
@@ -16,7 +17,7 @@
                     <input
                       formControlName="username"
                       type="text"
-                      [ngClass]="{'input-error': loginForm.get('username')?.invalid && loginForm.get('username')?.touched}"
+                      [ngClass]="{ 'input-error': loginForm.get('username')?.invalid && loginForm.get('username')?.touched }"
                       class="form-control"
                       placeholder="Usuario"
                     />
@@ -24,54 +25,93 @@
                       <div *ngIf="loginForm.get('username')?.errors?.['required']" class="my-error-message">
                         Este campo es obligatorio.
                       </div>
-
-                      <div *ngIf="!loginForm.get('username')?.errors?.['required'] && loginForm.get('username')?.errors?.['email']" class="my-error-message">
+                      <div
+                        *ngIf="!loginForm.get('username')?.errors?.['required'] && loginForm.get('username')?.errors?.['email']"
+                        class="my-error-message"
+                      >
                         Ingresa un correo válido.
                       </div>
                     </div>
                   </div>
                 </c-input-group>
 
+                <!-- Campo Contraseña -->
                 <c-input-group class="mb-4">
-                  <span cInputGroupText>
-                    <svg cIcon name="cilLockLocked"></svg>
-                  </span>
-                  <div class="form-group">
+  <span cInputGroupText>
+    <svg cIcon name="cilLockLocked"></svg>
+  </span>
+
+                  <div class="form-group position-relative">
                     <input
                       formControlName="password"
-                      type="password"
-                      [ngClass]="{'input-error': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}"
+                      [type]="showPassword ? 'text' : 'password'"
+                      [ngClass]="{
+        'input-error': loginForm.get('password')?.invalid && loginForm.get('password')?.touched
+      }"
                       class="form-control"
                       placeholder="Contraseña"
                     />
-                    <div *ngIf="loginForm.get('password')?.errors?.['required']" class="my-error-message">
-                      Este campo es obligatorio.
-                    </div>
 
-                    <div *ngIf="!loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.errors?.['pattern']" class="my-error-message">
-                      Ingresa una contraseña valida
+                    <!-- Botón ojito -->
+                    <button
+                      type="button"
+                      class="btn btn-sm position-absolute end-0 me-2 bg-transparent border-0"
+                      (click)="togglePasswordVisibility()"
+                      style="top: 50%; transform: translateY(-50%);"
+                    >
+                      <c-icon *ngIf="!showPassword" name="cil" style="color: black;"></c-icon>
+                      <c-icon *ngIf="showPassword" name="cilEyeSlash" style="color: black;"></c-icon>
+                    </button>
+
+                    <!-- Validaciones -->
+                    <div *ngIf="loginForm.get('password')?.touched">
+                      <div
+                        *ngIf="loginForm.get('password')?.errors?.['required']"
+                        class="my-error-message"
+                      >
+                        Este campo es obligatorio.
+                      </div>
+                      <div
+                        *ngIf="!loginForm.get('password')?.errors?.['required'] &&
+               loginForm.get('password')?.errors?.['pattern']"
+                        class="my-error-message"
+                      >
+                        Debe incluir una mayúscula y un número.
+                      </div>
                     </div>
                   </div>
-
                 </c-input-group>
+
+
+
                 <c-row>
                   <c-col xs="6">
-                    <button cButton class="px-4" color="primary" type="button" (click)="login()">
-                      Ingresar
-                    </button>
-                  </c-col>
-                  <c-col class="text-right" xs="6">
+                    <button cButton class="px-4" color="primary" type="submit">Ingresar</button>
                   </c-col>
                 </c-row>
               </form>
             </c-card-body>
           </c-card>
-          <c-card [ngStyle]="{'minWidth.%': 44}" class="bg-primary ">
-            <c-card-body class="p-0">
-              <div>
-                <img src="assets/images/boxExpress.jpeg" alt="Logo" style="width: 100%; height: 100%; object-fit: cover;">
+
+          <c-card [ngStyle]="{ 'minWidth.%': 44 }" class="bg-primary overflow-hidden p-0">
+            <div
+              class="position-relative h-100 w-100"
+              style="padding: 0.5px; box-sizing: border-box;"
+            >
+              <img
+                src="assets/images/boxExpress.jpeg"
+                alt="Logo"
+                class="w-100 h-100 position-absolute"
+                style="object-fit: cover; box-sizing: border-box;"
+              />
+              <div
+                class="d-flex flex-column justify-content-end align-items-center position-absolute w-100 h-100"
+              >
+                <button cButton color="primary" class="px-4 mb-4" type="button" >
+                  Registrar
+                </button>
               </div>
-            </c-card-body>
+            </div>
           </c-card>
         </c-card-group>
       </c-col>

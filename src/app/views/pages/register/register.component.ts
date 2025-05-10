@@ -11,7 +11,7 @@ import {
   InputGroupComponent,
   InputGroupTextDirective,
   FormControlDirective,
-  ButtonDirective
+  ButtonDirective, CardHeaderComponent
 }
   from '@coreui/angular';
 
@@ -26,13 +26,14 @@ import {AuthInterceptor} from "../../../services/http-interceptors/auth.intercep
 import {AuthService} from "../../../services/auth.service";
 import {CommonModule} from "@angular/common";
 import {environment} from "../../../../environments/environment";
+import {CitiesService} from "../../../services/city.service";
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   standalone: true,
-  imports: [ContainerComponent, RowComponent, ColComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, FormsModule, ReactiveFormsModule, CommonModule]
+  imports: [ContainerComponent, RowComponent, ColComponent, TextColorDirective, CardComponent, CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective, ButtonDirective, FormsModule, ReactiveFormsModule, CommonModule, CardHeaderComponent]
 })
 export class RegisterComponent {
   icons ={cilMobile, cilHome, cilLocationPin, cilFactory, cilCart};
@@ -42,26 +43,28 @@ export class RegisterComponent {
   errorMessage: string = '';
   isLoading: boolean = false;
   registerForm: FormGroup;
-  private passwordPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,}$/;
-
+  cities: any[]=[];
+  loadCity: boolean = false;
+  private passwordPattern = /^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+=\-{}[\]:;"'<>?,./]{8,}$/;
   constructor(
     private fb: FormBuilder,
     private registerService: RegisterService,
     private router: Router,
     private messageService: MessageService,
-    private http: HttpClient
+    private http: HttpClient,
+    private citiesService: CitiesService,
+
   ) {
+    this.loadCities();
     this.registerForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
-      pickupAddress: ['', Validators.required],
-      companyName: ['', Validators.required],
       legalName: ['', Validators.required],
       documentNumber: ['', Validators.required],
       storeName: ['', Validators.required],
-      balance: [0, Validators.required],
+      city: [{ value: 1, disabled: true }, Validators.required], // ← deshabilitado desde el inicio
       password: ['',[
         Validators.pattern(this.passwordPattern),
         Validators.required]],
@@ -80,7 +83,9 @@ export class RegisterComponent {
     const storeData = {
       ...data,
       cityId: environment.defaultValues.cityId,
-      countryId: environment.defaultValues.countryId
+      countryId: environment.defaultValues.countryId,
+      balance: environment.defaultValues.balance,
+      pickupAdress:environment.defaultValues.pickupAddress
     }
 
     console.log('este es el store data: ', storeData)
@@ -99,4 +104,14 @@ export class RegisterComponent {
     this.router.navigate(['/login']);
   }
 
+  loadCities(): void {
+    this.citiesService.getCities().subscribe({
+      next: (cities) => {
+        this.cities = cities;
+      },
+      error: (err) => {
+        this.messageService.showError("No se pudieron cargar las ciudades", err);
+      }
+    });
+  }
 }

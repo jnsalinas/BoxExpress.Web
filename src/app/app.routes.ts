@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './layout';
+import { LoginGuard } from './guards/login.guard'; // Importamos el LoginGuard
 
 export const routes: Routes = [
   {
@@ -97,6 +98,7 @@ export const routes: Routes = [
   {
     path: 'login',
     loadComponent: () => import('./views/pages/login/login.component').then(m => m.LoginComponent),
+    canActivate: [LoginGuard], // Aplicamos el LoginGuard aquí
     data: {
       title: 'Login Page'
     }
