@@ -59,8 +59,20 @@
                       (click)="togglePasswordVisibility()"
                       style="top: 50%; transform: translateY(-50%);"
                     >
-                      <c-icon *ngIf="!showPassword" name="cil" style="color: black;"></c-icon>
-                      <c-icon *ngIf="showPassword" name="cilEyeSlash" style="color: black;"></c-icon>
+                      <img
+                        *ngIf="!showPassword"
+                        src="assets/eye-solid.svg"
+                        alt="Mostrar contraseña"
+                        width="20"
+                        height="20"
+                      />
+                      <img
+                        *ngIf="showPassword"
+                        src="assets/eye-slash-solid.svg"
+                        alt="Ocultar contraseña"
+                        width="20"
+                        height="20"
+                      />
                     </button>
 
                     <!-- Validaciones -->
