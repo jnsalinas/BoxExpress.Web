@@ -110,7 +110,7 @@ export class RegisterComponent {
         this.cities = cities;
       },
       error: (err) => {
-        this.messageService.showError("No se pudieron cargar las ciudades", err);
+        this.messageService.showWarning("No se pudieron cargar las ciudades");
       }
     });
   }
