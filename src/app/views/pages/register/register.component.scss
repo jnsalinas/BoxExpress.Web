@@ -95,3 +95,8 @@ c-input-group.mb-4 {
   width: 1rem;
 }
 
+.equal-height {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}

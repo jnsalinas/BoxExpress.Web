@@ -82,3 +82,12 @@ c-input-group span[cInputGroupText] svg {
 c-input-group.mb-4 {
   margin-bottom: 2rem !important;
 }
+.image-container img {
+  padding: 10px;
+  box-sizing: border-box;
+}
+.icon-black {
+  fill: black !important; /* Asegura que el relleno del ícono SVG sea negro */
+  color: black !important; /* Aplica el color desde el texto (por si SVG usa este diseño) */
+}
+
