@@ -28,7 +28,6 @@ import { WithdrawalRequestModalComponent } from '../../components/withdrawal-req
 import { GenericModalComponent } from '../../../../views/shared/components/generic-modal/generic-modal.component';
 import { StoreService } from '../../../../services/store.service';
 import { StoreDto } from '../../../../models/store.dto';
-import { W } from '@angular/router/router_module.d-6zbCxc1T';
 import { WithdrawalRequestFilter } from 'src/app/models/withdrawal-request-filter.model';
 
 @Component({
