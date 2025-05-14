@@ -4,7 +4,9 @@ export const environment = {
     auth: '/Auth/login',
     defaultValues: {
       cityId: 1,
-      countryId: 1
+      countryId: 1,
+      balance: 0,
+      pickupAddress: 'BodegajeBoxExpress'
     }
 };
 

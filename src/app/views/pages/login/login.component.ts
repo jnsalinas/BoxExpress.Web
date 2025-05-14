@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import {CommonModule, NgStyle} from '@angular/common';
-import { IconDirective } from '@coreui/icons-angular';
+import {IconComponent, IconDirective} from '@coreui/icons-angular';
 import {
   ContainerComponent,
   RowComponent,
@@ -19,8 +19,9 @@ import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MessageService} from "../../../services/message.service";
-import {HTTP_INTERCEPTORS} from "@angular/common/http";
-import {AuthInterceptor} from "../../../services/http-interceptors/auth.interceptor";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
   selector: 'app-login',
@@ -44,7 +45,9 @@ import {AuthInterceptor} from "../../../services/http-interceptors/auth.intercep
     NgStyle,
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    FontAwesomeModule,
+    IconComponent
   ]
 })
 export class LoginComponent {
@@ -52,8 +55,11 @@ export class LoginComponent {
   password: string = '';
   errorMessage: string = '';
   isLoading: boolean = false;
-  loginForm: FormGroup
-
+  loginForm: FormGroup;
+  showPassword = false;
+  faEye = faEye;
+  faEyeSlash = faEyeSlash;
+  private passwordPattern = /^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+=\-{}[\]:;"'<>?,./]{8,}$/;
   constructor(private authService: AuthService,
               private router: Router,
               private fb: FormBuilder,
@@ -61,16 +67,15 @@ export class LoginComponent {
               ) {
     this.loginForm = this.fb.group({
       username: ['',[ Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      /*password:[
+      password:[
         '',
         [
           Validators.required,
           Validators.pattern(
-            '^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{8,}$'
+            this.passwordPattern
           )
 
-        ]],*/
+        ]],
     })
   }
 
@@ -103,5 +108,9 @@ export class LoginComponent {
 
   register(): void{
     this.router.navigate(['/register'])
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }
