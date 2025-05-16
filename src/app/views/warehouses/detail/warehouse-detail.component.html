@@ -8,7 +8,7 @@
             Agregar productos
           </button>
           <button class="btn btn-sm btn-primary" (click)="openTransferModal()">
-            Transferir productos 
+            Transferir productos
           </button>
           <!-- Todo: transferir solo tiene permisos el administrador de bodegas -->
         </div>
@@ -28,54 +28,51 @@
           </button>
         </div>
 
-        <table cTable>
-          <thead>
-            <tr>
-              <th>Producto</th>
-            </tr>
-          </thead>
+        <table class="table table-bordered">
           <tbody>
             <tr *ngFor="let product of filteredProducts">
-              <td colspan="2">
-                <div class="p-3 mb-3 border rounded bg-white shadow-sm">
-                  <!-- Encabezado del producto -->
-                  <div
-                    class="d-flex justify-content-between align-items-center mb-2"
-                  >
-                    <div>
-                      <h5 class="mb-0">{{ product.name }}</h5>
-                      <span class="badge bg-secondary">{{ product.sku }}</span>
-                    </div>
-                  </div>
-
-                  <!-- Lista de variantes -->
-                  <div class="ms-2">
-                    <div
-                      *ngFor="let variant of product.variants"
-                      class="p-2 mb-2 border rounded bg-light"
-                    >
-                      <div class="d-flex justify-content-between">
-                        <div>
-                          <strong>{{ variant.name }}</strong> ({{
-                            variant.quantity
-                          }})
-                          <div
-                            *ngIf="variant.shopifyId"
-                            class="text-muted small"
-                          >
-                            Shopify ID: {{ variant.shopifyId }}
-                          </div>
-                          <div *ngIf="variant.sku" class="text-muted small">
-                            SKU:
-                            <span class="badge bg-secondary">{{
-                              variant.sku
-                            }}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+              <td>
+                <!-- Producto Header -->
+                <div
+                  class="d-flex justify-content-between align-items-center bg-light p-2"
+                >
+                  <div>
+                    <strong>📦 {{ product.name }}</strong>
+                    <span class="badge bg-secondary ms-2">{{
+                      product.sku
+                    }}</span>
                   </div>
                 </div>
+
+                <!-- Tabla de variantes -->
+                <table class="table table-sm mt-2">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Variante</th>
+                      <th>Disponible</th>
+                      <th>Total</th>
+                      <th>Hold</th>
+                      <th>Shopify ID</th>
+                      <th>SKU</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let variant of product.variants">
+                      <td>
+                        <strong>{{ variant.name }}</strong>
+                      </td>
+                      <td>{{ variant.availableQuantity }}</td>
+                      <td>{{ variant.quantity }}</td>
+                      <td>{{ variant.reservedQuantity }}</td>
+                      <td>{{ variant.shopifyId || "-" }}</td>
+                      <td>
+                        <span *ngIf="variant.sku" class="badge bg-secondary">
+                          {{ variant.sku }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </td>
             </tr>
           </tbody>

@@ -132,7 +132,7 @@ export class WithdrawalRequestListComponent implements OnInit {
             this.handleWithdrawalRequestClose();
           },
           error: (err) => {
-            console.error('Error changing warehouse', err);
+            console.error('Error changing withdrawall', err);
           },
         });
       },
@@ -160,7 +160,7 @@ export class WithdrawalRequestListComponent implements OnInit {
               this.isLoading = false;
             },
             error: (err) => {
-              console.error('Error changing warehouse', err);
+              console.error('Error approved withdrawal', err);
             },
           });
       },
@@ -189,7 +189,7 @@ export class WithdrawalRequestListComponent implements OnInit {
               this.isLoading = false;
             },
             error: (err) => {
-              console.error('Error changing warehouse', err);
+              console.error('Error reject withdrawal', err);
             },
           });
       },

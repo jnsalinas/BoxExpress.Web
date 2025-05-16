@@ -11,4 +11,5 @@ export class ProductVariantAutocompleteDto implements BaseDto {
   productName?: string;
   displayName?: string;
   availableUnits?: number;
+  reservedQuantity?: number;
 }

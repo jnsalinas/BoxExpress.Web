@@ -5,4 +5,6 @@ export interface ProductVariantDto extends BaseDto {
   shopifyId?: string;
   sku?: string;
   price?: number;
+  reservedQuantity?: number;
+  availableQuantity?: number;
 }

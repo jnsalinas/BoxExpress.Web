@@ -8,18 +8,18 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class ProductVariantService extends BaseApiService<
+export class WarehouseInventoriesService extends BaseApiService<
   ProductVariantDto,
   any
 > {
   constructor(http: HttpClient) {
-    super(http, 'productvariants');
+    super(http, 'warehouseinventories');
   }
 
   autocomplete(query: string, warehouseOriginId: number): Observable<ProductVariantAutocompleteDto[]> {
     return this.http
       .get<ApiResponse<ProductVariantAutocompleteDto[]>>(
-        `${environment.apiUrl}/productvariants/autocomplete?query=${query}&warehouseOriginId=${warehouseOriginId}`
+        `${environment.apiUrl}/warehouseinventories/autocomplete?query=${query}&warehouseOriginId=${warehouseOriginId}`
       )
       .pipe(this.handleResponse());
   }

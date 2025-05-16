@@ -247,7 +247,7 @@ export class OrderListComponent implements OnInit {
               this.loadOrders();
             },
             error: (err) => {
-              console.error('Error changing warehouse', err);
+              console.error('Error changing status', err);
               order.statusId = event.previousStatusId;
             },
           });
@@ -277,6 +277,16 @@ export class OrderListComponent implements OnInit {
             },
             error: (err) => {
               console.error('Error changing warehouse', err);
+              this.modal.show({
+                title: 'Error',
+                body: `Error al cambiar la bodega:\n ${err.message}`,
+                okText: 'Aceptar',
+                showCancelButton: false,
+                ok: () => {},
+                close: () => {},
+              });
+
+              this.loadOrders();
             },
           });
       },

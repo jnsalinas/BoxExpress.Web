@@ -16,11 +16,11 @@ import {
 } from '@coreui/angular';
 import { WarehouseDto } from '../../../../models/warehouse.dto';
 import { WarehouseService } from '../../../../services/warehouse.service';
-import { ProductVariantService } from '../../../../services/product-variant.service';
 import { Subject } from 'rxjs';
 import { ProductVariantAutocompleteDto } from '../../../../models/product-variant-autocomplete.dto';
 import { freeSet } from '@coreui/icons';
 import { IconDirective } from '@coreui/icons-angular';
+import { WarehouseInventoriesService } from '../../../../services/warehouse-inventories.service';
 @Component({
   selector: 'app-warehouse-transfer-modal',
   standalone: true,
@@ -62,7 +62,7 @@ export class WarehouseTransferModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private warehouseService: WarehouseService,
-    private productVariantService: ProductVariantService
+    private warehouseInventoriesService: WarehouseInventoriesService
   ) {}
 
   ngOnInit(): void {
@@ -145,7 +145,7 @@ export class WarehouseTransferModalComponent implements OnInit {
     }
 
     this.isLoadingVariant[index] = true;
-    this.productVariantService.autocomplete(term, this.warehouseId).subscribe({
+    this.warehouseInventoriesService.autocomplete(term, this.warehouseId).subscribe({
       next: (matches) => {
         this.variantOptions[index] = matches.filter(
           (v) => !this.isDuplicate(v.id, index)

@@ -12,14 +12,16 @@
     {{ body }}</c-modal-body
   >
   <c-modal-footer>
-    <button (click)="onClose()" cButton color="secondary">Cancelar</button>
+    <button *ngIf="showCancelButton" (click)="onClose()" cButton color="secondary">
+      {{ cancelText }}
+    </button>
     <button
       cButton
       color="primary"
       (click)="onOk()"
       [disabled]="isConfirmDisabled"
     >
-      Guardar
+      {{okText}}
     </button>
   </c-modal-footer>
 </c-modal>

@@ -31,6 +31,9 @@ export class GenericModalComponent {
   @Input() title: string = ''; // Título del modal
   @Input() body: string = ''; // Contenido del modal
   @Input() isConfirmDisabled: boolean = false; // Título del modal
+  @Input() okText: string = 'Guardar'; // Texto del botón "Aceptar"
+  @Input() cancelText: string = 'Cancelar'; // Texto del botón "Cancelar"
+  @Input() showCancelButton: boolean = true; // Texto del botón "Cancelar"
   @Output() close = new EventEmitter<void>(); // Evento para cerrar el modal
   @Output() ok = new EventEmitter<void>(); // Evento para aceptar cambios
 
@@ -41,11 +44,17 @@ export class GenericModalComponent {
   show(config: {
     title?: string;
     body?: string;
+    okText?: string;
+    cancelText?: string;
+    showCancelButton?: boolean;
     ok?: () => void;
     close?: () => void;
   }) {
     this.title = config.title ?? ''; // Establece el título
     this.body = config.body ?? ''; // Establece el contenido
+    this.okText = config.okText ?? this.okText; // Establece el texto del botón "Aceptar"
+    this.cancelText = config.cancelText ?? this.cancelText; // Establece el texto del botón "Cancelar"
+    this.showCancelButton = config.showCancelButton ?? true; // Establece si se muestra el botón "Cancelar"
     this.onOkCallback = config.ok ?? null; // Establece la función para "Aceptar"
     this.onCloseCallback = config.close ?? null; // Establece la función para "Cerrar"
     this.isVisible = true; // Abre el modal
