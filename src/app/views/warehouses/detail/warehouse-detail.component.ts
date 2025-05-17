@@ -10,7 +10,12 @@ import {
   TableDirective,
 } from '@coreui/angular';
 import { WarehouseService } from '../../../services/warehouse.service';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { WarehouseDetailDto } from '../../../models/warehouse-detail.dto';
 import { WarehouseProductModalComponent } from '../components/warehouse-product-modal/warehouse-product-modal.component';
 import { ProductDto } from '../../../models/product.dto';
@@ -19,6 +24,10 @@ import { IconDirective } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
 import { WarehouseTransferModalComponent } from '../components/warehouse-transfer-modal/warehouse-transfer-modal.component';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
+import { WarehouseInventoriesService } from '../../../services/warehouse-inventories.service';
+import { PaginationDto } from '../../../models/common/pagination.dto';
+import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
+import { WarehouseInventoryFilter } from '../../../models/warehouse-inventory-filter.model';
 
 @Component({
   selector: 'app-warehouse-detail',
@@ -34,7 +43,10 @@ import { GenericModalComponent } from '../../shared/components/generic-modal/gen
     WarehouseProductModalComponent,
     WarehouseTransferModalComponent,
     TableDirective,
-    GenericModalComponent
+    GenericModalComponent,
+    GenericPaginationComponent,
+    FormsModule,
+    ReactiveFormsModule,
     // IconDirective
   ],
   templateUrl: './warehouse-detail.component.html',
@@ -51,11 +63,22 @@ export class WarehouseDetailComponent implements OnInit {
   searchTerm: string = '';
   loading = false;
   icons = freeSet;
+  currentPage: number = 1;
+  pagination: PaginationDto | null = null;
+  filtersForm: FormGroup = new FormGroup({});
 
-  constructor(private warehouseService: WarehouseService) {}
+  constructor(
+    private warehouseService: WarehouseService,
+    private warehouseInventoriesService: WarehouseInventoriesService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
+    this.filtersForm = this.fb.group({
+      query: [null],
+    });
+
     this.loadWarehouseDetail();
   }
 
@@ -63,12 +86,31 @@ export class WarehouseDetailComponent implements OnInit {
     this.warehouseService.getById(id).subscribe({
       next: (result) => {
         this.warehouseDetail = result;
-        this.filteredProducts = this.warehouseDetail?.products ?? [];
+        // this.filteredProducts = this.warehouseDetail?.products ?? [];
+        this.loadWarehouseInventories();
       },
       error: (err) => {
         console.error('Error loading warehouses', err);
       },
     });
+  }
+
+  loadWarehouseInventories(): void {
+    this.warehouseInventoriesService
+      .getWarehouseProductSummaryAsync(this.getFilters())
+      .subscribe({
+        next: (response) => {
+          console.log('Warehouse inventories:', response);
+          if (this.warehouseDetail) {
+            // this.warehouseDetail.products = result;
+            this.filteredProducts = response.data ?? [];
+            this.pagination = response.pagination;
+          }
+        },
+        error: (err) => {
+          console.error('Error loading warehouses', err);
+        },
+      });
   }
 
   filterProducts(): void {
@@ -151,10 +193,31 @@ export class WarehouseDetailComponent implements OnInit {
           },
         });
       },
-      close: () => {
-
-      },
+      close: () => {},
     });
   }
   //#endregion
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadWarehouseInventories();
+  }
+
+  onFilter(): void {
+    this.loadWarehouseInventories();
+  }
+
+  getFilters(): WarehouseInventoryFilter {
+    const filters = this.filtersForm.value;
+    const payload: WarehouseInventoryFilter = {
+      warehouseId: this.warehouseId,
+      page: this.currentPage,
+      query: filters.query || null,
+    };
+    return payload;
+  }
+
+  resetFilters(): void {
+    this.filtersForm.reset();
+    this.loadWarehouseInventories();
+  }
 }

@@ -17,13 +17,26 @@ export class BaseApiService<T, F> {
     });
   }
 
+ protected handleResponseWithPagination<T>() {
+  return map((res: ApiResponse<T>) => {
+    if (res.success) {
+      return {
+        data: res.data ?? ([] as T),
+        pagination: res.pagination || ({} as PaginationDto),
+      };
+    }
+    throw new Error(res.message || 'Error en la respuesta del servidor');
+  });
+}
+
+
   export(filter: F): Observable<Blob> {
     return this.http.post<Blob>(
       `${environment.apiUrl}/${this.endpoint}/export`,
       filter,
       {
         responseType: 'blob' as 'json',
-      } 
+      }
     );
   }
 
@@ -76,7 +89,7 @@ export class BaseApiService<T, F> {
       : `${environment.apiUrl}/${this.endpoint}`;
 
     return this.http
-      .post<ApiResponse<T>>(url, data, )
+      .post<ApiResponse<T>>(url, data)
       .pipe(this.handleResponse());
   }
 

@@ -196,7 +196,6 @@ export class WarehouseTransferModalComponent implements OnInit {
   }
 
   getVariantOptions(index: number): ProductVariantAutocompleteDto[] {
-    console.log(this.variantOptions, index);
     this.variantOptions[index].forEach((option) => {
       option.displayName = `${option.productName || ''} - ${
         option.name || ''

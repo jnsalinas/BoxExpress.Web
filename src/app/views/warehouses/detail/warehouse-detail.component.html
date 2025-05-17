@@ -14,18 +14,52 @@
         </div>
       </c-card-header>
       <c-card-body>
-        <div class="input-group mb-3">
-          <span class="input-group-text">🔍</span>
+        <div class="input-group mb-3 justify-content-end">
+          <form
+            [formGroup]="filtersForm"
+            (ngSubmit)="onFilter()"
+            class="d-flex w-100 align-items-center gap-2 mb-3"
+          >
+            <span class="input-group-text">🔍</span>
+
+            <input
+              type="text"
+              class="form-control flex-grow-1"
+              placeholder="Buscar producto"
+              formControlName="query"
+            />
+
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              (click)="resetFilters()"
+            >
+              Limpiar
+            </button>
+          </form>
+
+          <!-- <span class="input-group-text">🔍</span>
           <input
             type="text"
             class="form-control"
             placeholder="Buscar producto"
             [(ngModel)]="searchTerm"
             (input)="filterProducts()"
+          /> -->
+
+          <!-- <input
+            type="text"
+            class="form-control"
+            placeholder="Buscar producto"
           />
+          <button class="btn btn-outline-primary" (click)="clearSearch()">
+            Filtrar
+          </button>
           <button class="btn btn-outline-secondary" (click)="clearSearch()">
             Limpiar
-          </button>
+          </button> -->
         </div>
 
         <table class="table table-bordered">
@@ -77,6 +111,12 @@
             </tr>
           </tbody>
         </table>
+        <app-generic-pagination
+          [pagination]="pagination"
+          [currentPage]="currentPage"
+          (pageChange)="onPageChange($event)"
+        >
+        </app-generic-pagination>
       </c-card-body>
     </c-card>
   </c-col>
