@@ -27,6 +27,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { StoreDto } from '../../../models/store.dto';
 import { StoreService } from '../../../services/store.service';
 import { IconDirective } from '@coreui/icons-angular';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-wallet-transaction-list',
@@ -45,6 +46,7 @@ import { IconDirective } from '@coreui/icons-angular';
     LoadingOverlayComponent,
     NgSelectModule,
     IconDirective,
+    RouterLink
   ],
   templateUrl: './wallet-transaction-list.component.html',
   styleUrl: './wallet-transaction-list.component.scss',

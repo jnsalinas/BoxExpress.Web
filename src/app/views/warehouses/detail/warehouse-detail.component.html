@@ -88,6 +88,7 @@
                       <th>Hold</th>
                       <th>Shopify ID</th>
                       <th>SKU</th>
+                      <th>Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -102,6 +103,20 @@
                       <td>
                         <span *ngIf="variant.sku" class="badge bg-secondary">
                           {{ variant.sku }}
+                        </span>
+                      </td>
+                      <td>
+                        <span>
+                          <a
+                            [routerLink]="[
+                              '/warehouses',
+                              warehouseDetail?.id,
+                              'inventory',
+                              variant.warehouseInventoryId
+                            ]"
+                          >
+                            Ver historial
+                          </a>
                         </span>
                       </td>
                     </tr>

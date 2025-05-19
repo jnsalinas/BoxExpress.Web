@@ -11,7 +11,7 @@ import { ProductDto } from '../models/product.dto';
 import { PaginationDto } from '../models/common/pagination.dto';
 
 @Injectable({ providedIn: 'root' })
-export class WarehouseInventoriesService extends BaseApiService<
+export class WarehouseInventoryService extends BaseApiService<
   ProductVariantDto,
   WarehouseInventoryFilter
 > {

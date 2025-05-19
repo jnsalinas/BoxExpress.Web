@@ -20,7 +20,7 @@ import { Subject } from 'rxjs';
 import { ProductVariantAutocompleteDto } from '../../../../models/product-variant-autocomplete.dto';
 import { freeSet } from '@coreui/icons';
 import { IconDirective } from '@coreui/icons-angular';
-import { WarehouseInventoriesService } from '../../../../services/warehouse-inventories.service';
+import { WarehouseInventoryService } from '../../../../services/warehouse-inventory.service';
 @Component({
   selector: 'app-warehouse-transfer-modal',
   standalone: true,
@@ -62,7 +62,7 @@ export class WarehouseTransferModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private warehouseService: WarehouseService,
-    private warehouseInventoriesService: WarehouseInventoriesService
+    private warehouseInventoriesService: WarehouseInventoryService
   ) {}
 
   ngOnInit(): void {

@@ -6,4 +6,5 @@ export interface OrderItemDto extends BaseDto {
   productName?: string;
   quantity?: number;
   unitPrice?: number;
+  orderId?: number;
 }

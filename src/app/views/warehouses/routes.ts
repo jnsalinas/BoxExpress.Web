@@ -16,4 +16,11 @@ export const routes: Routes = [
         (m) => m.WarehouseDetailComponent
       ),
   },
+  {
+    path: ':warehouseId/inventory/:inventoryItemId',
+    loadComponent: () =>
+      import('./inventory-item-detail/inventory-item-detail.component').then(
+        (m) => m.InventoryItemDetailComponent
+      ),
+  },
 ];

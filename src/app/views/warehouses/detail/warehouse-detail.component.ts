@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterLinkWithHref, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   CardComponent,
@@ -24,7 +24,7 @@ import { IconDirective } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
 import { WarehouseTransferModalComponent } from '../components/warehouse-transfer-modal/warehouse-transfer-modal.component';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
-import { WarehouseInventoriesService } from '../../../services/warehouse-inventories.service';
+import { WarehouseInventoryService } from '../../../services/warehouse-inventory.service';
 import { PaginationDto } from '../../../models/common/pagination.dto';
 import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
 import { WarehouseInventoryFilter } from '../../../models/warehouse-inventory-filter.model';
@@ -47,7 +47,9 @@ import { WarehouseInventoryFilter } from '../../../models/warehouse-inventory-fi
     GenericPaginationComponent,
     FormsModule,
     ReactiveFormsModule,
-    // IconDirective
+    RouterModule,
+    RouterLink,
+    RouterLinkWithHref
   ],
   templateUrl: './warehouse-detail.component.html',
 })
@@ -69,8 +71,9 @@ export class WarehouseDetailComponent implements OnInit {
 
   constructor(
     private warehouseService: WarehouseService,
-    private warehouseInventoriesService: WarehouseInventoriesService,
-    private fb: FormBuilder
+    private warehouseInventoryService: WarehouseInventoryService,
+    private fb: FormBuilder,
+    // private routerLink: RouterLink,
   ) {}
 
   ngOnInit(): void {
@@ -96,7 +99,7 @@ export class WarehouseDetailComponent implements OnInit {
   }
 
   loadWarehouseInventories(): void {
-    this.warehouseInventoriesService
+    this.warehouseInventoryService
       .getWarehouseProductSummaryAsync(this.getFilters())
       .subscribe({
         next: (response) => {

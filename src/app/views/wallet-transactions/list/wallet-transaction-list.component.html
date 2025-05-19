@@ -107,7 +107,14 @@
               <td>{{ tx.orderStatus }}</td>
               <td>{{ tx.createdAt | utcDate }}</td>
               <td>{{ tx.amount }}</td>
-              <td>{{ tx.relatedOrderId || "-" }}</td>
+              <td>
+                <a
+                  *ngIf="tx.relatedOrderId"
+                  [routerLink]="['/orders', tx.relatedOrderId]"
+                >
+                  #{{ tx.relatedOrderId || "-" }}
+                </a>
+              </td>
             </tr>
           </tbody>
         </table>

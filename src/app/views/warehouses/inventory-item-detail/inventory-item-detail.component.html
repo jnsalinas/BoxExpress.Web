@@ -1,0 +1,157 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando movimientos de inventario...'"
+></app-loading-overlay>
+
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header>
+        <strong>
+          <svg [cIcon]="icons.cilTag"></svg>
+
+          Movimientos de inventario
+        </strong>
+      </c-card-header>
+      <c-card-body>
+        <ng-container *ngIf="warehouseInventory">
+          <!-- Header variante -->
+          <h5 class="mt-4 mb-2">
+            {{ warehouseInventory.productVariant?.product?.name }}
+            {{ warehouseInventory.productVariant?.name }} (SKU:
+            {{ warehouseInventory.productVariant?.sku }})
+          </h5>
+          <p class="mb-2">
+            Precio: {{ warehouseInventory.productVariant?.price | currency }} |
+            Stock: {{ warehouseInventory.quantity }} | Reservado:
+            <span
+              [ngClass]="{
+                'text-success': warehouseInventory.reservedQuantity ?? 0 > 0,
+              }"
+              >{{ warehouseInventory.reservedQuantity ?? 0 }} </span
+            >| Disponible:
+            {{ warehouseInventory.availableQuantity ?? 0 }}
+          </p>
+
+          <!-- Tabla de movimientos -->
+
+          <div *ngIf="inventoryMovements.length">
+            <table cTable striped responsive hover>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Bodega</th>
+                  <th>Tipo</th>
+                  <th>Cantidad</th>
+                  <th>Orden</th>
+                  <th>Transferencia</th>
+                  <th>Notas</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let movement of inventoryMovements">
+                  <td>{{ movement.id }}</td>
+                  <td>{{ movement?.warehouse?.name }}</td>
+                  <td>
+                    {{ getInventoryMovementTypeText(movement.movementType) }}
+                  </td>
+                  <!-- <td>{{ getMovementTypeLabel(movement.movementType) }}</td> -->
+                  <td
+                    [ngClass]="{
+                      'text-success': movement.quantity > 0,
+                      'text-danger': movement.quantity < 0
+                    }"
+                  >
+                    {{ movement.quantity }}
+                  </td>
+                  <td>
+                    <a [routerLink]="['/orders', movement.orderId]">
+                      <span *ngIf="movement.orderId"
+                        >#{{ movement.orderId }}</span
+                      >
+                    </a>
+                  </td>
+                  <td>
+                    <span *ngIf="movement.transferId"
+                      >#{{ movement.transferId }}</span
+                    >
+                  </td>
+                  <td>{{ movement.notes }}</td>
+                  <td>{{ movement.createdAt | utcDate }}</td>
+                </tr>
+              </tbody>
+            </table>
+            <!-- Paginación -->
+            <app-generic-pagination
+              [pagination]="pagination"
+              [currentPage]="currentPage"
+              (pageChange)="onPageChange($event)"
+            ></app-generic-pagination>
+          </div>
+          <!-- Si no hay movimientos -->
+          <div *ngIf="!inventoryMovements.length" class="text-muted">
+            No hay movimientos registrados para esta variante.
+          </div>
+        </ng-container>
+      </c-card-body>
+    </c-card>
+
+    <!-- Card de retenciones activas -->
+    <c-card class="mt-4">
+      <c-card-header>
+        <strong>
+          <svg [cIcon]="icons.cilLockLocked"></svg>
+          Retenciones activas
+        </strong>
+      </c-card-header>
+      <c-card-body>
+        <table cTable striped responsive hover *ngIf="inventoryHolds?.length">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cantidad</th>
+              <th>Tipo</th>
+              <th>Orden</th>
+              <th>Transferencia</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let hold of inventoryHolds">
+              <td>{{ hold.id }}</td>
+              <td class="text-warning fw-bold">{{ hold.quantity }}</td>
+              <td>
+                <span *ngIf="hold.type === 1">Orden</span>
+                <span *ngIf="hold.type === 2">Transferencia</span>
+              </td>
+              <td>
+                <a
+                  *ngIf="hold.orderItem"
+                  [routerLink]="['/orders', hold.orderItem.orderId]"
+                >
+                  #{{ hold.orderItemId }}
+                </a>
+              </td>
+              <td>
+                <span *ngIf="hold.transferId"> #{{ hold.transferId }} </span>
+
+                <!-- <a
+                  *ngIf="hold.transferId"
+                  [routerLink]="['/transfers', hold.transferId]"
+                >
+                  #{{ hold.transferId }}
+                </a> -->
+              </td>
+              <td>{{ hold.createdAt | utcDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div *ngIf="!inventoryHolds?.length" class="text-muted">
+          No hay retenciones activas para esta variante.
+        </div>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>
