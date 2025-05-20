@@ -4,6 +4,7 @@ import { WarehouseDto } from '../../../models/warehouse.dto';
 import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { LoadingOverlayComponent } from 'src/app/shared/components/loading-overlay/loading-overlay.component';
 
 import {
   RowComponent,
@@ -28,9 +29,11 @@ import {
     CardBodyComponent,
     TableDirective,
     RouterLink,
+    LoadingOverlayComponent,
   ],
 })
-export class WarehousesComponent implements OnInit { //todo: renombrar a WrehousesListComponent
+export class WarehousesComponent implements OnInit {
+  //todo: renombrar a WrehousesListComponent
   selectedWarehouseId: number | undefined;
 
   warehouses: WarehouseDto[] = [
@@ -52,7 +55,7 @@ export class WarehousesComponent implements OnInit { //todo: renombrar a Wrehous
     },
   ];
 
-  loading = false;
+  isLoading = false;
 
   constructor(private warehouseService: WarehouseService) {}
 
@@ -61,18 +64,18 @@ export class WarehousesComponent implements OnInit { //todo: renombrar a Wrehous
   }
 
   loadWarehouses(): void {
-    this.loading = true;
+    this.isLoading = true;
     const filter: WarehouseFilter = {
       // Aquí pones filtros si los necesitas
     };
     this.warehouseService.getAll(filter).subscribe({
       next: (result) => {
         this.warehouses = result.data;
-        this.loading = false;
+        this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error loading warehouses', err);
-        this.loading = false;
+        console.error('Error isLoading warehouses', err);
+        this.isLoading = false;
       },
     });
   }
@@ -92,11 +95,11 @@ export class WarehousesComponent implements OnInit { //todo: renombrar a Wrehous
   //     .subscribe({
   //       next: (data) => {
   //         console.log('Warehouse created:', data);
-  //         this.loading = false;
+  //         this.isLoading = false;
   //       },
   //       error: (err) => {
-  //         console.error('Error loading warehouses', err);
-  //         this.loading = false;
+  //         console.error('Error isLoading warehouses', err);
+  //         this.isLoading = false;
   //       },
   //     });
 

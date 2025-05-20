@@ -1,5 +1,10 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, RouterLink, RouterLinkWithHref, RouterModule } from '@angular/router';
+import {
+  ActivatedRoute,
+  RouterLink,
+  RouterLinkWithHref,
+  RouterModule,
+} from '@angular/router';
 import { CommonModule } from '@angular/common';
 import {
   CardComponent,
@@ -28,6 +33,9 @@ import { WarehouseInventoryService } from '../../../services/warehouse-inventory
 import { PaginationDto } from '../../../models/common/pagination.dto';
 import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
 import { WarehouseInventoryFilter } from '../../../models/warehouse-inventory-filter.model';
+import { LoadingOverlayComponent } from 'src/app/shared/components/loading-overlay/loading-overlay.component';
+import { WarehouseInventoryItemEditModalComponent } from '../../warehouse-transfers/components/warehouse-inventory-item-edit-modal/warehouse-inventory-item-edit-modal.component';
+import { WarehouseInventoryDto } from '../../../models/warehouse-inventory.dto';
 
 @Component({
   selector: 'app-warehouse-detail',
@@ -49,7 +57,9 @@ import { WarehouseInventoryFilter } from '../../../models/warehouse-inventory-fi
     ReactiveFormsModule,
     RouterModule,
     RouterLink,
-    RouterLinkWithHref
+    RouterLinkWithHref,
+    LoadingOverlayComponent,
+    WarehouseInventoryItemEditModalComponent,
   ],
   templateUrl: './warehouse-detail.component.html',
 })
@@ -63,17 +73,17 @@ export class WarehouseDetailComponent implements OnInit {
   warehouseDetail: WarehouseDetailDto | undefined;
   filteredProducts: ProductDto[] | null = null;
   searchTerm: string = '';
-  loading = false;
+  isLoading = false;
   icons = freeSet;
   currentPage: number = 1;
   pagination: PaginationDto | null = null;
   filtersForm: FormGroup = new FormGroup({});
+  warehouseInventoryId: number | null = null;
 
   constructor(
     private warehouseService: WarehouseService,
     private warehouseInventoryService: WarehouseInventoryService,
-    private fb: FormBuilder,
-    // private routerLink: RouterLink,
+    private fb: FormBuilder // private routerLink: RouterLink,
   ) {}
 
   ngOnInit(): void {
@@ -93,12 +103,13 @@ export class WarehouseDetailComponent implements OnInit {
         this.loadWarehouseInventories();
       },
       error: (err) => {
-        console.error('Error loading warehouses', err);
+        console.error('Error isLoading warehouses', err);
       },
     });
   }
 
   loadWarehouseInventories(): void {
+    this.isLoading = true;
     this.warehouseInventoryService
       .getWarehouseProductSummaryAsync(this.getFilters())
       .subscribe({
@@ -109,9 +120,11 @@ export class WarehouseDetailComponent implements OnInit {
             this.filteredProducts = response.data ?? [];
             this.pagination = response.pagination;
           }
+          this.isLoading = false;
         },
         error: (err) => {
-          console.error('Error loading warehouses', err);
+          console.error('Error isLoading warehouses', err);
+          this.isLoading = false;
         },
       });
   }
@@ -147,17 +160,17 @@ export class WarehouseDetailComponent implements OnInit {
 
   handleInventorySave(data: any) {
     console.log('Saved data:', data);
-    this.loading = true;
+    this.isLoading = true;
     this.warehouseService
       .addInventory(this.warehouseId!, data.products)
       .subscribe({
         next: (data) => {
           console.log('Warehouse created:', data);
-          this.loading = false;
+          this.isLoading = false;
           this.handleInventoryClose(null);
         },
         error: (err) => {
-          console.error('Error loading warehouses', err);
+          console.error('Error isLoading warehouses', err);
           this.handleInventoryClose(null);
         },
       });
@@ -183,15 +196,15 @@ export class WarehouseDetailComponent implements OnInit {
       body: `¿Estás seguro de que desea crear la transferencia?`,
       ok: () => {
         console.log('Saved data:', data);
-        this.loading = true;
+        this.isLoading = true;
         this.warehouseService.transfer(this.warehouseId!, data).subscribe({
           next: (data) => {
             console.log('Warehouse transfer:', data);
-            this.loading = false;
+            this.isLoading = false;
             this.handleTransferClose(null);
           },
           error: (err) => {
-            console.error('Error loading warehouses', err);
+            console.error('Error isLoading warehouses', err);
             this.handleTransferClose(null);
           },
         });
@@ -223,4 +236,47 @@ export class WarehouseDetailComponent implements OnInit {
     this.filtersForm.reset();
     this.loadWarehouseInventories();
   }
+
+  //#region Inventory Item Edit
+  openInventoryItemModal(variant: ProductVariantDto) {
+    console.log('Selected variant:', variant);
+    this.warehouseInventoryId = variant.warehouseInventoryId ?? null;
+  }
+
+  handleInventoryItemSave(data: any) {
+    console.log('Saved data:', data);
+    this.modal.show({
+      title: 'Actualizar inventario',
+      body: `¿Estás seguro de que desea actualizar el inventario?`,
+      ok: () => {
+        if (this.warehouseInventoryId != null) {
+          console.log('Saved data:', data);
+          this.isLoading = true;
+          this.warehouseInventoryService
+            .update(this.warehouseInventoryId, data)
+            .subscribe({
+              next: (data) => {
+                console.log('Warehouse transfer:', data);
+                this.isLoading = false;
+                this.handleInventoryItemClose();
+                this.loadWarehouseInventories();
+                this.warehouseInventoryId = null;
+              },
+              error: (err) => {
+                console.error('Error isLoading warehouses', err);
+                this.handleInventoryItemClose();
+              },
+            });
+        } else {
+          this.handleInventoryItemClose();
+        }
+      },
+      close: () => {},
+    });
+  }
+
+  handleInventoryItemClose() {
+    this.warehouseInventoryId = null;
+  }
+  //#endregion
 }

@@ -1,3 +1,7 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando detalle...'"
+></app-loading-overlay>
 <c-row>
   <c-col xs="12">
     <c-card class="mb-3">
@@ -84,8 +88,8 @@
                     <tr>
                       <th>Variante</th>
                       <th>Disponible</th>
+                      <th>Procesamiento</th>
                       <th>Total</th>
-                      <th>Hold</th>
                       <th>Shopify ID</th>
                       <th>SKU</th>
                       <th>Acciones</th>
@@ -97,17 +101,18 @@
                         <strong>{{ variant.name }}</strong>
                       </td>
                       <td>{{ variant.availableQuantity }}</td>
-                      <td>{{ variant.quantity }}</td>
                       <td>{{ variant.reservedQuantity }}</td>
-                      <td>{{ variant.shopifyId || "-" }}</td>
+                      <td>{{ variant.quantity }}</td>
+                      <td>{{ variant.shopifyVariantId || "-" }}</td>
                       <td>
                         <span *ngIf="variant.sku" class="badge bg-secondary">
                           {{ variant.sku }}
                         </span>
                       </td>
-                      <td>
+                      <td style="display: flex; gap: 0.5rem">
                         <span>
                           <a
+                            class="btn btn-sm btn-outline-primary"
                             [routerLink]="[
                               '/warehouses',
                               warehouseDetail?.id,
@@ -118,6 +123,12 @@
                             Ver historial
                           </a>
                         </span>
+                        <!-- <button class="me-1 btn btn-outline-primary">✏️</button> -->
+                        <a
+                          class="btn btn-sm btn-outline-primary"
+                          (click)="openInventoryItemModal(variant)"
+                          >Editar</a
+                        >
                       </td>
                     </tr>
                   </tbody>
@@ -157,4 +168,11 @@
 >
 </app-warehouse-transfer-modal>
 <app-generic-modal></app-generic-modal>
+
+<app-warehouse-inventory-item-edit-modal
+  *ngIf="warehouseInventoryId"
+  [warehouseInventoryId]="warehouseInventoryId"
+  (onSave)="handleInventoryItemSave($event)"
+  (onClose)="handleInventoryItemClose()"
+></app-warehouse-inventory-item-edit-modal>
 <!-- todo: mirar si este modal se puede poner en el router outlet en el template  -->

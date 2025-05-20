@@ -1,0 +1,198 @@
+<c-modal [visible]="warehouseInventoryItem" size="lg" backdrop="static">
+  <c-modal-header>
+    <h5 class="modal-title">Modificar producto</h5>
+  </c-modal-header>
+
+  <c-modal-body>
+    <c-card>
+      <c-card-body>
+        <form
+          [formGroup]="warehouseInventoryForm"
+          *ngIf="warehouseInventoryItem"
+        >
+          <c-row>
+            <!-- Nombre del producto -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label for="productName" class="form-label"
+                  >Nombre del producto</label
+                >
+                <input
+                  type="text"
+                  id="productName"
+                  class="form-control"
+                  formControlName="productName"
+                />
+              </div>
+            </c-col>
+
+            <!-- Nombre de la variante -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label for="variantName" class="form-label"
+                  >Nombre de la variante</label
+                >
+                <input
+                  type="text"
+                  id="variantName"
+                  class="form-control"
+                  formControlName="variantName"
+                />
+              </div>
+            </c-col>
+          </c-row>
+
+          <c-row>
+            <!-- SKU del producto -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label for="productSku" class="form-label"
+                  >SKU del producto</label
+                >
+                <input
+                  type="text"
+                  id="productSku"
+                  class="form-control"
+                  formControlName="productSku"
+                />
+              </div>
+            </c-col>
+
+            <!-- SKU de la variante -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label for="variantSku" class="form-label"
+                  >SKU de la variante</label
+                >
+                <input
+                  type="text"
+                  id="variantSku"
+                  class="form-control"
+                  formControlName="variantSku"
+                />
+              </div>
+            </c-col>
+          </c-row>
+
+          <c-row>
+            <!-- Shopify Product ID -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label for="shopifyProductId" class="form-label"
+                  >Shopify Product ID</label
+                >
+                <input
+                  type="text"
+                  id="shopifyProductId"
+                  class="form-control"
+                  formControlName="shopifyProductId"
+                />
+              </div>
+            </c-col>
+
+            <!-- Shopify Variant ID -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label for="shopifyVariantId" class="form-label"
+                  >Shopify Variant ID</label
+                >
+                <input
+                  type="text"
+                  id="shopifyVariantId"
+                  class="form-control"
+                  formControlName="shopifyVariantId"
+                />
+              </div>
+            </c-col>
+          </c-row>
+
+          <c-row>
+            <!-- Precio -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label for="price" class="form-label">Precio</label>
+                <input
+                  type="number"
+                  id="price"
+                  class="form-control"
+                  formControlName="price"
+                />
+              </div>
+            </c-col>
+
+            <!-- Cantidad total -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label for="quantity" class="form-label">Cantidad total</label>
+                <input
+                  type="number"
+                  id="quantity"
+                  class="form-control"
+                  formControlName="quantity"
+                />
+              </div>
+            </c-col>
+          </c-row>
+
+          <c-row>
+            <!-- Cantidad reservada -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label for="reservedQuantity" class="form-label"
+                  >Cantidad en Procesamiento</label
+                >
+                <input
+                  type="number"
+                  id="reservedQuantity"
+                  class="form-control"
+                  [value]="warehouseInventoryItem?.reservedQuantity"
+                  disabled
+                />
+              </div>
+            </c-col>
+
+            <!-- Cantidad disponible -->
+            <c-col col="6">
+              <div class="mb-3">
+                <label class="form-label">Cantidad disponible</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  [value]="warehouseInventoryItem?.availableQuantity"
+                  disabled
+                />
+              </div>
+            </c-col>
+          </c-row>
+          <c-row>
+            <!-- Notas -->
+            <c-col col="12">
+              <div class="mb-3">
+                <label for="notes" class="form-label">Justificación</label>
+                <textarea
+                  id="notes"
+                  class="form-control"
+                  formControlName="notes"
+                ></textarea>
+              </div>
+            </c-col>
+          </c-row>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="save()"
+      [disabled]="warehouseInventoryForm.invalid"
+    >
+      Aceptar
+    </button>
+  </c-modal-footer>
+</c-modal>

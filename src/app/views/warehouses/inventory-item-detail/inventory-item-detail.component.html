@@ -23,7 +23,7 @@
           </h5>
           <p class="mb-2">
             Precio: {{ warehouseInventory.productVariant?.price | currency }} |
-            Stock: {{ warehouseInventory.quantity }} | Reservado:
+            Total: {{ warehouseInventory.quantity }} | Procesamiento:
             <span
               [ngClass]="{
                 'text-success': warehouseInventory.reservedQuantity ?? 0 > 0,
@@ -102,7 +102,7 @@
       <c-card-header>
         <strong>
           <svg [cIcon]="icons.cilLockLocked"></svg>
-          Retenciones activas
+          En Procesamiento
         </strong>
       </c-card-header>
       <c-card-body>

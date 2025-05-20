@@ -79,7 +79,7 @@ export class WarehouseProductModalComponent implements OnInit {
       id: [product.id || 0],
       name: [product.name || '', Validators.required],
       sku: [product.sku || ''],
-      shopifyId: [product.shopifyId || ''],
+      shopifyId: [product.shopifyProductId || ''],
       price: [product.price || 0],
       variants: this.fb.array(
         (product.variants || []).map((v: ProductVariantDto) =>

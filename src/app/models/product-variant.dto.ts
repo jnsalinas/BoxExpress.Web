@@ -4,7 +4,7 @@ import { ProductDto } from './product.dto';
 
 export interface ProductVariantDto extends BaseDto {
   quantity: number;
-  shopifyId?: string;
+  shopifyVariantId?: string;
   sku?: string;
   price?: number;
   reservedQuantity?: number;
