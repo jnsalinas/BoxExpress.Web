@@ -114,6 +114,7 @@
               <th>Tipo</th>
               <th>Orden</th>
               <th>Transferencia</th>
+              <th>Estatus</th>
               <th>Fecha</th>
             </tr>
           </thead>
@@ -135,14 +136,8 @@
               </td>
               <td>
                 <span *ngIf="hold.transferId"> #{{ hold.transferId }} </span>
-
-                <!-- <a
-                  *ngIf="hold.transferId"
-                  [routerLink]="['/transfers', hold.transferId]"
-                >
-                  #{{ hold.transferId }}
-                </a> -->
               </td>
+              <td>{{ getStatusLabel(hold.status) }}</td>
               <td>{{ hold.createdAt | utcDate }}</td>
             </tr>
           </tbody>

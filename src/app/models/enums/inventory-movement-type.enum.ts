@@ -7,6 +7,7 @@ export enum InventoryMovementType {
   InitialLoad = 6,
   OrderDeliveryReverted = 7,
   InitialStock = 8,
+  LostOnCancellation = 9,
 }
 
 export const InventoryMovementTypeText: Record<InventoryMovementType, string> =
@@ -19,4 +20,5 @@ export const InventoryMovementTypeText: Record<InventoryMovementType, string> =
     [InventoryMovementType.InitialLoad]: 'Carga inicial',
     [InventoryMovementType.OrderDeliveryReverted]: 'Orden revertida',
     [InventoryMovementType.InitialStock]: 'Inicial stock',
+    [InventoryMovementType.LostOnCancellation]: 'Pérdida por cancelación de orden ',
   };

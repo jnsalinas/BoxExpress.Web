@@ -1,0 +1,72 @@
+<c-card>
+  <c-card-header>
+    <strong>Devoluciones</strong>
+  </c-card-header>
+  <c-card-body>
+    QUE PASA SI UNA ORDEN ESTA CANCELADA Y NO HAN SOLUCIONADO ESTO DEL
+    INVENTARIOL, DEBERIA DEJARLE CAMBIAR STATUS O NO?
+    <table cTable striped responsive hover>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Producto</th>
+          <th>Bodega</th>
+          <th>Orden</th>
+          <th>Cantidad</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let hold of pendingReturns; let i = index">
+          <td>{{ hold.id }}</td>
+          <td>
+            {{ hold.warehouseInventory?.productVariant?.product?.name }}
+            {{ hold.warehouseInventory?.productVariant?.name }}
+          </td>
+          <td>{{ hold.warehouseInventory?.warehouse?.name }}</td>
+          <td>
+            <a
+              *ngIf="hold.orderItem?.orderId"
+              [routerLink]="['/orders', hold.orderItem?.orderId]"
+            >
+              #{{ hold.orderItemId }}
+            </a>
+          </td>
+
+          <td>{{ hold.quantity }}</td>
+          <td>{{ hold.createdAt | date : "short" }}</td>
+          <td>
+            <button
+              cButton
+              color="success"
+              size="sm"
+              (click)="openSolveModal(hold, true)"
+            >
+              Aceptar
+            </button>
+            <button
+              cButton
+              color="danger"
+              size="sm"
+              class="ms-2"
+              (click)="openSolveModal(hold, false)"
+            >
+              Rechazar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </c-card-body>
+</c-card>
+
+<app-inventory-return-solve-modal
+  [isVisible]="inventoryHoldResolution != null"
+  [title]="getTitleModal()"
+  [inventoryHoldResolution]="inventoryHoldResolution"
+  (ok)="acceptReturn($event)"
+  (close)="cancelReturn()"
+>
+</app-inventory-return-solve-modal>
+<app-generic-modal></app-generic-modal>

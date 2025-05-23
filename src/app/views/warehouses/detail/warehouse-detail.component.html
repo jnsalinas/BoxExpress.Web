@@ -89,6 +89,7 @@
                       <th>Variante</th>
                       <th>Disponible</th>
                       <th>Procesamiento</th>
+                      <th>En devolución</th>
                       <th>Total</th>
                       <th>Shopify ID</th>
                       <th>SKU</th>
@@ -102,6 +103,7 @@
                       </td>
                       <td>{{ variant.availableQuantity }}</td>
                       <td>{{ variant.reservedQuantity }}</td>
+                      <td>{{ variant.pendingReturnQuantity }}</td>
                       <td>{{ variant.quantity }}</td>
                       <td>{{ variant.shopifyVariantId || "-" }}</td>
                       <td>

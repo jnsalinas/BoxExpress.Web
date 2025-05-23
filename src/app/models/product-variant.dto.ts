@@ -12,4 +12,5 @@ export interface ProductVariantDto extends BaseDto {
   inventoryMovements? : InventoryMovementDto[];
   product: ProductDto
   warehouseInventoryId?: number;
+  pendingReturnQuantity?: number;
 }

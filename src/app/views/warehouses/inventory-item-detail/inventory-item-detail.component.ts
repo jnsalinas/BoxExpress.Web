@@ -31,6 +31,10 @@ import {
   InventoryMovementType,
   InventoryMovementTypeText,
 } from 'src/app/models/enums/inventory-movement-type.enum';
+import {
+  InventoryHoldStatus,
+  InventoryHoldStatusText,
+} from '../../../models/enums/inventory-hold-status.enum';
 
 @Component({
   selector: 'app-inventory-item-detail',
@@ -117,6 +121,10 @@ export class InventoryItemDetailComponent implements OnInit {
     this.inventoryHoldService
       .getAll({
         warehouseInventoryId: this.warehouseInventory.id,
+        statuses: [
+          InventoryHoldStatus.PendingReturn,
+          InventoryHoldStatus.Active,
+        ],
       })
       .subscribe({
         next: (response) => {
@@ -136,6 +144,10 @@ export class InventoryItemDetailComponent implements OnInit {
         this.isLoading = false;
       },
     });
+  }
+
+  getStatusLabel(status?: InventoryHoldStatus): string {
+    return InventoryHoldStatusText[status!] ?? 'Desconocido';
   }
 
   getInventoryMovementTypeText(type: InventoryMovementType): string {

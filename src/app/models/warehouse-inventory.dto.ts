@@ -13,4 +13,5 @@ export interface WarehouseInventoryDto extends BaseDto {
   availableQuantity?: number;
   productVariant?: ProductVariantDto;
   warehouse?: WarehouseDto;
+  pendingReturnQuantity?: number;
 }
