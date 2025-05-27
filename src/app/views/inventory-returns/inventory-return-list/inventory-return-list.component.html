@@ -3,8 +3,6 @@
     <strong>Devoluciones</strong>
   </c-card-header>
   <c-card-body>
-    QUE PASA SI UNA ORDEN ESTA CANCELADA Y NO HAN SOLUCIONADO ESTO DEL
-    INVENTARIOL, DEBERIA DEJARLE CAMBIAR STATUS O NO?
     <table cTable striped responsive hover>
       <thead>
         <tr>
@@ -30,7 +28,7 @@
               *ngIf="hold.orderItem?.orderId"
               [routerLink]="['/orders', hold.orderItem?.orderId]"
             >
-              #{{ hold.orderItemId }}
+              #{{ hold.orderItem?.orderId }}
             </a>
           </td>
 

@@ -1,6 +1,6 @@
 <!-- Se dejan las columnas "fijas" ya que al hacerlo de forma dinamica con swtich o ngif dentro de un ngfor de columnas para hacer el render de los td cuando se pone ngmodule y ngchange se muere el binding y no carga la pagina  -->
 <div style="overflow-x: auto; width: 100%">
-  <table cTable>
+  <table [hover]="true" [striped]="true" cTable>
     <thead>
       <tr>
         <th *ngIf="hasColumn('id')">Guía</th>
@@ -25,20 +25,27 @@
     </thead>
 
     <tbody>
-      <tr
+      <!-- <tr
         *ngFor="let order of orders"
         [ngStyle]="{
           'border-left': '5px solid ' + getStatusColor(order.status)
         }"
+        [ngClass]="'bg-' + order.status | lowercase"
+      > -->
+      <tr
+        *ngFor="let order of orders"
+        [ngClass]="'bg-' + order.status | lowercase"
       >
-        <td *ngIf="hasColumn('id')">{{ order.id }}</td>
+        <td *ngIf="hasColumn('id')">
+          {{ order.id }}
+        </td>
         <td *ngIf="hasColumn('code')">{{ order.code }}</td>
         <td *ngIf="hasColumn('clientFullName')">{{ order.clientFullName }}</td>
         <td *ngIf="hasColumn('storeName')">{{ order.storeName }}</td>
         <td *ngIf="hasColumn('clientPhone')">{{ order.clientPhone }}</td>
-        <td *ngIf="hasColumn('clientAddress')">{{ order.clientAddress }}</td>
-        <td *ngIf="hasColumn('notes')">{{ order.notes }}</td>
-        <td *ngIf="hasColumn('totalAmount')">
+        <td *ngIf="hasColumn('clientAddress')" style="min-width: 200px">{{ order.clientAddress }}</td>
+        <td *ngIf="hasColumn('notes')" style="min-width: 100px">{{ order.notes }}</td>
+        <td *ngIf="hasColumn('totalAmount')" style="min-width: 90px">
           {{
             order.totalAmount
               | currency : order.curencyCode : "symbol" : "1.0-0"
@@ -51,7 +58,7 @@
           }}
         </td>
 
-        <td *ngIf="hasColumn('contains')">
+        <td *ngIf="hasColumn('contains')" style="min-width: 200px">
           <div
             *ngIf="order.orderItems?.length; else showContains"
             style="white-space: normal"
@@ -69,8 +76,8 @@
             </div>
           </ng-template>
         </td>
-        <td *ngIf="hasColumn('city')">{{ order.city }}</td>
-        <td *ngIf="hasColumn('category')">
+        <td *ngIf="hasColumn('city')" style="min-width: 155px">{{ order.city }}</td>
+        <td *ngIf="hasColumn('category')" style="min-width: 185px">
           <select
             class="form-select form-select-sm"
             [(ngModel)]="order.warehouseId"
@@ -90,12 +97,7 @@
         </td>
         <td *ngIf="hasColumn('warehouseName')">{{ order.warehouseName }}</td>
         <td *ngIf="hasColumn('status')" style="min-width: 155px">
-          <!-- <span class="badge" [ngClass]="getStatusBadgeClass(order.status)">
-          {{ order.status }}
-        </span> -->
-          <!-- <span class="badge bg-info">{{ order.status }}</span> -->
           <select
-            [ngClass]="getStatusBadgeClass(order.status)"
             class="form-select form-select-sm"
             [(ngModel)]="order.statusId"
             (ngModelChange)="onStatusChange(order.id, $event)"
@@ -110,8 +112,7 @@
         </td>
         <td *ngIf="hasColumn('scheduledDate')" style="min-width: 125px">
           {{ order.scheduledDate | date : "MM-dd-yyyy" }}
-          <br />
-
+          <br *ngIf="order.scheduledDate" />
           <strong
             >{{ order.timeSlotStartTime | slice : 0 : 5 }} -
             {{ order.timeSlotEndTime | slice : 0 : 5 }}
@@ -122,20 +123,22 @@
         {{ order.timeSlotEndTime | slice : 0 : 5 }}
       </td> -->
         <!-- Acciones -->
-        <td *ngIf="hasColumn('actions')" class="d-flex">
-          <button
-            class="btn btn-sm btn-outline-primary me-2"
-            [routerLink]="[order.id]"
-          >
-            <svg [cIcon]="icons.cilPencil"></svg>
-          </button>
-          <button
-            *ngIf="hasColumn('action-edit')"
-            class="btn btn-sm btn-outline-primary"
-            (click)="onScheduleOrder(order)"
-          >
-            <svg cIcon name="cilCalendar"></svg>
-          </button>
+        <td *ngIf="hasColumn('actions')">
+          <div class="d-flex">
+            <button
+              class="btn btn-sm btn-outline-primary me-2"
+              [routerLink]="[order.id]"
+            >
+              <svg [cIcon]="icons.cilPencil"></svg>
+            </button>
+            <button
+              *ngIf="hasColumn('action-edit')"
+              class="btn btn-sm btn-outline-primary"
+              (click)="onScheduleOrder(order)"
+            >
+              <svg cIcon name="cilCalendar"></svg>
+            </button>
+          </div>
         </td>
       </tr>
     </tbody>

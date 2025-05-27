@@ -42,6 +42,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { OrderEditModalComponent } from '../components/order-edit-modal/order-edit-modal.component';
 import { IconDirective } from '@coreui/icons-angular';
+import { PaginationDto } from '../../../models/common/pagination.dto';
+import { GenericPaginationComponent } from 'src/app/shared/components/generic-pagination/generic-pagination.component';
 
 @Component({
   standalone: true,
@@ -70,6 +72,7 @@ import { IconDirective } from '@coreui/icons-angular';
     FormControlDirective,
     OrderEditModalComponent,
     IconDirective,
+    GenericPaginationComponent
   ],
 })
 export class OrderListComponent implements OnInit {
@@ -93,6 +96,8 @@ export class OrderListComponent implements OnInit {
   private ordersSubject = new BehaviorSubject<OrderDto[]>([]); // Aquí almacenamos las órdenes
   orders$ = this.ordersSubject.asObservable(); // Observable para los componentes que escuchan cambios
   orderSelected: OrderDto | null = null;
+  pagination: PaginationDto = {};
+  currentPage: number = 1;
 
   constructor(
     private orderService: OrderService,
@@ -144,6 +149,8 @@ export class OrderListComponent implements OnInit {
       endDate: filters.endDate ? toUtcEndOfDayLocal(filters.endDate) : null,
       orderId: filters.orderId ?? null,
       storeId: filters.storeId || null,
+      page: this.currentPage,
+      // pageSize: 2
     };
     return payload;
   }
@@ -155,6 +162,7 @@ export class OrderListComponent implements OnInit {
         this.orders = result.data;
         this.ordersSubject.next(result.data); // Actualiza el BehaviorSubject con las órdenes
         this.isLoading = false;
+        this.pagination = result.pagination;
       },
       error: (err) => {
         console.error('Error loading orders', err);
@@ -249,6 +257,12 @@ export class OrderListComponent implements OnInit {
             error: (err) => {
               console.error('Error changing status', err);
               order.statusId = event.previousStatusId;
+              this.modal.show({
+                title: 'Error',
+                body: `${err.message}`,
+                showCancelButton: false,
+                okText: 'Ok',
+              });
             },
           });
       },
@@ -363,5 +377,10 @@ export class OrderListComponent implements OnInit {
       a.click();
       this.isLoading = false;
     });
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadOrders();
   }
 }

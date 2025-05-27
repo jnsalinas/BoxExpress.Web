@@ -106,6 +106,12 @@
                 (warehouseChanged)="handleWarehouseChange($event)"
                 (scheduleOrder)="handleScheduleOrder($event)"
               />
+              <app-generic-pagination
+                [pagination]="pagination"
+                [currentPage]="currentPage"
+                (pageChange)="onPageChange($event)"
+              >
+              </app-generic-pagination>
             </c-tab-panel>
           </c-tabs-content>
         </c-tabs>

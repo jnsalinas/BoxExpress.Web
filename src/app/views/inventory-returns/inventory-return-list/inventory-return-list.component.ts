@@ -64,9 +64,9 @@ export class InventoryReturnListComponent implements OnInit {
   getTitleModal(): string {
     switch (this.inventoryHoldResolution?.status) {
       case InventoryHoldStatus.NotReturned:
-        return 'Aceptar perdida de productos';
+        return 'Devolución no recibida';
       default:
-        return 'Aceptar devolución';
+        return 'Aceptar devolución de productos';
     }
   }
 
