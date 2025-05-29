@@ -38,6 +38,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     GenericPaginationComponent,
     NgSelectModule,
     ReactiveFormsModule,
+    IconDirective,
   ],
   templateUrl: './store-balance-list.component.html',
   styleUrl: './store-balance-list.component.scss',
@@ -93,6 +94,23 @@ export class StoreBalanceListComponent implements OnInit {
         console.error('Error loading stores:', err);
         this.isLoading = false;
       },
+    });
+  }
+
+  downloadExcel() {
+    this.isLoading = true;
+    this.storeService.export(this.getFilters()).subscribe((response: Blob) => {
+      const dateTimeString = new Date()
+        .toISOString()
+        .replace('T', '_')
+        .replace(/:/g, '-')
+        .substring(0, 16);
+      const fileURL = URL.createObjectURL(response);
+      const a = document.createElement('a');
+      a.href = fileURL;
+      a.download = `Balance_${dateTimeString}.xlsx`;
+      a.click();
+      this.isLoading = false;
     });
   }
 }

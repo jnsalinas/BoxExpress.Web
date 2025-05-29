@@ -9,6 +9,14 @@
       <c-card-header>
         <strong>Balance</strong>
         <!-- -> <small>Con balance disponible</small> -->
+        <button
+          type="button"
+          class="float-end btn btn-primary ms-2"
+          (click)="downloadExcel()"
+        >
+          <svg [cIcon]="icons.cilCloudDownload"></svg>
+          Exportar
+        </button>
       </c-card-header>
 
       <c-card-body>

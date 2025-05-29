@@ -34,7 +34,7 @@
       > -->
       <tr
         *ngFor="let order of orders"
-        [ngClass]="'bg-' + order.status | lowercase"
+        [ngClass]="getStatusClass(order.status)"
       >
         <td *ngIf="hasColumn('id')">
           {{ order.id }}

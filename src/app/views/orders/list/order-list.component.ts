@@ -44,6 +44,7 @@ import { OrderEditModalComponent } from '../components/order-edit-modal/order-ed
 import { IconDirective } from '@coreui/icons-angular';
 import { PaginationDto } from '../../../models/common/pagination.dto';
 import { GenericPaginationComponent } from 'src/app/shared/components/generic-pagination/generic-pagination.component';
+import { OrderSummaryDto } from '../../../models/order-summary.dto';
 
 @Component({
   standalone: true,
@@ -72,7 +73,7 @@ import { GenericPaginationComponent } from 'src/app/shared/components/generic-pa
     FormControlDirective,
     OrderEditModalComponent,
     IconDirective,
-    GenericPaginationComponent
+    GenericPaginationComponent,
   ],
 })
 export class OrderListComponent implements OnInit {
@@ -85,6 +86,7 @@ export class OrderListComponent implements OnInit {
   selectedOrderId: number | undefined;
   selectedOrderName: string = '';
   orders: OrderDto[] = [];
+  orderSummary: OrderSummaryDto[] = [];
   warehouseOptions: WarehouseDto[] = [
     {
       id: 0,
@@ -163,6 +165,22 @@ export class OrderListComponent implements OnInit {
         this.ordersSubject.next(result.data); // Actualiza el BehaviorSubject con las órdenes
         this.isLoading = false;
         this.pagination = result.pagination;
+        this.loadSummary();
+      },
+      error: (err) => {
+        console.error('Error loading orders', err);
+        this.isLoading = false;
+      },
+    });
+  }
+
+  loadSummary() {
+    this.isLoading = true;
+    this.orderService.getSummary(this.getFilters()).subscribe({
+      next: (result) => {
+        this.orderSummary = result;
+        this.isLoading = false;
+        console.log('orderSummary', this.orderSummary);
       },
       error: (err) => {
         console.error('Error loading orders', err);
@@ -382,5 +400,9 @@ export class OrderListComponent implements OnInit {
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadOrders();
+  }
+
+  getStatusClass(status: string): string {
+    return 'bg-' + status.toLowerCase().replace(/ /g, '-');
   }
 }

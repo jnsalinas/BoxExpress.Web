@@ -101,4 +101,8 @@ export class OrderTableComponent {
     }
     return order.contains || '';
   }
+
+  getStatusClass(status: string): string {
+    return 'bg-' + status.toLowerCase().replace(/ /g, '-');
+  }
 }

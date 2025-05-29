@@ -1,3 +1,7 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando devoluciones...'"
+></app-loading-overlay>
 <c-card>
   <c-card-header>
     <strong>Devoluciones</strong>
@@ -8,6 +12,7 @@
         <tr>
           <th>#</th>
           <th>Producto</th>
+          <th>Cliente</th>
           <th>Bodega</th>
           <th>Orden</th>
           <th>Cantidad</th>
@@ -22,6 +27,7 @@
             {{ hold.warehouseInventory?.productVariant?.product?.name }}
             {{ hold.warehouseInventory?.productVariant?.name }}
           </td>
+          <td>{{ hold.clientFullName }}</td>
           <td>{{ hold.warehouseInventory?.warehouse?.name }}</td>
           <td>
             <a

@@ -6,7 +6,7 @@
   <c-col xs="12">
     <c-card class="mb-4">
       <c-card-header>
-        <strong>Órdenes</strong> -> <small>Listado</small>
+        <strong>Órdenes</strong>
         <button
           type="button"
           class="float-end btn btn-primary"
@@ -95,6 +95,21 @@
               [itemKey]="idx"
               class="p-3"
             >
+              <c-row class="mb-3">
+                <c-col *ngFor="let status of orderSummary">
+                  <c-card
+                    class="text-center"
+                    [ngClass]="getStatusClass(status.statusName)"
+                  >
+                  
+                    <c-card-body>
+                      <h6>{{ status.statusName }}</h6>
+                      <p class="m-0">{{ status.count }}</p>
+                    </c-card-body>
+                  </c-card>
+                </c-col>
+              </c-row>
+
               <app-order-table
                 *ngIf="orders"
                 [orders]="orders"

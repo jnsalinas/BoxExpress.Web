@@ -7,7 +7,7 @@
   <c-col xs="12">
     <c-card class="mb-4">
       <c-card-header>
-        <strong>Wallet</strong> -> <small>Listado</small>
+        <strong>Retiros</strong>
 
         <button
           type="button"
@@ -106,6 +106,7 @@
               <th scope="col">Descripcion</th>
               <th scope="col">Estado</th>
               <th scope="col">Fecha de aceptacion</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -113,7 +114,9 @@
               <th scope="row">{{ tx.id || "-" }}</th>
               <td>{{ tx.createdAt | utcDate }}</td>
               <td>{{ tx.store || "-" }}</td>
-              <td>{{ tx.amount || "-" }}</td>
+              <td>
+                {{ tx.amount | currency : "USD" : "symbol" : "1.0-0" }}
+              </td>
               <td>{{ tx.accountHolder }}</td>
               <td>{{ tx.document }}</td>
               <td>{{ tx.bank }}</td>
@@ -121,13 +124,15 @@
               <td>{{ tx.description }}</td>
               <td>{{ getStatusLabel(tx.status) }}</td>
               <td>{{ tx.processedAt | utcDate }}</td>
-              <td class="d-flex">
-                <button
-                  class="btn btn-sm btn-outline-primary"
-                  (click)="showModal(tx)"
-                >
-                  <svg cIcon name="cilCheck"></svg>
-                </button>
+              <td>
+                <div class="d-flex">
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="showModal(tx)"
+                  >
+                    <svg cIcon name="cilCheck"></svg>
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>

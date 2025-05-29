@@ -1,0 +1,25 @@
+.table td,
+.table th {
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+::ng-deep .bg-sin-programar, ::ng-deep tr.bg-sin-programar td {
+  background-color: #e6f7ff !important;
+}
+::ng-deep .bg-programado, ::ng-deep tr.bg-programado td {
+  background-color: #fffbe6 !important;
+}
+::ng-deep .bg-entregado, ::ng-deep tr.bg-entregado td {
+  background-color: #f6ffed !important;
+}
+::ng-deep .bg-cancelado, ::ng-deep tr.bg-cancelado td {
+  background-color: #fff1f0 !important;
+}
+::ng-deep .bg-cancelado, ::ng-deep tr.bg-cancelado1 td {
+  background-color: #f9f0ff !important;
+}
+
+td {
+  vertical-align: middle;
+}

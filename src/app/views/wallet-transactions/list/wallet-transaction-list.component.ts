@@ -46,7 +46,7 @@ import { RouterLink } from '@angular/router';
     LoadingOverlayComponent,
     NgSelectModule,
     IconDirective,
-    RouterLink
+    RouterLink,
   ],
   templateUrl: './wallet-transaction-list.component.html',
   styleUrl: './wallet-transaction-list.component.scss',
@@ -143,10 +143,16 @@ export class WalletTransactionListComponent implements OnInit {
     this.walletTransactionService
       .export(this.getFilters())
       .subscribe((response: Blob) => {
+        const dateTimeString = new Date()
+          .toISOString()
+          .replace('T', '_')
+          .replace(/:/g, '-')
+          .substring(0, 16);
         const fileURL = URL.createObjectURL(response);
         const a = document.createElement('a');
         a.href = fileURL;
-        a.download = 'Transacciones.xlsx';
+        a.download = `Transacciones_${dateTimeString}.xlsx`;
+
         a.click();
         this.isLoading = false;
       });

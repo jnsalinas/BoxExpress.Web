@@ -6,16 +6,17 @@
   <c-col xs="12">
     <c-card class="mb-4">
       <c-card-header>
-        <strong>Bodegas</strong> -> <small>Listado</small>
+        <strong>Bodegas</strong>
       </c-card-header>
       <c-card-body>
-        <table cTable>
+        <table [hover]="true" [striped]="true" cTable>
           <thead>
             <tr>
               <th>Id</th>
               <th>Nombre</th>
               <th>Dirección</th>
               <th>Encargado</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

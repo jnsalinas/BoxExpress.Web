@@ -10,6 +10,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { OrderScheduleUpdateDto } from '../models/order-schedule-update.dto';
 import { OrderItemDto } from '../models/order-item.dto';
+import { OrderSummaryDto } from '../models/order-summary.dto';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
@@ -64,7 +65,9 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
       .pipe(this.handleResponse());
   }
 
-  getOrderCategoryHistory(orderId: number): Observable<OrderCategoryHistoryDto[]> {
+  getOrderCategoryHistory(
+    orderId: number
+  ): Observable<OrderCategoryHistoryDto[]> {
     return this.http
       .get<ApiResponse<null>>(
         `${environment.apiUrl}/orders/${orderId}/category-history`
@@ -77,6 +80,12 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
       .get<ApiResponse<null>>(
         `${environment.apiUrl}/orders/${orderId}/products`
       )
+      .pipe(this.handleResponse());
+  }
+
+  getSummary(filter: OrderFilter): Observable<OrderSummaryDto[]> {
+    return this.http
+      .post<ApiResponse<null>>(`${environment.apiUrl}/orders/summary`, filter)
       .pipe(this.handleResponse());
   }
 }

@@ -7,7 +7,7 @@
   <c-col xs="12">
     <c-card class="mb-4">
       <c-card-header>
-        <strong>Wallet</strong> -> <small>Listado</small>
+        <strong>Wallet</strong>
 
         <button
           type="button"
@@ -106,7 +106,11 @@
               <td>{{ tx.transactionType }}</td>
               <td>{{ tx.orderStatus }}</td>
               <td>{{ tx.createdAt | utcDate }}</td>
-              <td>{{ tx.amount }}</td>
+              <td>
+                {{
+                  tx.amount | currency : "USD" : "symbol" : "1.0-0"
+                }}
+              </td>
               <td>
                 <a
                   *ngIf="tx.relatedOrderId"

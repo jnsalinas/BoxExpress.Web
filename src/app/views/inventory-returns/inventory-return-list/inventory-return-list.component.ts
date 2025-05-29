@@ -17,6 +17,7 @@ import { InventoryReturnSolveModalComponent } from '../components/inventory-retu
 import { InventoryHoldResolutionDto } from '../../../models/inventory-hold-resolution.dto';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 import { RouterLink } from '@angular/router';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 
 @Component({
   standalone: true,
@@ -31,6 +32,7 @@ import { RouterLink } from '@angular/router';
     InventoryReturnSolveModalComponent,
     GenericModalComponent,
     RouterLink,
+    LoadingOverlayComponent,
   ],
   templateUrl: './inventory-return-list.component.html',
   styleUrl: './inventory-return-list.component.scss',

@@ -16,4 +16,5 @@ export interface InventoryHoldDto extends BaseDto {
   productVariantName?: string;
   warehouseName?: string;
   warehouseInventory?: WarehouseInventoryDto;
+  clientFullName?: string;
 }
