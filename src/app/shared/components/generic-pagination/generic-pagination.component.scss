@@ -1,0 +1,9 @@
+.pagination-ellipsis {
+  padding: 0 8px;
+  color: #888;
+  pointer-events: none;
+}
+a.disabled {
+  pointer-events: none;
+  color: #ccc;
+}

@@ -32,11 +32,35 @@ export class GenericPaginationComponent {
     return this.pagination?.totalPages;
   }
 
-  onPageChange(page: number): void {
+  onPageChange(page: any): void {
     if (this.pagination && this.pagination.totalPages) {
       if (page >= 1 && page <= this.pagination?.totalPages) {
         this.pageChange.emit(page);
       }
     }
+  }
+
+  get paginationPages(): (number | string)[] {
+    const pages: (number | string)[] = [];
+    const total = this.totalPages;
+    const current = this.currentPage;
+
+    if (total <= 7) {
+      // Mostrar todas si son pocas
+      for (let i = 1; i <= total; i++) pages.push(i);
+    } else {
+      pages.push(1);
+      if (current > 4) pages.push('...');
+      for (
+        let i = Math.max(2, current - 2);
+        i <= Math.min(total - 1, current + 2);
+        i++
+      ) {
+        pages.push(i);
+      }
+      if (current < total - 3) pages.push('...');
+      pages.push(total);
+    }
+    return pages;
   }
 }
