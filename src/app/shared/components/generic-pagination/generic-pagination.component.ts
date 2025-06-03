@@ -32,7 +32,7 @@ export class GenericPaginationComponent {
     return this.pagination?.totalPages;
   }
 
-  onPageChange(page: number): void {
+  onPageChange(page: any): void {
     if (this.pagination && this.pagination.totalPages) {
       if (page >= 1 && page <= this.pagination?.totalPages) {
         this.pageChange.emit(page);
