@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://api.boxexpress.com/api',
+    apiUrl: 'https://boxexpress-api.onrender.com/api',
     auth: '/Auth/login',
     defaultValues: {
       cityId: 1,
