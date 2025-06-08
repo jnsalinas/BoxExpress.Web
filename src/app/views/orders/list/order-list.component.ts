@@ -114,6 +114,7 @@ export class OrderListComponent implements OnInit {
       endDate: [null],
       orderId: [null],
       storeId: [null],
+      scheduledDate: [null],
     });
   }
 

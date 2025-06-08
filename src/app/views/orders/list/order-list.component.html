@@ -45,7 +45,7 @@
             >
             </ng-select>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="startDate" class="form-label">Fecha inicio</label>
             <input
               type="date"
@@ -55,11 +55,20 @@
             />
           </div>
 
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label for="endDate" class="form-label">Fecha fin</label>
             <input
               type="date"
               id="endDate"
+              formControlName="endDate"
+              class="form-control"
+            />
+          </div>
+           <div class="col-md-2">
+            <label for="endDate" class="form-label">Programación</label>
+            <input
+              type="date"
+              id="scheduledDate"
               formControlName="endDate"
               class="form-control"
             />

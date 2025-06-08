@@ -8,6 +8,8 @@ import {
   CardHeaderComponent,
   CardBodyComponent,
   TableDirective,
+  ButtonDirective,
+  ButtonModule,
 } from '@coreui/angular';
 import { EventEmitter } from '@angular/core';
 import { OrderCategoryDto } from '../../../../models/order-category.dto';
@@ -27,6 +29,8 @@ import { freeSet } from '@coreui/icons';
     CommonModule,
     FormsModule,
     IconDirective,
+    ButtonDirective,
+    ButtonModule
   ],
   templateUrl: './order-table.component.html',
   styleUrl: './order-table.component.scss',
@@ -50,24 +54,29 @@ export class OrderTableComponent {
   @Output() scheduleOrder = new EventEmitter<OrderDto>();
   previousStatusId: number = 0;
 
-  statusStyles: Record<string, { color: string; badgeClass: string }> = {
-    'sin programar': { color: '#adb5bd', badgeClass: 'bg-secondary' },
-    programado: { color: '#0d6efd', badgeClass: 'bg-primary' },
-    entregado: { color: '#198754', badgeClass: 'bg-success' },
-    cancelado: { color: '#dc3545', badgeClass: 'bg-danger' },
-    'cancelado 1': { color: '#6f42c1', badgeClass: 'bg-purple' },
-  };
+  // statusStyles: Record<string, { color: string; badgeClass: string }> = {
+  //   'sin programar': { color: '#adb5bd', badgeClass: 'bg-secondary' },
+  //   'en ruta': { color: '#0dcaf0', badgeClass: 'bg-info' }, // ← sugerido
+  //   programado: { color: '#0d6efd', badgeClass: 'bg-primary' },
+  //   entregado: { color: '#198754', badgeClass: 'bg-success' },
+  //   cancelado: { color: '#dc3545', badgeClass: 'bg-danger' },
+  //   'cancelado 1': { color: '#6f42c1', badgeClass: 'bg-purple' },
+  // };
 
-  getStatusBadgeClass(status: string): string {
-    return (
-      this.statusStyles[status?.toLowerCase()]?.badgeClass ||
-      'bg-light text-dark'
-    );
+  // getStatusBadgeClass(status: string): string {
+  //   return (
+  //     this.statusStyles[status?.toLowerCase()]?.badgeClass ||
+  //     'bg-light text-dark'
+  //   );
+  // }
+
+  getStatusOnTheWay(): number  {
+    return this.statusOptions.find((x) => x.name.toLowerCase() == 'en ruta')!.id!;
   }
 
-  getStatusColor(status: string): string {
-    return this.statusStyles[status?.toLowerCase()]?.color || '#dee2e6';
-  }
+  // getStatusColor(status: string): string {
+  //   return this.statusStyles[status?.toLowerCase()]?.color || '#dee2e6';
+  // }
 
   onStatusChange(orderId: number, statusId: number) {
     const previousStatusId = this.previousStatusId;

@@ -12,6 +12,7 @@
         <tr>
           <th>#</th>
           <th>Producto</th>
+          <th>Bodega</th>
           <th>Cliente</th>
           <th>Bodega</th>
           <th>Orden</th>
@@ -27,6 +28,7 @@
             {{ hold.warehouseInventory?.productVariant?.product?.name }}
             {{ hold.warehouseInventory?.productVariant?.name }}
           </td>
+          <td>{{ hold.warehouseName }}</td>
           <td>{{ hold.clientFullName }}</td>
           <td>{{ hold.warehouseInventory?.warehouse?.name }}</td>
           <td>

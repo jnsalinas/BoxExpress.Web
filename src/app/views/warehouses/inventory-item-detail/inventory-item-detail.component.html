@@ -29,6 +29,12 @@
                 'text-success': warehouseInventory.reservedQuantity ?? 0 > 0,
               }"
               >{{ warehouseInventory.reservedQuantity ?? 0 }} </span
+            >| En devolución:
+            <span
+              [ngClass]="{
+                'text-danger': warehouseInventory.pendingReturnQuantity ?? 0 > 0,
+              }"
+              >{{ warehouseInventory.pendingReturnQuantity ?? 0 }} </span
             >| Disponible:
             {{ warehouseInventory.availableQuantity ?? 0 }}
           </p>

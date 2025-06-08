@@ -19,6 +19,9 @@
 ::ng-deep .bg-cancelado, ::ng-deep tr.bg-cancelado1 td {
   background-color: #f9f0ff !important;
 }
+::ng-deep .bg-en-ruta, ::ng-deep tr.bg-en-ruta td {
+  background-color: #0dcaf0 !important;
+}
 
 td {
   vertical-align: middle;

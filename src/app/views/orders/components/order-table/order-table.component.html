@@ -32,19 +32,21 @@
         }"
         [ngClass]="'bg-' + order.status | lowercase"
       > -->
-      <tr
-        *ngFor="let order of orders"
-        [ngClass]="getStatusClass(order.status)"
-      >
+      <tr *ngFor="let order of orders" [ngClass]="getStatusClass(order.status)">
         <td *ngIf="hasColumn('id')">
+          {{getStatusClass(order.status)}}
           {{ order.id }}
         </td>
         <td *ngIf="hasColumn('code')">{{ order.code }}</td>
         <td *ngIf="hasColumn('clientFullName')">{{ order.clientFullName }}</td>
         <td *ngIf="hasColumn('storeName')">{{ order.storeName }}</td>
         <td *ngIf="hasColumn('clientPhone')">{{ order.clientPhone }}</td>
-        <td *ngIf="hasColumn('clientAddress')" style="min-width: 200px">{{ order.clientAddress }}</td>
-        <td *ngIf="hasColumn('notes')" style="min-width: 100px">{{ order.notes }}</td>
+        <td *ngIf="hasColumn('clientAddress')" style="min-width: 200px">
+          {{ order.clientAddress }}
+        </td>
+        <td *ngIf="hasColumn('notes')" style="min-width: 100px">
+          {{ order.notes }}
+        </td>
         <td *ngIf="hasColumn('totalAmount')" style="min-width: 90px">
           {{
             order.totalAmount
@@ -76,7 +78,9 @@
             </div>
           </ng-template>
         </td>
-        <td *ngIf="hasColumn('city')" style="min-width: 155px">{{ order.city }}</td>
+        <td *ngIf="hasColumn('city')" style="min-width: 155px">
+          {{ order.city }}
+        </td>
         <td *ngIf="hasColumn('category')" style="min-width: 185px">
           <select
             class="form-select form-select-sm"
@@ -101,7 +105,7 @@
             class="form-select form-select-sm"
             [(ngModel)]="order.statusId"
             (ngModelChange)="onStatusChange(order.id, $event)"
-            [disabled]="statusOptions.length === 0"
+            [disabled]="order.scheduledDate === null || order.timeSlotStartTime === null"
             (mousedown)="previousStatusId = order.statusId"
           >
             <option [value]="null" disabled>Seleccione...</option>
@@ -109,11 +113,21 @@
               {{ status.name }}
             </option>
           </select>
+
+          <button
+            cButton
+            color="warning"
+            size="sm"
+            class="ms-2"
+            (click)="onStatusChange(order.id, getStatusOnTheWay())"
+          >
+            Enrutar
+          </button>
         </td>
         <td *ngIf="hasColumn('scheduledDate')" style="min-width: 125px">
           {{ order.scheduledDate | date : "MM-dd-yyyy" }}
           <br *ngIf="order.scheduledDate" />
-          <strong
+          <strong *ngIf="order.timeSlotStartTime"
             >{{ order.timeSlotStartTime | slice : 0 : 5 }} -
             {{ order.timeSlotEndTime | slice : 0 : 5 }}
           </strong>
