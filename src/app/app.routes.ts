@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { DefaultLayoutComponent } from './layout';
-import { LoginGuard } from './guards/login.guard'; // Importamos el LoginGuard
+import { RoleGuard } from './guards/role.guard';
+import { LoginGuard } from './guards/login.guard';
 
 export const routes: Routes = [
   {
@@ -19,86 +20,100 @@ export const routes: Routes = [
         path: 'warehouses',
         loadChildren: () =>
           import('./views/warehouses/routes').then((m) => m.routes),
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'bodega'] },
       },
       {
         path: 'transfers',
         loadChildren: () =>
           import('./views/warehouse-transfers/routes').then((m) => m.routes),
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] },
       },
       {
         path: 'inventory-returns',
         loadChildren: () =>
           import('./views/inventory-returns/routes').then((m) => m.routes),
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'bodega'] },
       },
       {
         path: 'orders',
         loadChildren: () =>
           import('./views/orders/routes').then((m) => m.routes),
+        canActivate: [RoleGuard],
+        data: { roles: ['admin', 'tienda'] },
       },
       {
         path: 'wallet',
         loadChildren: () =>
           import('./views/wallet-transactions/routes').then((m) => m.routes),
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] },
       },
       {
         path: 'withdrawal-requests',
         loadChildren: () =>
           import('./views/withdrawal-requests/routes').then((m) => m.routes),
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] },
       },
       {
         path: 'stores',
         loadChildren: () =>
           import('./views/stores/routes').then((m) => m.routes),
+        canActivate: [RoleGuard],
+        data: { roles: ['admin'] },
       },
       {
         path: 'dashboard',
         loadChildren: () =>
           import('./views/dashboard/routes').then((m) => m.routes),
       },
-      {
-        path: 'theme',
-        loadChildren: () =>
-          import('./views/theme/routes').then((m) => m.routes),
-      },
-      {
-        path: 'base',
-        loadChildren: () => import('./views/base/routes').then((m) => m.routes),
-      },
-      {
-        path: 'buttons',
-        loadChildren: () =>
-          import('./views/buttons/routes').then((m) => m.routes),
-      },
-      {
-        path: 'forms',
-        loadChildren: () =>
-          import('./views/forms/routes').then((m) => m.routes),
-      },
-      {
-        path: 'icons',
-        loadChildren: () =>
-          import('./views/icons/routes').then((m) => m.routes),
-      },
-      {
-        path: 'notifications',
-        loadChildren: () =>
-          import('./views/notifications/routes').then((m) => m.routes),
-      },
-      {
-        path: 'widgets',
-        loadChildren: () =>
-          import('./views/widgets/routes').then((m) => m.routes),
-      },
-      {
-        path: 'charts',
-        loadChildren: () =>
-          import('./views/charts/routes').then((m) => m.routes),
-      },
-      {
-        path: 'pages',
-        loadChildren: () =>
-          import('./views/pages/routes').then((m) => m.routes),
-      },
+      // {
+      //   path: 'theme',
+      //   loadChildren: () =>
+      //     import('./views/theme/routes').then((m) => m.routes),
+      // },
+      // {
+      //   path: 'base',
+      //   loadChildren: () => import('./views/base/routes').then((m) => m.routes),
+      // },
+      // {
+      //   path: 'buttons',
+      //   loadChildren: () =>
+      //     import('./views/buttons/routes').then((m) => m.routes),
+      // },
+      // {
+      //   path: 'forms',
+      //   loadChildren: () =>
+      //     import('./views/forms/routes').then((m) => m.routes),
+      // },
+      // {
+      //   path: 'icons',
+      //   loadChildren: () =>
+      //     import('./views/icons/routes').then((m) => m.routes),
+      // },
+      // {
+      //   path: 'notifications',
+      //   loadChildren: () =>
+      //     import('./views/notifications/routes').then((m) => m.routes),
+      // },
+      // {
+      //   path: 'widgets',
+      //   loadChildren: () =>
+      //     import('./views/widgets/routes').then((m) => m.routes),
+      // },
+      // {
+      //   path: 'charts',
+      //   loadChildren: () =>
+      //     import('./views/charts/routes').then((m) => m.routes),
+      // },
+      // {
+      //   path: 'pages',
+      //   loadChildren: () =>
+      //     import('./views/pages/routes').then((m) => m.routes),
+      // },
     ],
   },
   {
@@ -127,7 +142,7 @@ export const routes: Routes = [
       import('./views/pages/login/login.component').then(
         (m) => m.LoginComponent
       ),
-    canActivate: [LoginGuard], // Aplicamos el LoginGuard aquí
+    canActivate: [LoginGuard],
     data: {
       title: 'Login Page',
     },

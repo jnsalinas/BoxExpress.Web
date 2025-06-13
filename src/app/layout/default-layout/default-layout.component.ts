@@ -18,6 +18,8 @@ import {
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
 import { navItems } from './_nav';
 import { freeSet } from '@coreui/icons';
+import { AuthService } from '../../services/auth.service';
+import { CustomNavData } from '../../models/custom-nav-data.dto';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -52,7 +54,24 @@ function isOverflown(element: HTMLElement) {
 export class DefaultLayoutComponent {
   icons = freeSet;
   public navItems = [...navItems];
-  constructor() {
+  constructor(private auth: AuthService) {
     console.log(freeSet);
+    const role = this.auth.role; // O this.auth.roles si es array
+    this.navItems = this.filterNavByRole(navItems, role ?? '');
+  }
+
+  filterNavByRole(navItems: any[], userRole: string): CustomNavData[] {
+    return navItems
+      .filter((item) => !item.roles || item.roles.includes(userRole))
+      .map((item) => {
+        if (item.children) {
+          return {
+            ...item,
+            children: this.filterNavByRole(item.children, userRole),
+          };
+        }
+        return item;
+      })
+      .filter((item) => !item.children || item.children.length > 0);
   }
 }

@@ -1,40 +1,47 @@
-import { INavData } from '@coreui/angular';
+import { CustomNavData } from '../../models/custom-nav-data.dto';
 
-export const navItems: INavData[] = [
+export const navItems: CustomNavData[] = [
   {
     name: 'Bodegas',
     url: '/warehouses',
     iconComponent: { name: 'cil-home' },
+    roles: ['admin', 'bodega'],
   },
   {
     name: 'Transferencias',
     url: '/transfers',
     iconComponent: { name: 'cil-loop-circular' },
+    roles: ['admin'],
   },
   {
     name: 'Devoluciones',
     url: '/inventory-returns',
     iconComponent: { name: 'cil-arrow-circle-left' },
+    roles: ['admin', 'bodega'],
   },
   {
     name: 'Órdenes',
     url: '/orders',
     iconComponent: { name: 'cil-task' },
+    roles: ['admin'],
   },
   {
     name: 'Wallet',
     url: '/wallet',
     iconComponent: { name: 'cil-credit-card' },
+    roles: ['admin'],
   },
   {
     name: 'Retiros',
     url: '/withdrawal-requests',
     iconComponent: { name: 'cil-dollar' },
+    roles: ['admin'],
   },
   {
     name: 'Balance',
     url: '/stores',
     iconComponent: { name: 'cil-chart' },
+    roles: ['admin'],
   },
   // {
   //   name: 'Dashboard',

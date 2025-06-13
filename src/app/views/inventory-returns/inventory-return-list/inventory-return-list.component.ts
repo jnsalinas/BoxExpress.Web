@@ -86,8 +86,6 @@ export class InventoryReturnListComponent implements OnInit {
   acceptReturn(data: InventoryHoldResolutionDto): void {
     if (this.inventoryHoldResolution !== null) {
       this.inventoryHoldResolution.notes = data.notes;
-
-      debugger;
       this.modal.show({
         title:
           this.inventoryHoldResolution.status == InventoryHoldStatus.Returned

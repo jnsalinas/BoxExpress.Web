@@ -4,7 +4,7 @@ import {
   HttpRequest,
   HttpHandler,
   HttpEvent,
-  HttpErrorResponse
+  HttpErrorResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { AuthService } from '../auth.service';
@@ -13,13 +13,12 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
+  constructor(private authService: AuthService, private router: Router) {}
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
-
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
 
     if (token) {
@@ -29,6 +28,8 @@ export class AuthInterceptor implements HttpInterceptor {
         },
       });
     }
+    console.log(req.url);
+    console.log('Authorization header:', req.headers.get('Authorization'));
 
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {

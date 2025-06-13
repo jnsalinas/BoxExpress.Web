@@ -94,7 +94,7 @@ export class LoginComponent {
     this.authService.login(credentials).subscribe({
       next: (response) => {
         if(response) {
-          this.authService.saveToken(response.token);
+          this.authService.saveAuth(response);
           this.router.navigate(['/dashboard']);
         }
       },

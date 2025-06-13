@@ -1,4 +1,8 @@
-import {HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
@@ -7,24 +11,25 @@ import {
   withHashLocation,
   withInMemoryScrolling,
   withRouterConfig,
-  withViewTransitions
+  withViewTransitions,
 } from '@angular/router';
 
 import { DropdownModule, SidebarModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
 import { routes } from './app.routes';
 import { ToastrModule } from 'ngx-toastr';
-import {AuthInterceptor} from "./services/http-interceptors/auth.interceptor";
+import { AuthInterceptor } from './services/http-interceptors/auth.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes,
+    provideRouter(
+      routes,
       withRouterConfig({
-        onSameUrlNavigation: 'reload'
+        onSameUrlNavigation: 'reload',
       }),
       withInMemoryScrolling({
         scrollPositionRestoration: 'top',
-        anchorScrolling: 'enabled'
+        anchorScrolling: 'enabled',
       }),
       withEnabledBlockingInitialNavigation(),
       withViewTransitions(),
@@ -38,7 +43,7 @@ export const appConfig: ApplicationConfig = {
         positionClass: 'toast-top-right',
         preventDuplicates: true,
         closeButton: true,
-        progressBar: true
+        progressBar: true,
       })
     ),
     IconSetService,
@@ -47,7 +52,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 };

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../models/common/api-response';
 import { Observable } from 'rxjs';
 import {environment} from "../../environments/environment";
-
+import { AuthDto } from '../models/auth-dto';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService extends BaseApiService<any, any> {
@@ -12,10 +12,10 @@ export class AuthService extends BaseApiService<any, any> {
     super(http, 'auth');
   }
 
-  login(credentials: any): Observable<any> {
+  login(credentials: any): Observable<AuthDto> {
     const url = `${environment.apiUrl.replace(/\/+$/, '')}/${environment.auth.replace(/^\/+/, '')}`;
     return this.http
-      .post<ApiResponse<any>>(url, credentials)
+      .post<ApiResponse<AuthDto>>(url, credentials)
       .pipe(this.handleResponse());
   }
 
@@ -28,11 +28,25 @@ export class AuthService extends BaseApiService<any, any> {
     return localStorage.getItem('auth_token');
   }
 
-  saveToken(token: string): void {
-    localStorage.setItem('auth_token', token);
+  saveAuth(auth: AuthDto): void {
+    localStorage.setItem('auth_token', auth.token ?? "");
+    localStorage.setItem('auth_role', auth.role?.toLowerCase() ?? "");
   }
 
   logout(): void {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('auth_role');
+  }
+
+  get role(): string | null {
+    return localStorage.getItem('auth_role');
+  }
+
+  hasRole(role: string): boolean {
+    return this.role === role;
+  }
+
+  hasAnyRole(roles: string[]): boolean {
+    return roles.includes(this.role || '');
   }
 }

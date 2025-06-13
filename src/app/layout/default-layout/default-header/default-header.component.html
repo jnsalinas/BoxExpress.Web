@@ -52,13 +52,25 @@
   </c-container> -->
   <c-container [fluid]="true" class="px-4">
     <c-breadcrumb-router />
+    <button class="btn btn-outline-danger btn-sm ms-3" (click)="logout()">
+      <i class="cil-account-logout"></i>
+      Cerrar sesión
+    </button>
   </c-container>
 </ng-container>
 <!--</c-header>-->
 
 <ng-template #userDropdown>
-  <c-dropdown [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
-    <button [caret]="false" cDropdownToggle class="py-0 pe-0" aria-label="Open user menu">
+  <c-dropdown
+    [popperOptions]="{ placement: 'bottom-start' }"
+    variant="nav-item"
+  >
+    <button
+      [caret]="false"
+      cDropdownToggle
+      class="py-0 pe-0"
+      aria-label="Open user menu"
+    >
       <c-avatar
         shape="rounded-1"
         [size]="'md'"
@@ -70,7 +82,10 @@
     </button>
     <ul cDropdownMenu class="pt-0 w-auto">
       <li>
-        <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2 rounded-top">
+        <h6
+          cDropdownHeader
+          class="bg-body-secondary text-body-secondary fw-semibold py-2 rounded-top"
+        >
           Account
         </h6>
       </li>
@@ -85,9 +100,7 @@
         <a cDropdownItem routerLink="/apps/email/inbox">
           <svg cIcon class="me-2" name="cilEnvelopeOpen"></svg>
           Messages
-          <c-badge class="ms-2 float-end" color="success">
-            42
-          </c-badge>
+          <c-badge class="ms-2 float-end" color="success"> 42 </c-badge>
         </a>
       </li>
       <li>
@@ -105,7 +118,10 @@
         </a>
       </li>
       <li>
-        <h6 cDropdownHeader class="bg-body-secondary text-body-secondary fw-semibold py-2">
+        <h6
+          cDropdownHeader
+          class="bg-body-secondary text-body-secondary fw-semibold py-2"
+        >
           Settings
         </h6>
       </li>
@@ -126,18 +142,14 @@
         <a cDropdownItem routerLink="">
           <svg cIcon class="me-2" name="cilCreditCard"></svg>
           Payments
-          <c-badge class="ms-2 float-end" color="secondary">
-            42
-          </c-badge>
+          <c-badge class="ms-2 float-end" color="secondary"> 42 </c-badge>
         </a>
       </li>
       <li>
         <a cDropdownItem routerLink="">
           <svg cIcon class="me-2" name="cilFile"></svg>
           Projects
-          <c-badge class="ms-2 float-end" color="primary">
-            42
-          </c-badge>
+          <c-badge class="ms-2 float-end" color="primary"> 42 </c-badge>
         </a>
       </li>
       <li>
@@ -166,15 +178,15 @@
     </button>
     <div cDropdownMenu>
       @for (mode of colorModes; track mode.name) {
-        <button
-          (click)="colorMode.set(mode.name)"
-          [active]="colorMode()===mode.name"
-          cDropdownItem
-          class="d-flex align-items-center"
-        >
-          <svg cIcon class="me-2" [name]="mode.icon" size="lg"></svg>
-          {{ mode.text }}
-        </button>
+      <button
+        (click)="colorMode.set(mode.name)"
+        [active]="colorMode() === mode.name"
+        cDropdownItem
+        class="d-flex align-items-center"
+      >
+        <svg cIcon class="me-2" [name]="mode.icon" size="lg"></svg>
+        {{ mode.text }}
+      </button>
       }
     </div>
   </c-dropdown>
