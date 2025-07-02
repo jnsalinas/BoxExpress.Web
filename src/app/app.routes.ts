@@ -21,49 +21,49 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./views/warehouses/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin', 'bodega'] },
+        data: { roles: ['administrador', 'admin',  'bodega'] },
       },
       {
         path: 'transfers',
         loadChildren: () =>
           import('./views/warehouse-transfers/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin'] },
+        data: { roles: ['administrador', 'admin'] },
       },
       {
         path: 'inventory-returns',
         loadChildren: () =>
           import('./views/inventory-returns/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin', 'bodega'] },
+        data: { roles: ['administrador', 'admin',  'bodega'] },
       },
       {
         path: 'orders',
         loadChildren: () =>
           import('./views/orders/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin', 'tienda'] },
+        data: { roles: ['administrador', 'admin',  'tienda'] },
       },
       {
         path: 'wallet',
         loadChildren: () =>
           import('./views/wallet-transactions/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin'] },
+        data: { roles: ['administrador', 'admin'] },
       },
       {
         path: 'withdrawal-requests',
         loadChildren: () =>
           import('./views/withdrawal-requests/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin'] },
+        data: { roles: ['administrador', 'admin'] },
       },
       {
         path: 'stores',
         loadChildren: () =>
           import('./views/stores/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin'] },
+        data: { roles: ['administrador', 'admin'] },
       },
       {
         path: 'dashboard',

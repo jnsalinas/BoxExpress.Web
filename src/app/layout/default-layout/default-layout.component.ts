@@ -55,7 +55,6 @@ export class DefaultLayoutComponent {
   icons = freeSet;
   public navItems = [...navItems];
   constructor(private auth: AuthService) {
-    console.log(freeSet);
     const role = this.auth.role; // O this.auth.roles si es array
     this.navItems = this.filterNavByRole(navItems, role ?? '');
   }

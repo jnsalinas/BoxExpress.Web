@@ -110,7 +110,6 @@ export class InventoryItemDetailComponent implements OnInit {
       this.warehouseInventoryService
         .getById(parseInt(warehouseInventoryId))
         .subscribe((warehouseInventory) => {
-          console.log(warehouseInventory);
           this.warehouseInventory = warehouseInventory;
           this.loadInventoryMovements();
           this.loadInventoryHolds();

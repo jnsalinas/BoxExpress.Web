@@ -89,7 +89,6 @@ export class WithdrawalRequestListComponent implements OnInit {
   }
 
   onPageChange(page: number): void {
-    console.log('Page changed:', page);
     this.currentPage = page;
     this.loadWithdrawalRequest();
   }
@@ -126,7 +125,6 @@ export class WithdrawalRequestListComponent implements OnInit {
         this.withdrawalRequestService.create(data).subscribe({
           next: (data) => {
             //todo mostrar mensaje de crecion
-            console.log('data', data);
             this.loadWithdrawalRequest();
             this.isLoading = false;
             this.handleWithdrawalRequestClose();

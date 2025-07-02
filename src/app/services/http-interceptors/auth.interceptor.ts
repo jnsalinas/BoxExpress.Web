@@ -28,8 +28,6 @@ export class AuthInterceptor implements HttpInterceptor {
         },
       });
     }
-    console.log(req.url);
-    console.log('Authorization header:', req.headers.get('Authorization'));
 
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
