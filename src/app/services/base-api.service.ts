@@ -17,18 +17,17 @@ export class BaseApiService<T, F> {
     });
   }
 
- protected handleResponseWithPagination<T>() {
-  return map((res: ApiResponse<T>) => {
-    if (res.success) {
-      return {
-        data: res.data ?? ([] as T),
-        pagination: res.pagination || ({} as PaginationDto),
-      };
-    }
-    throw new Error(res.message || 'Error en la respuesta del servidor');
-  });
-}
-
+  protected handleResponseWithPagination<T>() {
+    return map((res: ApiResponse<T>) => {
+      if (res.success) {
+        return {
+          data: res.data ?? ([] as T),
+          pagination: res.pagination || ({} as PaginationDto),
+        };
+      }
+      throw new Error(res.message || 'Error en la respuesta del servidor');
+    });
+  }
 
   export(filter: F): Observable<Blob> {
     return this.http.post<Blob>(
@@ -64,7 +63,8 @@ export class BaseApiService<T, F> {
         }),
         catchError((error) => {
           console.error('Error en la respuesta:', error);
-          return throwError(() => new Error('Error en la solicitud'));
+          return throwError(() => error);
+          // this.toastr.error(error);
         })
       );
   }

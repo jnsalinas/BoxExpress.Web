@@ -3,7 +3,7 @@ import { BaseApiService } from './base-api.service';
 import { HttpClient } from '@angular/common/http';
 import { ApiResponse } from '../models/common/api-response';
 import { Observable } from 'rxjs';
-import {environment} from "../../environments/environment";
+import { environment } from '../../environments/environment';
 import { AuthDto } from '../models/auth-dto';
 
 @Injectable({ providedIn: 'root' })
@@ -13,7 +13,10 @@ export class AuthService extends BaseApiService<any, any> {
   }
 
   login(credentials: any): Observable<AuthDto> {
-    const url = `${environment.apiUrl.replace(/\/+$/, '')}/${environment.auth.replace(/^\/+/, '')}`;
+    const url = `${environment.apiUrl.replace(
+      /\/+$/,
+      ''
+    )}/${environment.auth.replace(/^\/+/, '')}`;
     return this.http
       .post<ApiResponse<AuthDto>>(url, credentials)
       .pipe(this.handleResponse());
@@ -28,9 +31,18 @@ export class AuthService extends BaseApiService<any, any> {
     return localStorage.getItem('auth_token');
   }
 
+  getStoreId(): number | null {
+    const storeId = localStorage.getItem('storeId');
+    return storeId ? Number(storeId) : null;
+  }
+
   saveAuth(auth: AuthDto): void {
-    localStorage.setItem('auth_token', auth.token ?? "");
-    localStorage.setItem('auth_role', auth.role?.toLowerCase() ?? "");
+    console.log(auth);
+    localStorage.setItem('auth_token', auth.token ?? '');
+    localStorage.setItem('auth_role', auth.role?.toLowerCase() ?? '');
+    if (auth.storeId) {
+      localStorage.setItem('storeId', auth.storeId.toString());
+    }
   }
 
   logout(): void {

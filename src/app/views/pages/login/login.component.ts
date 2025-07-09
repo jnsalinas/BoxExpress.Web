@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import {CommonModule, NgStyle} from '@angular/common';
-import {IconComponent, IconDirective} from '@coreui/icons-angular';
+import { CommonModule, NgStyle } from '@angular/common';
+import { IconComponent, IconDirective } from '@coreui/icons-angular';
 import {
   ContainerComponent,
   RowComponent,
@@ -13,15 +13,20 @@ import {
   InputGroupComponent,
   InputGroupTextDirective,
   FormControlDirective,
-  ButtonDirective
+  ButtonDirective,
 } from '@coreui/angular';
-import {AuthService} from "../../../services/auth.service";
-import {Router} from "@angular/router";
-import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
-import {MessageService} from "../../../services/message.service";
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { MessageService } from '../../../services/message.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-
 
 @Component({
   selector: 'app-login',
@@ -47,8 +52,8 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
     ReactiveFormsModule,
     CommonModule,
     FontAwesomeModule,
-    IconComponent
-  ]
+    IconComponent,
+  ],
 })
 export class LoginComponent {
   username: string = '';
@@ -59,41 +64,40 @@ export class LoginComponent {
   showPassword = false;
   faEye = faEye;
   faEyeSlash = faEyeSlash;
-  private passwordPattern = /^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+=\-{}[\]:;"'<>?,./]{8,}$/;
-  constructor(private authService: AuthService,
-              private router: Router,
-              private fb: FormBuilder,
-              private messageService: MessageService,
-              ) {
+  private passwordPattern =
+    /^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+=\-{}[\]:;"'<>?,./]{8,}$/;
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private fb: FormBuilder,
+    private messageService: MessageService
+  ) {
     this.loginForm = this.fb.group({
-      username: ['',[ Validators.required, Validators.email]],
-      password:[
+      username: ['', [Validators.required, Validators.email]],
+      password: [
         '',
-        [
-          Validators.required,
-          Validators.pattern(
-            this.passwordPattern
-          )
-
-        ]],
-    })
+        [Validators.required, Validators.pattern(this.passwordPattern)],
+      ],
+    });
   }
 
   login(): void {
-
-    if(this.loginForm.invalid){
+    if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
-      this.messageService.showError("El formulario no tiene los datos completos", "Error")
+      this.messageService.showError(
+        'El formulario no tiene los datos completos',
+        'Error'
+      );
       return;
     }
 
     this.isLoading = true;
     const credentials = this.loginForm.value;
-    console.log('estas son las credenciales: ', credentials)
+    console.log('estas son las credenciales: ', credentials);
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        if(response) {
+        if (response) {
           this.authService.saveAuth(response);
           this.router.navigate(['/dashboard']);
         }
@@ -102,12 +106,12 @@ export class LoginComponent {
         this.isLoading = false;
         this.errorMessage = 'Error en el servidor de autenticación.';
         this.messageService.showError('login.invalidCredentials');
-      }
+      },
     });
   }
 
-  register(): void{
-    this.router.navigate(['/register'])
+  register(): void {
+    this.router.navigate(['/register']);
   }
 
   togglePasswordVisibility(): void {

@@ -29,6 +29,9 @@ import { GenericModalComponent } from '../../../../views/shared/components/gener
 import { StoreService } from '../../../../services/store.service';
 import { StoreDto } from '../../../../models/store.dto';
 import { WithdrawalRequestFilter } from 'src/app/models/withdrawal-request-filter.model';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../../../services/auth.service';
+import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 
 @Component({
   selector: 'app-withdrawal-request-list',
@@ -49,6 +52,7 @@ import { WithdrawalRequestFilter } from 'src/app/models/withdrawal-request-filte
     WithdrawalRequestModalComponent,
     GenericModalComponent,
     NgSelectModule,
+    HasRoleDirective
   ],
   templateUrl: './withdrawal-request-list.component.html',
   styleUrl: './withdrawal-request-list.component.scss',
@@ -63,14 +67,20 @@ export class WithdrawalRequestListComponent implements OnInit {
   currentPage: number = 1;
   icons = freeSet;
   withdrawalRequestSelected: WithdrawalRequestDto | null = null;
+  storeId: number | null = 1;
 
   constructor(
     private fb: FormBuilder,
-    private withdrawalRequestService: WithdrawalRequestService
+    private withdrawalRequestService: WithdrawalRequestService,
+    private toastr: ToastrService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.loadWithdrawalRequest();
+    this.storeId = this.authService.hasRole('admin')
+      ? 1
+      : this.authService.getStoreId();
   }
 
   loadWithdrawalRequest() {
@@ -118,19 +128,27 @@ export class WithdrawalRequestListComponent implements OnInit {
 
   handleWithdrawalRequestSave(data: WithdrawalRequestDto) {
     this.isLoading = true;
+    const sanitizedData: WithdrawalRequestDto = {
+      ...data,
+      document: data.document?.toString() ?? '',
+      accountNumber: data.accountNumber?.toString() ?? '',
+      storeId: data.storeId || null,
+    };
+
     this.modal.show({
       title: 'Creacion de retiro',
       body: `¿Estás seguro de que desea solicitar el retiro?`,
       ok: () => {
-        this.withdrawalRequestService.create(data).subscribe({
+        this.withdrawalRequestService.create(sanitizedData).subscribe({
           next: (data) => {
+            console.log(data);
             //todo mostrar mensaje de crecion
             this.loadWithdrawalRequest();
             this.isLoading = false;
             this.handleWithdrawalRequestClose();
           },
           error: (err) => {
-            console.error('Error changing withdrawall', err);
+            this.toastr.error(err);
           },
         });
       },

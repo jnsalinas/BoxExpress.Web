@@ -32,7 +32,7 @@
               class="form-control"
             />
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2" *hasRole="['admin']">
             <label for="store" class="form-label">Tienda</label>
             <ng-select
               cFormControl
@@ -93,9 +93,9 @@
           (activeItemKeyChange)="handleActiveItemChange($event)"
         >
           <c-tabs-list variant="underline-border">
-            <button cTab [itemKey]="0">Órdenes</button>
+            <button *hasRole="['admin', 'tienda']" cTab [itemKey]="0">Órdenes</button>
             <button cTab [itemKey]="1">Express</button>
-            <button cTab [itemKey]="2">Tradicional</button>
+            <button *hasRole="['admin', 'tienda']" cTab [itemKey]="2">Tradicional</button>
           </c-tabs-list>
 
           <c-tabs-content>

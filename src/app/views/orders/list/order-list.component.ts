@@ -45,6 +45,8 @@ import { IconDirective } from '@coreui/icons-angular';
 import { PaginationDto } from '../../../models/common/pagination.dto';
 import { GenericPaginationComponent } from 'src/app/shared/components/generic-pagination/generic-pagination.component';
 import { OrderSummaryDto } from '../../../models/order-summary.dto';
+import { HasRoleDirective } from 'src/app/shared/directives/has-role.directive';
+import { AuthService } from '../../../../../src/app/services/auth.service';
 
 @Component({
   standalone: true,
@@ -74,6 +76,7 @@ import { OrderSummaryDto } from '../../../models/order-summary.dto';
     OrderEditModalComponent,
     IconDirective,
     GenericPaginationComponent,
+    HasRoleDirective
   ],
 })
 export class OrderListComponent implements OnInit {
@@ -93,7 +96,7 @@ export class OrderListComponent implements OnInit {
       name: 'Tradicional',
     },
   ];
-  activeTab: number = 0;
+  activeTab: number;
   stores: StoreDto[] = [];
   private ordersSubject = new BehaviorSubject<OrderDto[]>([]); // Aquí almacenamos las órdenes
   orders$ = this.ordersSubject.asObservable(); // Observable para los componentes que escuchan cambios
@@ -107,8 +110,10 @@ export class OrderListComponent implements OnInit {
     private statusOrderService: OrderStatusService,
     private categoryOrderService: OrderCategoryService,
     private storeService: StoreService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private authService: AuthService
   ) {
+    this.activeTab = this.authService.hasAnyRole(['admin', 'tienda']) ? 0 : 1;
     this.filtersForm = this.fb.group({
       startDate: [null],
       endDate: [null],

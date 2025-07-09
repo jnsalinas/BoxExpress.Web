@@ -36,7 +36,7 @@
                 class="form-control"
               />
             </div>
-            <div class="col-md-2">
+            <div class="col-md-2" *hasRole="['admin']">
               <label for="store" class="form-label">Tienda</label>
               <ng-select
                 [items]="stores"

@@ -7,14 +7,13 @@
     <c-card class="mb-3">
       <c-card-header>
         <strong>Bodega:</strong> {{ warehouseDetail?.name }}
-        <div class="d-flex justify-content-end gap-2">
+        <div class="d-flex justify-content-end gap-2" *hasRole="['admin']">
           <button class="btn btn-sm btn-primary" (click)="openInventoryModal()">
             Agregar productos
           </button>
           <button class="btn btn-sm btn-primary" (click)="openTransferModal()">
             Transferir productos
           </button>
-          <!-- Todo: transferir solo tiene permisos el administrador de bodegas -->
         </div>
       </c-card-header>
       <c-card-body>
@@ -126,7 +125,7 @@
                           </a>
                         </span>
                         <!-- <button class="me-1 btn btn-outline-primary">✏️</button> -->
-                        <a
+                        <a *hasRole="['admin']"
                           class="btn btn-sm btn-outline-primary"
                           (click)="openInventoryItemModal(variant)"
                           >Editar</a

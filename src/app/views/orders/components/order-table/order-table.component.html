@@ -14,28 +14,21 @@
         <th *ngIf="hasColumn('deliveryFee')">Flete</th>
         <th *ngIf="hasColumn('contains')">Contiene</th>
         <th *ngIf="hasColumn('city')">Ciudad</th>
-        <th *ngIf="hasColumn('category')">Categoría</th>
+        <th *ngIf="hasColumn('category') && authService.hasRole('admin')">Categoría</th>
         <!-- Todo solo para el admin validar permisos -->
         <th *ngIf="hasColumn('warehouseName')">Bodega</th>
         <th *ngIf="hasColumn('status')">Estado</th>
         <th *ngIf="hasColumn('scheduledDate')">Fecha programada</th>
         <!-- <th *ngIf="hasColumn('timeSlot')">Horario de entrega</th> -->
-        <th *ngIf="hasColumn('actions')">Acciones</th>
+        <th *ngIf="hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])" >Acciones</th>
       </tr>
     </thead>
 
     <tbody>
-      <!-- <tr
-        *ngFor="let order of orders"
-        [ngStyle]="{
-          'border-left': '5px solid ' + getStatusColor(order.status)
-        }"
-        [ngClass]="'bg-' + order.status | lowercase"
-      > -->
       <tr *ngFor="let order of orders" [ngClass]="getStatusClass(order.status)">
         <td *ngIf="hasColumn('id')">
-          {{getStatusClass(order.status)}}
-          {{ order.id }}
+          <!-- {{getStatusClass(order.status)}} -->
+          {{ order.id }}  {{ order.status }}
         </td>
         <td *ngIf="hasColumn('code')">{{ order.code }}</td>
         <td *ngIf="hasColumn('clientFullName')">{{ order.clientFullName }}</td>
@@ -81,7 +74,7 @@
         <td *ngIf="hasColumn('city')" style="min-width: 155px">
           {{ order.city }}
         </td>
-        <td *ngIf="hasColumn('category')" style="min-width: 185px">
+        <td *ngIf="hasColumn('category') && authService.hasRole('admin')" style="min-width: 185px">
           <select
             class="form-select form-select-sm"
             [(ngModel)]="order.warehouseId"
@@ -102,10 +95,11 @@
         <td *ngIf="hasColumn('warehouseName')">{{ order.warehouseName }}</td>
         <td *ngIf="hasColumn('status')" style="min-width: 155px">
           <select
+            *hasRole="['admin']"
             class="form-select form-select-sm"
             [(ngModel)]="order.statusId"
             (ngModelChange)="onStatusChange(order.id, $event)"
-            [disabled]="order.scheduledDate === null || order.timeSlotStartTime === null"
+            [disabled]="(order.scheduledDate === null || order.timeSlotStartTime === null) || order.statusId === getStatusDelivered()"
             (mousedown)="previousStatusId = order.statusId"
           >
             <option [value]="null" disabled>Seleccione...</option>
@@ -115,6 +109,7 @@
           </select>
 
           <button
+            *ngIf="order.statusId == getStatusScheduled() && authService.hasRole('bodega')"
             cButton
             color="warning"
             size="sm"
@@ -123,6 +118,10 @@
           >
             Enrutar
           </button>
+
+          <span *ngIf="order.statusId !== getStatusScheduled() && authService.hasAnyRole(['bodega', 'tienda'])">
+              {{ order.status }}
+          </span>
         </td>
         <td *ngIf="hasColumn('scheduledDate')" style="min-width: 125px">
           {{ order.scheduledDate | date : "MM-dd-yyyy" }}
@@ -137,16 +136,17 @@
         {{ order.timeSlotEndTime | slice : 0 : 5 }}
       </td> -->
         <!-- Acciones -->
-        <td *ngIf="hasColumn('actions')">
+        <td *ngIf="hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])">
           <div class="d-flex">
             <button
+              *ngIf="(authService.hasRole('tienda') && order.statusId == getStatusUnscheduled()) || authService.hasRole('admin')"
               class="btn btn-sm btn-outline-primary me-2"
               [routerLink]="[order.id]"
             >
               <svg [cIcon]="icons.cilPencil"></svg>
             </button>
             <button
-              *ngIf="hasColumn('action-edit')"
+              *ngIf="hasColumn('action-edit') && order.statusId !== getStatusDelivered() && authService.hasRole('admin')"
               class="btn btn-sm btn-outline-primary"
               (click)="onScheduleOrder(order)"
             >

@@ -16,6 +16,8 @@ import { WithdrawalRequestDto } from 'src/app/models/withdrawal-request.dto';
 import { DocumentTypeService } from '../../../../services/document-type.service';
 import { DocumentTypeDto } from '../../../../models/document-type.dto';
 import { WithdrawalRequestStatus } from 'src/app/constants/withdrawal-request-status';
+import { AuthService } from '../../../../services/auth.service';
+import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 
 @Component({
   selector: 'app-withdrawal-request-modal',
@@ -28,13 +30,14 @@ import { WithdrawalRequestStatus } from 'src/app/constants/withdrawal-request-st
     ModalFooterComponent,
     NgSelectModule,
     NgSelectComponent,
+    HasRoleDirective,
   ],
   templateUrl: './withdrawal-request-modal.component.html',
   styleUrl: './withdrawal-request-modal.component.scss',
 })
 export class WithdrawalRequestModalComponent implements OnInit {
   @Input() isVisible = false;
-  @Input() storeId!: number;
+  @Input() storeId!: number | null;
   @Output() onClose = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<any>();
   @Output() onApprove = new EventEmitter<{ id: number; reason: string }>();
@@ -49,16 +52,20 @@ export class WithdrawalRequestModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private storeService: StoreService,
-    private documentTypeService: DocumentTypeService
+    private documentTypeService: DocumentTypeService,
+    private authService: AuthService
   ) {}
 
   private _withdrawalRequest: WithdrawalRequestDto | null = null;
   @Input() set withdrawalRequest(value: WithdrawalRequestDto | null) {
-    this.storeService.getById(this.storeId).subscribe({
-      next: (response) => {
-        this.store = response;
-      },
-    });
+    if (this.storeId) {
+      this.storeService.getById(this.storeId).subscribe({
+        next: (response) => {
+          this.store = response;
+        },
+      });
+    }
+
     this._withdrawalRequest = value;
     if (value && this.form) {
       this.form.patchValue(value);
@@ -80,6 +87,8 @@ export class WithdrawalRequestModalComponent implements OnInit {
   }
 
   ngOnInit() {
+    const isStore = this.authService.hasRole('tienda');
+
     this.form = this.fb.group({
       id: [],
       amount: [null, [Validators.required, Validators.min(1)]],
@@ -87,13 +96,16 @@ export class WithdrawalRequestModalComponent implements OnInit {
       documentTypeId: ['', Validators.required],
       document: ['', Validators.required],
       bank: ['', Validators.required],
-      accountNumber: ['', Validators.required],
+      accountNumber: [null, Validators.required],
       description: [''],
-      storeId: ['', Validators.required],
+      storeId: [null, isStore ? [] : Validators.required],
       reason: [''],
     });
 
-    this.loadStores();
+    if (!isStore) {
+      this.loadStores();
+    }
+
     this.loadDocumentTypes();
   }
 

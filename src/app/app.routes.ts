@@ -42,28 +42,28 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./views/orders/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin',  'tienda'] },
+        data: { roles: ['administrador', 'admin',  'bodega', 'tienda'] },
       },
       {
         path: 'wallet',
         loadChildren: () =>
           import('./views/wallet-transactions/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin'] },
+        data: { roles: ['administrador', 'admin', 'tienda'] },
       },
       {
         path: 'withdrawal-requests',
         loadChildren: () =>
           import('./views/withdrawal-requests/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin'] },
+        data: { roles: ['administrador', 'admin', 'tienda'] },
       },
       {
         path: 'stores',
         loadChildren: () =>
           import('./views/stores/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin'] },
+        data: { roles: ['administrador', 'admin', 'tienda'] },
       },
       {
         path: 'dashboard',

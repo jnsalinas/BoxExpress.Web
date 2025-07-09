@@ -28,6 +28,7 @@ import { StoreDto } from '../../../models/store.dto';
 import { StoreService } from '../../../services/store.service';
 import { IconDirective } from '@coreui/icons-angular';
 import { RouterLink } from '@angular/router';
+import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
 
 @Component({
   selector: 'app-wallet-transaction-list',
@@ -47,6 +48,7 @@ import { RouterLink } from '@angular/router';
     NgSelectModule,
     IconDirective,
     RouterLink,
+    HasRoleDirective
   ],
   templateUrl: './wallet-transaction-list.component.html',
   styleUrl: './wallet-transaction-list.component.scss',

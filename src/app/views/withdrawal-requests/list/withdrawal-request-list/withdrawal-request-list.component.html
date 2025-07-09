@@ -106,7 +106,7 @@
               <th scope="col">Descripcion</th>
               <th scope="col">Estado</th>
               <th scope="col">Fecha de aceptacion</th>
-              <th scope="col"></th>
+              <th scope="col" *hasRole="['admin']"></th>
             </tr>
           </thead>
           <tbody>
@@ -124,7 +124,7 @@
               <td>{{ tx.description }}</td>
               <td>{{ getStatusLabel(tx.status) }}</td>
               <td>{{ tx.processedAt | utcDate }}</td>
-              <td>
+              <td *hasRole="['admin']">
                 <div class="d-flex">
                   <button
                     class="btn btn-sm btn-outline-primary"
@@ -150,7 +150,7 @@
 
 <app-withdrawal-request-modal
   [isVisible]="isModalVisible"
-  [storeId]="1"
+  [storeId]="storeId"
   [withdrawalRequest]="withdrawalRequestSelected"
   (onClose)="handleWithdrawalRequestClose()"
   (onSave)="handleWithdrawalRequestSave($event)"

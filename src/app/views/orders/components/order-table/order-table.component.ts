@@ -19,7 +19,9 @@ import { WarehouseDto } from '../../../../models/warehouse.dto';
 import { OrderDto } from '../../../../models/order.dto';
 import { IconDirective } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
-
+import { HasRoleDirective } from 'src/app/shared/directives/has-role.directive';
+import { OrderStatusName } from '../../../../models/enums/order-status.enum';
+import { AuthService } from 'src/app/services/auth.service';
 @Component({
   standalone: true,
   selector: 'app-order-table',
@@ -30,7 +32,8 @@ import { freeSet } from '@coreui/icons';
     FormsModule,
     IconDirective,
     ButtonDirective,
-    ButtonModule
+    ButtonModule,
+    HasRoleDirective,
   ],
   templateUrl: './order-table.component.html',
   styleUrl: './order-table.component.scss',
@@ -53,27 +56,36 @@ export class OrderTableComponent {
   }>();
   @Output() scheduleOrder = new EventEmitter<OrderDto>();
   previousStatusId: number = 0;
+  
+  validationsAvailableStatus = {
+    Delivered: [], // No puede pasar a ningún otro estado desde Delivered
+    Scheduled: ['Delivered', 'InTransit'],
+    // Puedes agregar más:
+    InTransit: ['Delivered'],
+    Cancelled: [],
+  };
 
-  // statusStyles: Record<string, { color: string; badgeClass: string }> = {
-  //   'sin programar': { color: '#adb5bd', badgeClass: 'bg-secondary' },
-  //   'en ruta': { color: '#0dcaf0', badgeClass: 'bg-info' }, // ← sugerido
-  //   programado: { color: '#0d6efd', badgeClass: 'bg-primary' },
-  //   entregado: { color: '#198754', badgeClass: 'bg-success' },
-  //   cancelado: { color: '#dc3545', badgeClass: 'bg-danger' },
-  //   'cancelado 1': { color: '#6f42c1', badgeClass: 'bg-purple' },
-  // };
+  constructor(public authService: AuthService) {}
 
-  // getStatusBadgeClass(status: string): string {
-  //   return (
-  //     this.statusStyles[status?.toLowerCase()]?.badgeClass ||
-  //     'bg-light text-dark'
-  //   );
-  // }
-
-  getStatusOnTheWay(): number  {
-    return this.statusOptions.find((x) => x.name.toLowerCase() == 'en ruta')!.id!;
+  getStatusDelivered(): number {
+    return this.statusOptions.find((x) => x.name == OrderStatusName.Delivered)!
+      .id!;
   }
 
+  getStatusOnTheWay(): number {
+    return this.statusOptions.find((x) => x.name == OrderStatusName.InTransit)!
+      .id!;
+  }
+
+  getStatusScheduled(): number {
+    return this.statusOptions.find((x) => x.name == OrderStatusName.Scheduled)!
+      .id!;
+  }
+
+   getStatusUnscheduled(): number {
+    return this.statusOptions.find((x) => x.name == OrderStatusName.Unscheduled)!
+      .id!;
+  }
   // getStatusColor(status: string): string {
   //   return this.statusStyles[status?.toLowerCase()]?.color || '#dee2e6';
   // }

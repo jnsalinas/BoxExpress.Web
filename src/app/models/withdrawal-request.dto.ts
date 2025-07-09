@@ -1,7 +1,7 @@
 import { BaseDto } from './common/base.dto';
 
 export interface WithdrawalRequestDto extends BaseDto {
-  storeId?: number;
+  storeId?: number | null;
   store?: string;
   amount?: number;
   accountHolder?: string;

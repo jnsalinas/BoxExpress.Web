@@ -36,7 +36,7 @@
               *ngIf="hold.orderItem?.orderId"
               [routerLink]="['/orders', hold.orderItem?.orderId]"
             >
-              #{{ hold.orderItem?.orderId }}
+              #{{ hold.orderItem?.orderId }}{{ hold.itemIndex ? '-' + hold.itemIndex : '' }}
             </a>
           </td>
 

@@ -5,7 +5,7 @@ export const navItems: CustomNavData[] = [
     name: 'Bodegas',
     url: '/warehouses',
     iconComponent: { name: 'cil-home' },
-    roles: ['administrador', 'admin',  'bodega'],
+    roles: ['admin',  'bodega'],
   },
   {
     name: 'Transferencias',
@@ -23,19 +23,19 @@ export const navItems: CustomNavData[] = [
     name: 'Órdenes',
     url: '/orders',
     iconComponent: { name: 'cil-task' },
-    roles: ['administrador', 'admin'],
+    roles: ['administrador', 'admin', 'bodega', 'tienda'],
   },
   {
     name: 'Wallet',
     url: '/wallet',
     iconComponent: { name: 'cil-credit-card' },
-    roles: ['administrador', 'admin'],
+    roles: ['administrador', 'admin', 'tienda'],
   },
   {
     name: 'Retiros',
     url: '/withdrawal-requests',
     iconComponent: { name: 'cil-dollar' },
-    roles: ['administrador', 'admin'],
+    roles: ['administrador', 'admin', 'tienda'],
   },
   {
     name: 'Balance',

@@ -4,14 +4,18 @@ import { HttpClient } from '@angular/common/http';
 import { StoreDto } from '../models/store.dto';
 import { StoreFilter } from '../models/store-filter.model';
 import { environment } from '../../environments/environment';
+import { ApiResponse } from '../models/common/api-response';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class StoreService extends BaseApiService<
-  StoreDto,
-  StoreFilter
-> {
- 
+export class WalletService extends BaseApiService<StoreDto, StoreFilter> {
   constructor(http: HttpClient) {
-    super(http, 'stores');
+    super(http, 'wallet');
+  }
+
+  summary(): Observable<StoreDto> {
+    return this.http
+      .get<ApiResponse<StoreDto>>(`${environment.apiUrl}/Wallet/Summary`)
+      .pipe(this.handleResponse());
   }
 }
