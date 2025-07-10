@@ -12,6 +12,13 @@ export const routes: Routes = [
     },
   },
   {
+    path: 'create',
+    loadComponent: () =>
+      import('../orders/create/order-create.component').then(
+        (m) => m.OrderCreateComponent
+      ),
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('../orders/detail/order-detail.component').then(

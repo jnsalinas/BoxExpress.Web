@@ -42,15 +42,15 @@ import { WalletTransactionListComponent } from '../../wallet-transactions/list/w
     OrderCategoryHistoryComponent,
     LoadingOverlayComponent,
     OrderInfoComponent,
-    WalletTransactionListComponent
+    WalletTransactionListComponent,
   ],
   templateUrl: './order-detail.component.html',
   styleUrl: './order-detail.component.scss',
 })
 export class OrderDetailComponent implements OnInit {
-  order!: OrderDto;
+  order: OrderDto = { id: 0, name: '' };
   activeTab: number = 0;
-  isLoading = true;
+  isLoading = false;
 
   orderForm!: FormGroup;
   orderItems: any[] = [];
@@ -60,12 +60,16 @@ export class OrderDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
-    private orderService: OrderService,
+    private orderService: OrderService
   ) {}
 
   ngOnInit() {
-    const orderId = +this.route.snapshot.params['id'];
-    this.loadOrder(orderId);
+    const orderId = this.route.snapshot.params['id'];
+    if (orderId == 'new') {
+      this.order;
+    } else {
+      this.loadOrder(orderId);
+    }
   }
 
   loadOrder(id: number) {

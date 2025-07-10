@@ -76,7 +76,8 @@ import { AuthService } from '../../../../../src/app/services/auth.service';
     OrderEditModalComponent,
     IconDirective,
     GenericPaginationComponent,
-    HasRoleDirective
+    HasRoleDirective,
+    RouterLink
   ],
 })
 export class OrderListComponent implements OnInit {

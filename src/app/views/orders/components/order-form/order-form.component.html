@@ -1,0 +1,335 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando opciones...'"
+></app-loading-overlay>
+
+<c-row>
+  <c-col xs="12">
+    <c-card class="mb-4">
+      <c-card-header><strong>Crear Orden</strong></c-card-header>
+      <c-card-body>
+        <form cForm [formGroup]="form" (ngSubmit)="onSubmit()">
+          <!-- CLIENTE -->
+          <c-card class="mb-4">
+            <c-card-header><strong>Datos del Cliente</strong></c-card-header>
+            <c-card-body>
+              <c-row>
+                <c-col md="6">
+                  <div class="mb-3">
+                    <label cLabel for="clientFirstName">Nombre</label>
+                    <input
+                      cFormControl
+                      id="clientFirstName"
+                      formControlName="clientFirstName"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="clientLastName">Apellido</label>
+                    <input
+                      cFormControl
+                      id="clientLastName"
+                      formControlName="clientLastName"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="clientDocumentTypeId"
+                      >Tipo de Documento</label
+                    >
+                    <select
+                      cFormControl
+                      id="clientDocumentTypeId"
+                      formControlName="clientDocumentTypeId"
+                      class="form-control"
+                    >
+                      <option value="" disabled selected>Seleccione</option>
+                      <option
+                        *ngFor="let documentType of documentTypes"
+                        [value]="documentType.id"
+                      >
+                        {{ documentType.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="clientDocument">Documento</label>
+                    <input
+                      cFormControl
+                      id="clientDocument"
+                      formControlName="clientDocument"
+                      class="form-control"
+                    />
+                  </div>
+                </c-col>
+
+                <c-col md="6">
+                  <div class="mb-3">
+                    <label cLabel for="clientEmail">Email</label>
+                    <input
+                      cFormControl
+                      id="clientEmail"
+                      formControlName="clientEmail"
+                      class="form-control"
+                      type="email"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="clientExternalId">External ID</label>
+                    <input
+                      cFormControl
+                      id="clientExternalId"
+                      formControlName="clientExternalId"
+                      class="form-control"
+                    />
+                  </div>
+                </c-col>
+              </c-row>
+            </c-card-body>
+          </c-card>
+
+          <!-- DIRECCIÓN -->
+          <c-card class="mb-4">
+            <c-card-header><strong>Dirección</strong></c-card-header>
+            <c-card-body>
+              <c-row>
+                <c-col md="6">
+                  <div class="mb-3">
+                    <label cLabel for="clientAddress">Dirección</label>
+                    <input
+                      cFormControl
+                      id="clientAddress"
+                      formControlName="clientAddress"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="clientAddressComplement"
+                      >Complemento</label
+                    >
+                    <input
+                      cFormControl
+                      id="clientAddressComplement"
+                      formControlName="clientAddressComplement"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="cityId">Ciudad</label>
+                    <select
+                      cFormControl
+                      id="cityId"
+                      formControlName="cityId"
+                      class="form-control"
+                    >
+                      <option value="" disabled selected>Seleccione</option>
+                      <option *ngFor="let city of cities" [value]="city.id">
+                        {{ city.name }}
+                      </option>
+                    </select>
+                  </div>
+                </c-col>
+                <c-col md="6">
+                  <div class="mb-3">
+                    <label cLabel for="latitude">Latitud</label>
+                    <input
+                      cFormControl
+                      id="latitude"
+                      formControlName="latitude"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="longitude">Longitud</label>
+                    <input
+                      cFormControl
+                      id="longitude"
+                      formControlName="longitude"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="clientAddress2">Dirección 2</label>
+                    <input
+                      cFormControl
+                      id="clientAddress2"
+                      formControlName="clientAddress2"
+                      class="form-control"
+                    />
+                  </div>
+                </c-col>
+              </c-row>
+            </c-card-body>
+          </c-card>
+
+          <!-- ORDEN -->
+          <c-card class="mb-4">
+            <c-card-header
+              ><strong>Información de la Orden</strong></c-card-header
+            >
+            <c-card-body>
+              <c-row>
+                <c-col md="6">
+                  <div class="mb-3">
+                    <label cLabel for="storeId">Tienda</label>
+                    <select
+                      cFormControl
+                      id="storeId"
+                      formControlName="storeId"
+                      class="form-control"
+                    >
+                      <option value="" disabled selected>Seleccione</option>
+                      <option *ngFor="let store of stores" [value]="store.id">
+                        {{ store.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="deliveryFee">Fee</label>
+                    <input
+                      cFormControl
+                      id="deliveryFee"
+                      formControlName="deliveryFee"
+                      class="form-control"
+                      type="number"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="currencyId">Moneda</label>
+                    <select
+                      cFormControl
+                      id="currencyId"
+                      formControlName="currencyId"
+                      class="form-control"
+                    >
+                      <option value="" disabled selected>Seleccione</option>
+                      <option
+                        *ngFor="let currency of currencies"
+                        [value]="currency.id"
+                      >
+                        {{ currency.name }}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="code">Código</label>
+                    <input
+                      cFormControl
+                      formControlName="code"
+                      id="code"
+                      type="text"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="contains">Contiene</label>
+                    <textarea
+                      cFormControl
+                      formControlName="contains"
+                      id="contains"
+                      class="form-control"
+                      rows="2"
+                    ></textarea>
+                  </div>
+                </c-col>
+                <c-col md="6">
+                  <div class="mb-3">
+                    <label cLabel for="totalAmount">Valor Total</label>
+                    <input
+                      cFormControl
+                      formControlName="totalAmount"
+                      id="totalAmount"
+                      type="number"
+                      class="form-control"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="notes">Notas</label>
+                    <textarea
+                      cFormControl
+                      formControlName="notes"
+                      id="notes"
+                      class="form-control"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label cLabel for="externalId">External ID</label>
+                    <input
+                      cFormControl
+                      id="externalId"
+                      formControlName="externalId"
+                      class="form-control"
+                    />
+                  </div>
+                </c-col>
+              </c-row>
+            </c-card-body>
+          </c-card>
+
+          <!-- Productos -->
+          <c-card class="mb-4">
+            <c-card-header><strong>Productos</strong></c-card-header>
+            <c-card-body>
+              <div
+                *ngFor="let item of orderItems.controls; let i = index"
+                [formGroup]="getOrderItemFormGroup(i)"
+                class="border p-3 mb-2 rounded"
+              >
+                <c-row class="align-items-end">
+                  <c-col md="6">
+                    <div class="mb-2">
+                      <label>Variante</label>
+                      <select
+                        class="form-control"
+                        formControlName="productVariantId"
+                      >
+                        <option value="" disabled selected>Seleccione</option>
+                        <option
+                          *ngFor="let variant of productVariants"
+                          [value]="variant.id"
+                        >
+                          {{ variant.name }}
+                        </option>
+                      </select>
+                    </div>
+                  </c-col>
+                  <c-col md="4">
+                    <div class="mb-2">
+                      <label>Cantidad</label>
+                      <input
+                        type="number"
+                        class="form-control"
+                        formControlName="quantity"
+                      />
+                    </div>
+                  </c-col>
+                  <c-col md="2" class="text-end">
+                    <div class="mb-2">
+                      <label class="d-block">&nbsp;</label>
+                      <button
+                        cButton
+                        type="button"
+                        color="danger"
+                        (click)="removeItem(i)"
+                      >
+                        Eliminar
+                      </button>
+                    </div>
+                  </c-col>
+                </c-row>
+              </div>
+              <button cButton type="button" color="primary" (click)="addItem()">
+                Agregar producto
+              </button>
+            </c-card-body>
+          </c-card>
+
+          <div class="mt-4 text-end">
+            <button cButton type="submit" color="success">Guardar Orden</button>
+          </div>
+        </form>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row>

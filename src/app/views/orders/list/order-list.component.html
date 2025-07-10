@@ -5,17 +5,36 @@
 <c-row>
   <c-col xs="12">
     <c-card class="mb-4">
-      <c-card-header>
+      <c-card-header
+        style="
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        "
+      >
         <strong>Órdenes</strong>
-        <button
-          type="button"
-          class="float-end btn btn-primary"
-          (click)="downloadExcel()"
-        >
-          <svg [cIcon]="icons.cilCloudDownload"></svg>
-          Exportar
-        </button>
+
+        <div style="display: flex; gap: 8px">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="downloadExcel()"
+          >
+            <svg [cIcon]="icons.cilCloudDownload"></svg>
+            Exportar
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            [routerLink]="['/orders', 'new']"
+          >
+            <svg [cIcon]="icons.cilPlus"></svg>
+            Crear
+          </button>
+        </div>
       </c-card-header>
+
       <c-card-body>
         <form
           [formGroup]="filtersForm"
@@ -64,7 +83,7 @@
               class="form-control"
             />
           </div>
-           <div class="col-md-2">
+          <div class="col-md-2">
             <label for="endDate" class="form-label">Programación</label>
             <input
               type="date"
@@ -93,9 +112,13 @@
           (activeItemKeyChange)="handleActiveItemChange($event)"
         >
           <c-tabs-list variant="underline-border">
-            <button *hasRole="['admin', 'tienda']" cTab [itemKey]="0">Órdenes</button>
+            <button *hasRole="['admin', 'tienda']" cTab [itemKey]="0">
+              Órdenes
+            </button>
             <button cTab [itemKey]="1">Express</button>
-            <button *hasRole="['admin', 'tienda']" cTab [itemKey]="2">Tradicional</button>
+            <button *hasRole="['admin', 'tienda']" cTab [itemKey]="2">
+              Tradicional
+            </button>
           </c-tabs-list>
 
           <c-tabs-content>
@@ -110,7 +133,6 @@
                     class="text-center"
                     [ngClass]="getStatusClass(status.statusName)"
                   >
-                  
                     <c-card-body>
                       <h6>{{ status.statusName }}</h6>
                       <p class="m-0">{{ status.count }}</p>

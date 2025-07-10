@@ -26,7 +26,7 @@ import {AuthInterceptor} from "../../../services/http-interceptors/auth.intercep
 import {AuthService} from "../../../services/auth.service";
 import {CommonModule} from "@angular/common";
 import {environment} from "../../../../environments/environment";
-import {CitiesService} from "../../../services/city.service";
+import {CityService} from "../../../services/city.service";
 
 @Component({
   selector: 'app-register',
@@ -52,7 +52,7 @@ export class RegisterComponent {
     private router: Router,
     private messageService: MessageService,
     private http: HttpClient,
-    private citiesService: CitiesService,
+    private cityService: CityService,
 
   ) {
     this.loadCities();
@@ -105,9 +105,9 @@ export class RegisterComponent {
   }
 
   loadCities(): void {
-    this.citiesService.getCities().subscribe({
+    this.cityService.getAll().subscribe({
       next: (cities) => {
-        this.cities = cities;
+        this.cities = cities.data;
       },
       error: (err) => {
         this.messageService.showWarning("No se pudieron cargar las ciudades");

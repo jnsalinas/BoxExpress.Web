@@ -14,7 +14,7 @@ export interface OrderDto extends BaseDto {
   clientFullName?: string;
   clientDocument?: string;
   clientPhone?: string;
-  totalAmount: number;
+  totalAmount?: number;
   status?: string;
   statusId?: number;
   category?: string;
