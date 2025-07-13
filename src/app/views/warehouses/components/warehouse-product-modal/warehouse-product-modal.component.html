@@ -53,69 +53,123 @@
                 min="0"
               />
             </div>
-            <div class="col-md-6">
-              <label class="form-label">Shopify ID</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="shopifyId"
-                placeholder="ID de Shopify"
-              />
-            </div>
           </div>
 
           <div formArrayName="variants" class="mt-3">
-            <div class="d-flex justify-content-between align-items-center mb-2">
-              <label class="form-label fw-semibold mb-0">Variantes</label>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <label class="form-label fw-semibold mb-0 text-primary">
+                  <svg [cIcon]="icons.cilList" class="me-2"></svg>
+                  Variantes del Producto
+                </label>
+                <small class="text-muted d-block">Agrega las diferentes versiones de este producto</small>
+              </div>
               <button
                 type="button"
-                class="btn btn-sm btn-outline-primary"
+                class="btn btn-primary btn-sm"
                 (click)="addVariant(i)"
               >
-                <i class="cil-plus me-1"></i> Agregar variante
+                <svg [cIcon]="icons.cilPlus" class="me-1"></svg>
+                Agregar Variante
               </button>
             </div>
 
             <div
               *ngFor="let variant of getVariants(i).controls; let j = index"
               [formGroupName]="j"
-              class="input-group mb-2"
+              class="variant-card border rounded p-4 mb-3 shadow-sm bg-light"
             >
-              <input
-                class="form-control"
-                formControlName="name"
-                placeholder="Nombre"
-              />
-              <input
-                class="form-control"
-                formControlName="quantity"
-                type="number"
-                placeholder="Cantidad"
-                min="0"
-              />
-              <input
-                class="form-control"
-                formControlName="sku"
-                placeholder="SKU"
-              />
-              <input
-                type="number"
-                class="form-control"
-                formControlName="price"
-                placeholder="Precio"
-                min="0"
-              />
-              <button
-                type="button"
-                class="btn btn-outline-danger"
-                (click)="removeVariant(i, j)"
-              >
-                <svg
-                  [cIcon]="icons.cilXCircle"
-                  size="md"
-                  title="List Icon"
-                ></svg>
-              </button>
+              <!-- Header de la variante -->
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0 text-primary fw-bold">
+                  <svg [cIcon]="icons.cilTag" class="me-2"></svg>
+                  Variante {{ j + 1 }}
+                </h6>
+                <button
+                  type="button"
+                  class="btn btn-outline-danger btn-sm"
+                  (click)="removeVariant(i, j)"
+                  title="Eliminar variante"
+                >
+                  <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                </button>
+              </div>
+
+              <!-- Información básica de la variante -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold text-muted small">Nombre de la Variante</label>
+                  <input
+                    class="form-control"
+                    formControlName="name"
+                    placeholder="Ej: Talla M - Color Azul"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold text-muted small">SKU</label>
+                  <input
+                    class="form-control"
+                    formControlName="sku"
+                    placeholder="SKU-001"
+                  />
+                </div>
+                <div class="col-md-4">
+                  <label class="form-label fw-semibold text-muted small">Shopify ID</label>
+                  <input
+                    class="form-control"
+                    formControlName="shopifyId"
+                    placeholder="ID de Shopify"
+                  />
+                </div>
+              </div>
+
+              <!-- Selector de tienda y cantidad -->
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold text-muted small">Tienda</label>
+                  <ng-select
+                    [items]="stores"
+                    bindLabel="name"
+                    bindValue="id"
+                    formControlName="storeId"
+                    placeholder="Seleccione una tienda..."
+                    [searchable]="true"
+                    [clearable]="false"
+                    class="ng-select-custom"
+                  >
+                    <ng-template ng-option-tmp let-item="item">
+                      <div class="d-flex align-items-center">
+                        <svg [cIcon]="icons.cilHome" class="me-2 text-primary"></svg>
+                        <span>{{ item.name }}</span>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label fw-semibold text-muted small">Cantidad</label>
+                  <input
+                    type="number"
+                    class="form-control"
+                    formControlName="quantity"
+                    placeholder="0"
+                    min="0"
+                  />
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label fw-semibold text-muted small">Precio</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input
+                      type="number"
+                      class="form-control"
+                      formControlName="price"
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -140,9 +194,10 @@
       class="btn btn-primary"
       type="submit"
       (click)="save()"
-      [disabled]="productForm.invalid"
+      [disabled]="productForm.invalid || isSaving"
     >
-      Guardar
+      <svg [cIcon]="icons.cilCheck" class="me-1" *ngIf="!isSaving"></svg>
+      {{ isSaving ? 'Guardando...' : 'Guardar' }}
     </button>
   </c-modal-footer>
 </c-modal>

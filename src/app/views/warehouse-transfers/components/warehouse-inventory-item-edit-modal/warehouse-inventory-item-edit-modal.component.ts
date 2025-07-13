@@ -22,8 +22,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { IconDirective } from '@coreui/icons-angular';
+import { freeSet } from '@coreui/icons';
 import { UtcDatePipe } from '../../../../shared/pipes/utc-date.pipe';
 import { WarehouseInventoryService } from 'src/app/services/warehouse-inventory.service';
+import { StoreService } from 'src/app/services/store.service';
+import { StoreDto } from '../../../../models/store.dto';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   standalone: true,
@@ -45,6 +49,7 @@ import { WarehouseInventoryService } from 'src/app/services/warehouse-inventory.
     ColComponent,
     RowComponent,
     UtcDatePipe,
+    NgSelectModule,
   ],
   templateUrl: './warehouse-inventory-item-edit-modal.component.html',
   styleUrl: './warehouse-inventory-item-edit-modal.component.scss',
@@ -56,12 +61,18 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
   @Output() onSave = new EventEmitter<any>();
   @Output() onReject = new EventEmitter<any>();
   warehouseInventoryForm: FormGroup = this.fb.group({});
+  isSaving = false;
+  icons = freeSet;
+  stores: StoreDto[] = [];
+  
   constructor(
     private fb: FormBuilder,
-    private warehouseInventoryService: WarehouseInventoryService
+    private warehouseInventoryService: WarehouseInventoryService,
+    private storeService: StoreService
   ) {}
 
   ngOnInit() {
+    this.loadStores();
     this.warehouseInventoryService
       .getById(this.warehouseInventoryId)
       .subscribe({
@@ -75,31 +86,32 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
       });
   }
 
+  loadStores() {
+    this.storeService.getAll({ isAll: true }).subscribe({
+      next: (response) => {
+        this.stores = response.data;
+      },
+      error: (error) => {
+        console.error('Error loading stores:', error);
+      },
+    });
+  }
+
   initForm() {
-    const product = this.warehouseInventoryItem?.productVariant?.product;
     const variant = this.warehouseInventoryItem?.productVariant;
 
-    // console.log(
-    //   'variant?.reservedQuantity',
-    //   warehouseInventoryItem?.reservedQuantity
-    // );
-
     this.warehouseInventoryForm = this.fb.group({
-      productName: [product?.name || '', Validators.required],
+      productName: [variant?.productName || '', Validators.required],
       variantName: [variant?.name || '', Validators.required],
-      productSku: [product?.sku || ''],
-      variantSku: [variant?.sku || ''],
-      shopifyProductId: [product?.shopifyProductId || ''],
+      productSku: [variant?.productSku || '', Validators.required],
+      variantSku: [variant?.sku || '', Validators.required],
       shopifyVariantId: [variant?.shopifyVariantId || ''],
-      price: [variant?.price || 0],
+      price: [variant?.price || 0, [Validators.required, Validators.min(0)]],
       quantity: [
         this.warehouseInventoryItem?.quantity || 0,
-        [
-          Validators.required,
-          Validators.min(this.warehouseInventoryItem?.reservedQuantity || 0),
-        ],
+        [Validators.required, Validators.min(0)],
       ],
-      notes: ['', Validators.required],
+      storeId: [this.warehouseInventoryItem?.store?.id || null, Validators.required],
     });
   }
 
@@ -109,10 +121,31 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
 
   save() {
     if (this.warehouseInventoryForm.valid) {
-      this.onSave.emit(this.warehouseInventoryForm.value);
+      this.isSaving = true;
+      
+      // Modelo plano para enviar al backend
+      const formData = this.warehouseInventoryForm.value;
+      const submitData = {
+        id: this.warehouseInventoryId,
+        productName: formData.productName,
+        variantName: formData.variantName,
+        productSku: formData.productSku,
+        variantSku: formData.variantSku,
+        shopifyVariantId: formData.shopifyVariantId,
+        price: formData.price,
+        quantity: formData.quantity,
+        storeId: formData.storeId,
+      };
+      
+      this.onSave.emit(submitData);
     } else {
       console.log('Formulario inválido:', this.warehouseInventoryForm.value);
     }
+  }
+
+  // Método para resetear el estado de guardado (llamado desde el componente padre)
+  resetSavingState() {
+    this.isSaving = false;
   }
 
   reject() {

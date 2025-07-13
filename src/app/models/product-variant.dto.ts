@@ -1,6 +1,7 @@
 import { BaseDto } from './common/base.dto';
 import { InventoryMovementDto } from './inventory-movement.dto';
 import { ProductDto } from './product.dto';
+import { StoreDto } from './store.dto';
 
 export interface ProductVariantDto extends BaseDto {
   quantity: number;
@@ -13,4 +14,8 @@ export interface ProductVariantDto extends BaseDto {
   product: ProductDto
   warehouseInventoryId?: number;
   pendingReturnQuantity?: number;
+  store?: StoreDto;
+  productName?: string;
+  productSku?: string;
+  productPrice?: number;
 }

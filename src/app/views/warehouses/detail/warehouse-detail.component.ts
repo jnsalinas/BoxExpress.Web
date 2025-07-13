@@ -66,6 +66,8 @@ import {HasRoleDirective} from '../../../shared/directives/has-role.directive';
 })
 export class WarehouseDetailComponent implements OnInit {
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
+  @ViewChild(WarehouseInventoryItemEditModalComponent) inventoryItemModal!: WarehouseInventoryItemEditModalComponent;
+  @ViewChild(WarehouseProductModalComponent) inventoryModal!: WarehouseProductModalComponent;
   private route = inject(ActivatedRoute);
   isModalInventoryVisible = false;
   isModalTransferVisible = false;
@@ -157,22 +159,33 @@ export class WarehouseDetailComponent implements OnInit {
     console.log('Modal closed with data:', data);
     this.isModalInventoryVisible = false;
     this.productToEdit = null;
+    // Resetear el estado de guardado en el modal
+    if (this.inventoryModal) {
+      this.inventoryModal.resetSavingState();
+    }
   }
 
   handleInventorySave(data: any) {
     console.log('Saved data:', data);
-    this.isLoading = true;
     this.warehouseService
       .addInventory(this.warehouseId!, data.products)
       .subscribe({
         next: (data) => {
           console.log('Warehouse created:', data);
-          this.isLoading = false;
           this.handleInventoryClose(null);
+          this.loadWarehouseInventories(); // Recargar la lista
+          // Resetear el estado de guardado en el modal
+          if (this.inventoryModal) {
+            this.inventoryModal.resetSavingState();
+          }
         },
         error: (err) => {
           console.error('Error isLoading warehouses', err);
           this.handleInventoryClose(null);
+          // Resetear el estado de guardado en el modal
+          if (this.inventoryModal) {
+            this.inventoryModal.resetSavingState();
+          }
         },
       });
   }
@@ -252,32 +265,47 @@ export class WarehouseDetailComponent implements OnInit {
       ok: () => {
         if (this.warehouseInventoryId != null) {
           console.log('Saved data:', data);
-          this.isLoading = true;
           this.warehouseInventoryService
             .update(this.warehouseInventoryId, data)
             .subscribe({
               next: (data) => {
                 console.log('Warehouse transfer:', data);
-                this.isLoading = false;
                 this.handleInventoryItemClose();
                 this.loadWarehouseInventories();
                 this.warehouseInventoryId = null;
+                // Resetear el estado de guardado en el modal
+                if (this.inventoryItemModal) {
+                  this.inventoryItemModal.resetSavingState();
+                }
               },
               error: (err) => {
                 console.error('Error isLoading warehouses', err);
                 this.handleInventoryItemClose();
+                // Resetear el estado de guardado en el modal
+                if (this.inventoryItemModal) {
+                  this.inventoryItemModal.resetSavingState();
+                }
               },
             });
         } else {
           this.handleInventoryItemClose();
         }
       },
-      close: () => {},
+      close: () => {
+        // Resetear el estado de guardado si se cancela
+        if (this.inventoryItemModal) {
+          this.inventoryItemModal.resetSavingState();
+        }
+      },
     });
   }
 
   handleInventoryItemClose() {
     this.warehouseInventoryId = null;
+    // Resetear el estado de guardado en el modal
+    if (this.inventoryItemModal) {
+      this.inventoryItemModal.resetSavingState();
+    }
   }
   //#endregion
 }

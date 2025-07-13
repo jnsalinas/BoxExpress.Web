@@ -1,6 +1,7 @@
 import { WarehouseTransferStatus } from '../constants/warehouse-transfer-status';
 import { BaseDto } from './common/base.dto';
 import { ProductVariantDto } from './product-variant.dto';
+import { StoreDto } from './store.dto';
 import { WarehouseInventoryTransferDetailDto } from './warehouse-inventory-transfer-detail.dto';
 import { WarehouseDto } from './warehouse.dto';
 
@@ -14,4 +15,5 @@ export interface WarehouseInventoryDto extends BaseDto {
   productVariant?: ProductVariantDto;
   warehouse?: WarehouseDto;
   pendingReturnQuantity?: number;
+  store?: StoreDto;
 }

@@ -1,198 +1,212 @@
-<c-modal [visible]="warehouseInventoryItem" size="lg" backdrop="static">
+<c-modal [visible]="warehouseInventoryItem && warehouseInventoryForm" size="lg" backdrop="static" keyboard="false">
   <c-modal-header>
-    <h5 class="modal-title">Modificar producto</h5>
+    <h5 class="modal-title">
+      <svg [cIcon]="icons.cilPencil" class="me-2"></svg>
+      Modificar Producto de Inventario
+    </h5>
   </c-modal-header>
 
   <c-modal-body>
-    <c-card>
-      <c-card-body>
-        <form
-          [formGroup]="warehouseInventoryForm"
-          *ngIf="warehouseInventoryItem"
-        >
-          <c-row>
-            <!-- Nombre del producto -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label for="productName" class="form-label"
-                  >Nombre del producto</label
-                >
-                <input
-                  type="text"
-                  id="productName"
-                  class="form-control"
-                  formControlName="productName"
-                />
-              </div>
-            </c-col>
+    <!-- Loading state -->
+    <div *ngIf="!warehouseInventoryItem" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+      <p class="mt-2 text-muted">Cargando datos del producto...</p>
+    </div>
 
-            <!-- Nombre de la variante -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label for="variantName" class="form-label"
-                  >Nombre de la variante</label
-                >
-                <input
-                  type="text"
-                  id="variantName"
-                  class="form-control"
-                  formControlName="variantName"
-                />
-              </div>
-            </c-col>
-          </c-row>
+    <!-- Form content -->
+    <form
+      [formGroup]="warehouseInventoryForm"
+      *ngIf="warehouseInventoryItem"
+    >
+      <!-- Información del Producto -->
+      <div class="product-info-section mb-4">
+        <h6 class="section-title text-primary mb-3">
+          <svg [cIcon]="icons.cilTag" class="me-2"></svg>
+          Información del Producto
+        </h6>
+        
+        <c-row>
+          <c-col col="6">
+            <div class="form-group">
+              <label for="productName" class="form-label fw-semibold">
+                Nombre del Producto
+              </label>
+              <input
+                type="text"
+                id="productName"
+                class="form-control"
+                formControlName="productName"
+                placeholder="Ej: Camiseta Básica"
+              />
+            </div>
+          </c-col>
 
-          <c-row>
-            <!-- SKU del producto -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label for="productSku" class="form-label"
-                  >SKU del producto</label
-                >
-                <input
-                  type="text"
-                  id="productSku"
-                  class="form-control"
-                  formControlName="productSku"
-                />
-              </div>
-            </c-col>
+          <c-col col="6">
+            <div class="form-group">
+              <label for="variantName" class="form-label fw-semibold">
+                Nombre de la Variante
+              </label>
+              <input
+                type="text"
+                id="variantName"
+                class="form-control"
+                formControlName="variantName"
+                placeholder="Ej: Talla M - Color Azul"
+              />
+            </div>
+          </c-col>
+        </c-row>
 
-            <!-- SKU de la variante -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label for="variantSku" class="form-label"
-                  >SKU de la variante</label
-                >
-                <input
-                  type="text"
-                  id="variantSku"
-                  class="form-control"
-                  formControlName="variantSku"
-                />
-              </div>
-            </c-col>
-          </c-row>
+        <c-row>
+          <c-col col="6">
+            <div class="form-group">
+              <label for="productSku" class="form-label fw-semibold">
+                SKU del Producto
+              </label>
+              <input
+                type="text"
+                id="productSku"
+                class="form-control"
+                formControlName="productSku"
+                placeholder="SKU-PRODUCTO-001"
+              />
+            </div>
+          </c-col>
 
-          <c-row>
-            <!-- Shopify Product ID -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label for="shopifyProductId" class="form-label"
-                  >Shopify Product ID</label
-                >
-                <input
-                  type="text"
-                  id="shopifyProductId"
-                  class="form-control"
-                  formControlName="shopifyProductId"
-                />
-              </div>
-            </c-col>
+          <c-col col="6">
+            <div class="form-group">
+              <label for="variantSku" class="form-label fw-semibold">
+                SKU de la Variante
+              </label>
+              <input
+                type="text"
+                id="variantSku"
+                class="form-control"
+                formControlName="variantSku"
+                placeholder="SKU-VARIANTE-001"
+              />
+            </div>
+          </c-col>
+        </c-row>
+      </div>
 
-            <!-- Shopify Variant ID -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label for="shopifyVariantId" class="form-label"
-                  >Shopify Variant ID</label
-                >
-                <input
-                  type="text"
-                  id="shopifyVariantId"
-                  class="form-control"
-                  formControlName="shopifyVariantId"
-                />
-              </div>
-            </c-col>
-          </c-row>
+      <!-- Información de Shopify -->
+      <div class="shopify-info-section mb-4">
+        <h6 class="section-title text-info mb-3">
+          <svg [cIcon]="icons.cilLink" class="me-2"></svg>
+          Información de Shopify
+        </h6>
+        
+        <c-row>
+          <c-col col="12">
+            <div class="form-group">
+              <label for="shopifyVariantId" class="form-label fw-semibold">
+                Shopify Variant ID
+              </label>
+              <input
+                type="text"
+                id="shopifyVariantId"
+                class="form-control"
+                formControlName="shopifyVariantId"
+                placeholder="ID de la variante en Shopify"
+              />
+              <small class="text-muted">Solo la variante tiene ID de Shopify</small>
+            </div>
+          </c-col>
+        </c-row>
+      </div>
 
-          <c-row>
-            <!-- Precio -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label for="price" class="form-label">Precio</label>
+      <!-- Información de Precios y Cantidades -->
+      <div class="pricing-section mb-4">
+        <h6 class="section-title text-success mb-3">
+          <svg [cIcon]="icons.cilDollar" class="me-2"></svg>
+          Precios y Cantidades
+        </h6>
+        
+        <c-row>
+          <c-col col="6">
+            <div class="form-group">
+              <label for="price" class="form-label fw-semibold">Precio</label>
+              <div class="input-group">
+                <span class="input-group-text">$</span>
                 <input
                   type="number"
                   id="price"
                   class="form-control"
                   formControlName="price"
+                  placeholder="0.00"
+                  min="0"
+                  step="0.01"
                 />
               </div>
-            </c-col>
+            </div>
+          </c-col>
 
-            <!-- Cantidad total -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label for="quantity" class="form-label">Cantidad total</label>
-                <input
-                  type="number"
-                  id="quantity"
-                  class="form-control"
-                  formControlName="quantity"
-                />
-              </div>
-            </c-col>
-          </c-row>
+          <c-col col="6">
+            <div class="form-group">
+              <label for="quantity" class="form-label fw-semibold">
+                Cantidad Total
+              </label>
+              <input
+                type="number"
+                id="quantity"
+                class="form-control"
+                formControlName="quantity"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+          </c-col>
+        </c-row>
+      </div>
 
-          <c-row>
-            <!-- Cantidad reservada -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label for="reservedQuantity" class="form-label"
-                  >Cantidad en Procesamiento</label
-                >
-                <input
-                  type="number"
-                  id="reservedQuantity"
-                  class="form-control"
-                  [value]="warehouseInventoryItem?.reservedQuantity"
-                  disabled
-                />
-              </div>
-            </c-col>
-
-            <!-- Cantidad disponible -->
-            <c-col col="6">
-              <div class="mb-3">
-                <label class="form-label">Cantidad disponible</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  [value]="warehouseInventoryItem?.availableQuantity"
-                  disabled
-                />
-              </div>
-            </c-col>
-          </c-row>
-          <c-row>
-            <!-- Notas -->
-            <c-col col="12">
-              <div class="mb-3">
-                <label for="notes" class="form-label">Justificación</label>
-                <textarea
-                  id="notes"
-                  class="form-control"
-                  formControlName="notes"
-                ></textarea>
-              </div>
-            </c-col>
-          </c-row>
-        </form>
-      </c-card-body>
-    </c-card>
+      <!-- Selección de Tienda -->
+      <div class="store-section mb-4">
+        <h6 class="section-title text-warning mb-3">
+          <svg [cIcon]="icons.cilHome" class="me-2"></svg>
+          Tienda
+        </h6>
+        
+        <c-row>
+          <c-col col="12">
+            <div class="form-group">
+              <label for="storeId" class="form-label fw-semibold">
+                Seleccionar Tienda
+              </label>
+              <ng-select
+                id="storeId"
+                [items]="stores"
+                [clearable]="false"
+                bindLabel="name"
+                bindValue="id"
+                placeholder="Selecciona una tienda..."
+                formControlName="storeId"
+                class="form-control"
+              >
+              </ng-select>
+              <small class="text-muted">Selecciona la tienda donde se encuentra el producto</small>
+            </div>
+          </c-col>
+        </c-row>
+      </div>
+    </form>
   </c-modal-body>
 
   <c-modal-footer>
     <button type="button" class="btn btn-secondary" (click)="close()">
+      <svg [cIcon]="icons.cilX" class="me-1"></svg>
       Cancelar
     </button>
     <button
       type="button"
       class="btn btn-primary"
       (click)="save()"
-      [disabled]="warehouseInventoryForm.invalid"
+      [disabled]="!warehouseInventoryForm.valid || isSaving"
     >
-      Aceptar
+      <svg [cIcon]="icons.cilCheck" class="me-1"></svg>
+      {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
     </button>
   </c-modal-footer>
 </c-modal>

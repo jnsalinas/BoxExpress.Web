@@ -25,6 +25,9 @@ import { IconDirective } from '@coreui/icons-angular';
 import { ProductDto } from '../../../../models/product.dto';
 import { ProductVariantDto } from '../../../../models/product-variant.dto';
 import { minLengthArray } from '../../../../shared/validators/custom-validators';
+import { StoreService } from '../../../../services/store.service';
+import { StoreDto } from '../../../../models/store.dto';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-warehouse-product-modal',
@@ -42,7 +45,8 @@ import { minLengthArray } from '../../../../shared/validators/custom-validators'
     ModalFooterComponent,
     ReactiveFormsModule,
     IconDirective,
-  ],
+    NgSelectModule
+  ]
 })
 export class WarehouseProductModalComponent implements OnInit {
   @Input() warehouseId: number | null = null;
@@ -54,13 +58,22 @@ export class WarehouseProductModalComponent implements OnInit {
   icons = freeSet;
 
   productForm: FormGroup = this.fb.group({});
+  stores: StoreDto[] = [];
+  isSaving = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private storeService: StoreService) { }
 
   ngOnInit(): void {
+    this.loadStores();
     // Inicializar el FormGroup con un FormArray de productos
     this.productForm = this.fb.group({
       products: this.fb.array([this.createProduct()]), // Inicializar con un producto
+    });
+  }
+
+  loadStores() {
+    this.storeService.getAll({ isAll: true }).subscribe((response) => {
+      this.stores = response.data;
     });
   }
 
@@ -79,13 +92,13 @@ export class WarehouseProductModalComponent implements OnInit {
       id: [product.id || 0],
       name: [product.name || '', Validators.required],
       sku: [product.sku || ''],
-      shopifyId: [product.shopifyProductId || ''],
       price: [product.price || 0],
       variants: this.fb.array(
         (product.variants || []).map((v: ProductVariantDto) =>
           this.fb.group({
             id: [v.id || 0],
             name: [v.name || '', Validators.required],
+            shopifyId: [v.shopifyVariantId || ''],
             sku: [v.sku || ''],
             price: [v.price || 0],
             quantity: [
@@ -113,7 +126,6 @@ export class WarehouseProductModalComponent implements OnInit {
     return this.fb.group({
       id: [0],
       name: ['', Validators.required], // Nombre del producto
-      shopifyId: [''],
       sku: [''],
       price: [null],
       variants: this.fb.array([this.createVariant()], [minLengthArray(1)]),
@@ -124,9 +136,11 @@ export class WarehouseProductModalComponent implements OnInit {
   createVariant(): FormGroup {
     return this.fb.group({
       id: [0],
+      storeId: [0],
       name: ['', Validators.required], // Nombre de la variante
       productCode: [''],
       sku: [''],
+      shopifyId: [''],
       price: [null],
       quantity: [null, [Validators.required, Validators.min(1)]], // Cantidad de la variante
     });
@@ -167,10 +181,16 @@ export class WarehouseProductModalComponent implements OnInit {
   // Método para guardar los datos
   save() {
     if (this.productForm.valid) {
+      this.isSaving = true;
       this.onSave.emit(this.productForm.value);
     } else {
       console.log('Formulario inválido:', this.productForm.value);
     }
+  }
+
+  // Método para resetear el estado de guardado
+  resetSavingState() {
+    this.isSaving = false;
   }
 
   // Método para cerrar el modal
