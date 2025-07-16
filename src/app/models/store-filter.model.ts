@@ -5,5 +5,4 @@ export interface StoreFilter extends PaginationFilter {
   storeId?: number;
   startDate?: Date | null;
   endDate?: Date | null;
-  isAll?: boolean;
 }

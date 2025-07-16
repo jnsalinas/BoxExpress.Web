@@ -14,18 +14,21 @@ import {
   ButtonDirective,
 } from '@coreui/angular';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CityService } from 'src/app/services/city.service';
-import { CityDto } from 'src/app/models/city.dto';
-import { StoreDto } from 'src/app/models/store.dto';
+import { CityService } from '../../../../services/city.service';
+import { CityDto } from '../../../../models/city.dto';
+import { StoreDto } from '../../../../models/store.dto';
 import { forkJoin } from 'rxjs';
-import { StoreService } from 'src/app/services/store.service';
-import { OrderStatusService } from 'src/app/services/order-status.service';
-import { OrderStatusDto } from 'src/app/models/order-status.dto';
-import { LoadingOverlayComponent } from 'src/app/shared/components/loading-overlay/loading-overlay.component';
-import { DocumentTypeService } from 'src/app/services/document-type.service';
-import { DocumentTypeDto } from 'src/app/models/document-type.dto';
-import { CurrencyService } from 'src/app/services/currency.service';
-import { CurrencyDto } from 'src/app/models/currency.dto';
+import { StoreService } from '../../../../services/store.service';
+import { OrderStatusService } from '../../../../services/order-status.service';
+import { OrderStatusDto } from '../../../../models/order-status.dto';
+import { LoadingOverlayComponent } from '../../../../shared/components/loading-overlay/loading-overlay.component';
+import { DocumentTypeService } from '../../../../services/document-type.service';
+import { DocumentTypeDto } from '../../../../models/document-type.dto';
+import { CurrencyService } from '../../../../services/currency.service';
+import { CurrencyDto } from '../../../../models/currency.dto';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { WarehouseInventoryService } from '../../../../services/warehouse-inventory.service';
+import { ProductVariantDto } from '../../../../models/product-variant.dto';
 
 @Component({
   selector: 'app-order-form',
@@ -43,6 +46,7 @@ import { CurrencyDto } from 'src/app/models/currency.dto';
     FormControlDirective,
     ButtonDirective,
     LoadingOverlayComponent,
+    NgSelectModule
   ],
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss'],
@@ -77,10 +81,7 @@ export class OrderFormComponent implements OnInit {
   //   { id: 2, name: 'Tienda Sur' },
   // ];
 
-  productVariants = [
-    { id: 101, name: 'Producto A - Variante 1' },
-    { id: 102, name: 'Producto B - Variante 2' },
-  ];
+  productVariants: ProductVariantDto[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -90,8 +91,9 @@ export class OrderFormComponent implements OnInit {
     private storeService: StoreService,
     private orderStatusService: OrderStatusService,
     private documentTypeService: DocumentTypeService,
-    private currencyService: CurrencyService
-  ) {}
+    private currencyService: CurrencyService,
+    private warehouseInventoryService: WarehouseInventoryService  
+  ) { }
 
   ngOnInit(): void {
     this.getData();
@@ -103,7 +105,7 @@ export class OrderFormComponent implements OnInit {
 
     forkJoin({
       cities: this.cityService.getAll({}),
-      stores: this.storeService.getAll({}),
+      stores: this.storeService.getAll({ isAll: true }),
       statuses: this.orderStatusService.getAll(),
       documentTypes: this.documentTypeService.getAll(),
       currencies: this.currencyService.getAll(),
@@ -116,6 +118,11 @@ export class OrderFormComponent implements OnInit {
         this.statuses = responses.statuses.data;
         this.documentTypes = responses.documentTypes.data;
         this.currencies = responses.currencies.data;
+        // Set first city as default and disable cityId
+        if (this.cities.length > 0) {
+          this.form?.get('cityId')?.setValue(this.cities[0].id);
+          this.form?.get('cityId')?.disable();
+        }
         // this.cateogryOptions = responses.categories.data;
         // this.warehouseOptions = responses.warehouses.data;
         this.isLoading = false;
@@ -169,7 +176,24 @@ export class OrderFormComponent implements OnInit {
       productVariantId: [null, Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
     });
-
+    // Escuchar cambios en la variante seleccionada para actualizar el validador de cantidad
+    item.get('productVariantId')?.valueChanges.subscribe(variantId => {
+      const variant = this.productVariants.find(v => v.id === variantId);
+      const quantityControl = item.get('quantity');
+      if (variant) {
+        quantityControl?.setValidators([
+          Validators.required,
+          Validators.min(1),
+          Validators.max(variant.quantity)
+        ]);
+      } else {
+        quantityControl?.setValidators([
+          Validators.required,
+          Validators.min(1)
+        ]);
+      }
+      quantityControl?.updateValueAndValidity();
+    });
     this.orderItems.push(item);
   }
 
@@ -178,22 +202,45 @@ export class OrderFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('Orden enviada:\n', JSON.stringify(this.form.value, null, 2));
-
-    console.log(this.form.value);
     if (this.form.invalid) {
       this.form.markAllAsTouched();
-      // return;
+      return;
     }
-
-    const payload = this.form.value;
-    console.log('Orden enviada:', payload);
-
+    const payload = this.form.getRawValue();
+    console.log('Orden enviada:', JSON.stringify(payload, null, 2));
     // Aquí puedes hacer la llamada a tu servicio
     // this.orderService.create(payload).subscribe(...)
   }
 
   getOrderItemFormGroup(index: number): FormGroup {
     return this.orderItems.at(index) as FormGroup;
+  }
+
+  getVariantMaxQuantity(item: FormGroup): number | string {
+    const variantId = item.get('productVariantId')?.value;
+    const variant = this.productVariants.find(v => v.id === variantId);
+    return variant && typeof variant.quantity === 'number' ? variant.quantity : '-';
+  }
+
+  onStoreChange(store: StoreDto) {
+    this.isLoading = true;
+    this.warehouseInventoryService.getWarehouseProductSummaryAsync({ storeId: store.id, isAll: true }).subscribe({
+      next: (res) => {
+        this.productVariants = res.data.flatMap(product =>
+          (product.variants || []).map(variant => ({
+            ...variant,
+            displayName: `${product.name} - ${variant.name}`
+          }))
+        );
+        // Limpiar productos seleccionados
+        this.orderItems.clear();
+        this.isLoading = false;
+      },
+      error: () => {
+        this.productVariants = [];
+        this.orderItems.clear();
+        this.isLoading = false;
+      }
+    });
   }
 }

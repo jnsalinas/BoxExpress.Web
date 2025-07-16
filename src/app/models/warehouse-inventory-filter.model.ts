@@ -6,4 +6,5 @@ export interface WarehouseInventoryFilter extends PaginationFilter {
   quantity?: number;
   reservedQuantity?: number;
   query?: string;
+  storeId?: number;
 }

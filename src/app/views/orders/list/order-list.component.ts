@@ -47,8 +47,6 @@ import { GenericPaginationComponent } from '../../../shared/components/generic-p
 import { OrderSummaryDto } from '../../../models/order-summary.dto';
 import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
 import { AuthService } from '../../../../../src/app/services/auth.service';
-import { ProductVariantService } from '../../../services/product-variant.service';
-import { ProductVariantDto } from '../../../models/product-variant.dto';
 
 @Component({
   standalone: true,
@@ -106,7 +104,6 @@ export class OrderListComponent implements OnInit {
   orderSelected: OrderDto | null = null;
   pagination: PaginationDto = {};
   currentPage: number = 1;
-  productVariants: ProductVariantDto[] = [];
 
   constructor(
     private orderService: OrderService,
@@ -116,7 +113,6 @@ export class OrderListComponent implements OnInit {
     private storeService: StoreService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private productVariantService: ProductVariantService
   ) {
     this.activeTab = this.authService.hasAnyRole(['admin', 'tienda']) ? 0 : 1;
     this.filtersForm = this.fb.group({
@@ -137,14 +133,12 @@ export class OrderListComponent implements OnInit {
       statuses: this.statusOrderService.getAll(),
       categories: this.categoryOrderService.getAll(),
       stores: this.storeService.getAll(),
-      productVariants: this.productVariantService.getAll(),
     }).subscribe({
       next: (responses) => {
         this.statusOptions = responses.statuses.data;
         this.categoryOptions = responses.categories.data;
         this.stores = responses.stores.data;
         this.warehouseOptions.push(...responses.warehouses.data);
-        this.productVariants = responses.productVariants.data;
         this.isLoading = false;
       },
       error: (error) => {
