@@ -57,7 +57,7 @@ export class OrderEditModalComponent implements OnInit {
   ngOnInit(): void {
     console.log(this.order.scheduledDate);
     this.form = this.fb.group({
-      statusId: [this.order.statusId],
+      // statusId: [this.order.statusId],
       scheduledDate: [this.order.scheduledDate?.toString().split('T')[0]],
       timeSlotId: [this.order.timeSlotId],
     });
