@@ -1,0 +1,29 @@
+.variant-item {
+  border-left: 3px solid #007bff;
+  padding-left: 10px;
+  margin-bottom: 8px;
+}
+
+.warehouse-badge {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  display: inline-block;
+}
+
+.table-responsive {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.badge {
+  font-size: 0.75rem;
+}
+
+.small {
+  font-size: 0.875rem;
+} 

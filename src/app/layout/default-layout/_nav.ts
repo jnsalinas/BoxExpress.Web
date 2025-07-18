@@ -8,16 +8,22 @@ export const navItems: CustomNavData[] = [
     roles: ['admin',  'bodega'],
   },
   {
+    name: 'Inventario',
+    url: '/warehouse-inventories',
+    iconComponent: { name: 'cil-puzzle' },
+    roles: ['admin', 'tienda'],
+  },
+  {
     name: 'Transferencias',
     url: '/transfers',
     iconComponent: { name: 'cil-loop-circular' },
-    roles: ['administrador', 'admin'],
+    roles: ['admin'],
   },
   {
     name: 'Devoluciones',
     url: '/inventory-returns',
     iconComponent: { name: 'cil-arrow-circle-left' },
-    roles: ['administrador', 'admin',  'bodega'],
+    roles: ['admin',  'bodega'],
   },
   {
     name: 'Órdenes',

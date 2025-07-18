@@ -90,7 +90,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
   }
 
   getBalanceInformation() {
-    if (this.authService.hasAnyRole(['tienda', 'admin'])) {
+    if (this.authService.hasAnyRole(['tienda', 'admin']) && this.authService.getToken()) {
       this.walletService.summary().subscribe({
         next: (res) => {
           console.log(res);

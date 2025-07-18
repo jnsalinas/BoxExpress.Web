@@ -47,6 +47,7 @@ import { GenericPaginationComponent } from '../../../shared/components/generic-p
 import { OrderSummaryDto } from '../../../models/order-summary.dto';
 import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
 import { AuthService } from '../../../../../src/app/services/auth.service';
+import { WarehouseInventoryService } from '../../../services/warehouse-inventory.service';
 
 @Component({
   standalone: true,
@@ -77,7 +78,7 @@ import { AuthService } from '../../../../../src/app/services/auth.service';
     IconDirective,
     GenericPaginationComponent,
     HasRoleDirective,
-    RouterLink
+    RouterLink,
   ],
 })
 export class OrderListComponent implements OnInit {
@@ -113,6 +114,7 @@ export class OrderListComponent implements OnInit {
     private storeService: StoreService,
     private fb: FormBuilder,
     private authService: AuthService,
+    private warehouseInventoryService: WarehouseInventoryService
   ) {
     this.activeTab = this.authService.hasAnyRole(['admin', 'tienda']) ? 0 : 1;
     this.filtersForm = this.fb.group({

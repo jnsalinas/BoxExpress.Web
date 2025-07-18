@@ -1,6 +1,7 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:5143/api',
+    apiUrl: 'http://localhost:5143/api', //run
+    // apiUrl: 'https://localhost:7001/api', //debug 
     auth: '/Auth/login',
     defaultValues: {
       cityId: 1,

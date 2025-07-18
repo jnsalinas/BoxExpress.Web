@@ -1,4 +1,7 @@
-<app-loading-overlay *ngIf="isLoading" [loadingText]="'Cargando opciones...'"></app-loading-overlay>
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando opciones...'"
+></app-loading-overlay>
 
 <c-row>
   <c-col xs="12">
@@ -8,20 +11,38 @@
         <form cForm [formGroup]="form" (ngSubmit)="onSubmit()">
           <!-- CLIENTE -->
           <c-card class="mb-4 shadow-sm border-0">
-            <c-card-header class="bg-light"><strong>Datos del Cliente</strong></c-card-header>
+            <c-card-header class="bg-light"
+              ><strong>Datos del Cliente</strong></c-card-header
+            >
             <c-card-body>
               <c-row>
                 <!-- Fila 1: Nombre y Apellido -->
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="clientFirstName">Nombre <span class="text-danger">*</span></label>
-                    <input cFormControl id="clientFirstName" formControlName="clientFirstName" class="form-control" placeholder="Nombre del cliente" />
+                    <label cLabel for="clientFirstName"
+                      >Nombre <span class="text-danger">*</span></label
+                    >
+                    <input
+                      cFormControl
+                      id="clientFirstName"
+                      formControlName="clientFirstName"
+                      class="form-control"
+                      placeholder="Nombre del cliente"
+                    />
                   </div>
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="clientLastName">Apellido <span class="text-danger">*</span></label>
-                    <input cFormControl id="clientLastName" formControlName="clientLastName" class="form-control" placeholder="Apellido del cliente" />
+                    <label cLabel for="clientLastName"
+                      >Apellido <span class="text-danger">*</span></label
+                    >
+                    <input
+                      cFormControl
+                      id="clientLastName"
+                      formControlName="clientLastName"
+                      class="form-control"
+                      placeholder="Apellido del cliente"
+                    />
                   </div>
                 </c-col>
               </c-row>
@@ -29,7 +50,10 @@
                 <!-- Fila 2: Tipo de Documento y Documento -->
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="clientDocumentTypeId">Tipo de Documento <span class="text-danger">*</span></label>
+                    <label cLabel for="clientDocumentTypeId"
+                      >Tipo de Documento
+                      <span class="text-danger">*</span></label
+                    >
                     <ng-select
                       [items]="documentTypes"
                       bindLabel="name"
@@ -41,8 +65,16 @@
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="clientDocument">Documento <span class="text-danger">*</span></label>
-                    <input cFormControl id="clientDocument" formControlName="clientDocument" class="form-control" placeholder="Número de documento" />
+                    <label cLabel for="clientDocument"
+                      >Documento <span class="text-danger">*</span></label
+                    >
+                    <input
+                      cFormControl
+                      id="clientDocument"
+                      formControlName="clientDocument"
+                      class="form-control"
+                      placeholder="Número de documento"
+                    />
                   </div>
                 </c-col>
               </c-row>
@@ -50,14 +82,29 @@
                 <!-- Fila 3: Email y External ID -->
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="clientEmail">Email <span class="text-danger">*</span></label>
-                    <input cFormControl id="clientEmail" formControlName="clientEmail" class="form-control" type="email" placeholder="Correo electrónico" />
+                    <label cLabel for="clientEmail"
+                      >Email <span class="text-danger">*</span></label
+                    >
+                    <input
+                      cFormControl
+                      id="clientEmail"
+                      formControlName="clientEmail"
+                      class="form-control"
+                      type="email"
+                      placeholder="Correo electrónico"
+                    />
                   </div>
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="clientExternalId">External ID</label>
-                    <input cFormControl id="clientExternalId" formControlName="clientExternalId" class="form-control" placeholder="ID externo (opcional)" />
+                    <input
+                      cFormControl
+                      id="clientExternalId"
+                      formControlName="clientExternalId"
+                      class="form-control"
+                      placeholder="ID externo (opcional)"
+                    />
                   </div>
                 </c-col>
               </c-row>
@@ -68,20 +115,38 @@
 
           <!-- DIRECCIÓN -->
           <c-card class="mb-4 shadow-sm border-0">
-            <c-card-header class="bg-light"><strong>Dirección de Entrega</strong></c-card-header>
+            <c-card-header class="bg-light"
+              ><strong>Dirección de Entrega</strong></c-card-header
+            >
             <c-card-body>
               <c-row>
                 <!-- Dirección y Complemento en la misma fila -->
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="clientAddress">Dirección <span class="text-danger">*</span></label>
-                    <input cFormControl id="clientAddress" formControlName="clientAddress" class="form-control" placeholder="Dirección principal" />
+                    <label cLabel for="clientAddress"
+                      >Dirección <span class="text-danger">*</span></label
+                    >
+                    <input
+                      cFormControl
+                      id="clientAddress"
+                      formControlName="clientAddress"
+                      class="form-control"
+                      placeholder="Dirección principal"
+                    />
                   </div>
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="clientAddressComplement">Complemento</label>
-                    <input cFormControl id="clientAddressComplement" formControlName="clientAddressComplement" class="form-control" placeholder="Apartamento, piso, etc." />
+                    <label cLabel for="clientAddressComplement"
+                      >Complemento</label
+                    >
+                    <input
+                      cFormControl
+                      id="clientAddressComplement"
+                      formControlName="clientAddressComplement"
+                      class="form-control"
+                      placeholder="Apartamento, piso, etc."
+                    />
                   </div>
                 </c-col>
               </c-row>
@@ -102,7 +167,13 @@
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="clientAddress2">Dirección 2</label>
-                    <input cFormControl id="clientAddress2" formControlName="clientAddress2" class="form-control" placeholder="Otra referencia (opcional)" />
+                    <input
+                      cFormControl
+                      id="clientAddress2"
+                      formControlName="clientAddress2"
+                      class="form-control"
+                      placeholder="Otra referencia (opcional)"
+                    />
                   </div>
                 </c-col>
               </c-row>
@@ -111,13 +182,27 @@
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="latitude">Latitud</label>
-                    <input cFormControl id="latitude" formControlName="latitude" class="form-control" step="any" placeholder="Latitud (ej: 4.60971)" />
+                    <input
+                      cFormControl
+                      id="latitude"
+                      formControlName="latitude"
+                      class="form-control"
+                      step="any"
+                      placeholder="Latitud (ej: 4.60971)"
+                    />
                   </div>
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="longitude">Longitud</label>
-                    <input cFormControl id="longitude" formControlName="longitude" class="form-control" step="any" placeholder="Longitud (ej: -74.08175)" />
+                    <input
+                      cFormControl
+                      id="longitude"
+                      formControlName="longitude"
+                      class="form-control"
+                      step="any"
+                      placeholder="Longitud (ej: -74.08175)"
+                    />
                   </div>
                 </c-col>
               </c-row>
@@ -128,23 +213,47 @@
 
           <!-- ORDEN -->
           <c-card class="mb-4 shadow-sm border-0">
-            <c-card-header class="bg-light"><strong>Información de la Orden</strong></c-card-header>
+            <c-card-header class="bg-light"
+              ><strong>Información de la Orden</strong></c-card-header
+            >
             <c-card-body>
               <c-row>
                 <!-- Tienda y Moneda -->
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="storeId">Tienda <span class="text-danger">*</span></label>
-                    <ng-select [items]="stores" bindLabel="name" bindValue="id" formControlName="storeId" placeholder="Seleccione" (change)="onStoreChange($event)"></ng-select>
-                    <small class="text-muted">Al cambiar la tienda, se actualizarán las variantes de producto disponibles.</small>
+                    <label cLabel for="storeId"
+                      >Tienda <span class="text-danger">*</span></label
+                    >
+                    <ng-select
+                      [items]="stores"
+                      bindLabel="name"
+                      bindValue="id"
+                      formControlName="storeId"
+                      placeholder="Seleccione"
+                      (change)="onStoreChange($event)"
+                    ></ng-select>
+                    <small class="text-muted"
+                      >Al cambiar la tienda, se actualizarán las variantes de
+                      producto disponibles.</small
+                    >
                   </div>
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="currencyId">Moneda <span class="text-danger">*</span></label>
-                    <select cFormControl id="currencyId" formControlName="currencyId" class="form-control">
+                    <label cLabel for="currencyId"
+                      >Moneda <span class="text-danger">*</span></label
+                    >
+                    <select
+                      cFormControl
+                      id="currencyId"
+                      formControlName="currencyId"
+                      class="form-control"
+                    >
                       <option value="" disabled selected>Seleccione</option>
-                      <option *ngFor="let currency of currencies" [value]="currency.id">
+                      <option
+                        *ngFor="let currency of currencies"
+                        [value]="currency.id"
+                      >
                         {{ currency.name }}
                       </option>
                     </select>
@@ -155,14 +264,32 @@
                 <!-- Fee y Código -->
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="deliveryFee">Fee <span class="text-danger">*</span></label>
-                    <input cFormControl id="deliveryFee" formControlName="deliveryFee" class="form-control" type="number" placeholder="Costo de envío" />
+                    <label cLabel for="deliveryFee"
+                      >Flete <span class="text-danger">*</span></label
+                    >
+                    <input
+                      cFormControl
+                      id="deliveryFee"
+                      formControlName="deliveryFee"
+                      class="form-control"
+                      type="number"
+                      placeholder="Costo de envío"
+                    />
                   </div>
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="code">Código <span class="text-danger">*</span></label>
-                    <input cFormControl formControlName="code" id="code" type="text" class="form-control" placeholder="Código de la orden" />
+                    <label cLabel for="code"
+                      >Código <span class="text-danger">*</span></label
+                    >
+                    <input
+                      cFormControl
+                      formControlName="code"
+                      id="code"
+                      type="text"
+                      class="form-control"
+                      placeholder="Código de la orden"
+                    />
                   </div>
                 </c-col>
               </c-row>
@@ -171,13 +298,27 @@
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="contains">Contiene</label>
-                    <textarea cFormControl formControlName="contains" id="contains" class="form-control" rows="2" placeholder="Descripción del contenido (opcional)"></textarea>
+                    <textarea
+                      cFormControl
+                      formControlName="contains"
+                      id="contains"
+                      class="form-control"
+                      rows="2"
+                      placeholder="Descripción del contenido (opcional)"
+                    ></textarea>
                   </div>
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="notes">Notas</label>
-                    <textarea cFormControl formControlName="notes" id="notes" class="form-control" rows="3" placeholder="Notas adicionales (opcional)"></textarea>
+                    <textarea
+                      cFormControl
+                      formControlName="notes"
+                      id="notes"
+                      class="form-control"
+                      rows="3"
+                      placeholder="Notas adicionales (opcional)"
+                    ></textarea>
                   </div>
                 </c-col>
               </c-row>
@@ -185,14 +326,29 @@
                 <!-- Valor Total y External ID -->
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="totalAmount">Valor Total <span class="text-danger">*</span></label>
-                    <input cFormControl formControlName="totalAmount" id="totalAmount" type="number" class="form-control" placeholder="Valor total de la orden" />
+                    <label cLabel for="totalAmount"
+                      >Valor Total <span class="text-danger">*</span></label
+                    >
+                    <input
+                      cFormControl
+                      formControlName="totalAmount"
+                      id="totalAmount"
+                      type="number"
+                      class="form-control"
+                      placeholder="Valor total de la orden"
+                    />
                   </div>
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="externalId">External ID</label>
-                    <input cFormControl id="externalId" formControlName="externalId" class="form-control" placeholder="ID externo (opcional)" />
+                    <input
+                      cFormControl
+                      id="externalId"
+                      formControlName="externalId"
+                      class="form-control"
+                      placeholder="ID externo (opcional)"
+                    />
                   </div>
                 </c-col>
               </c-row>
@@ -203,15 +359,27 @@
 
           <!-- Productos -->
           <c-card class="mb-4 shadow-sm border-0">
-            <c-card-header class="bg-light"><strong>Productos</strong></c-card-header>
+            <c-card-header class="bg-light"
+              ><strong>Productos</strong></c-card-header
+            >
             <c-card-body>
-              <div *ngIf="productVariants.length === 0" class="alert alert-info mb-3">
-                Selecciona una tienda para ver las variantes de producto disponibles.
+              <div
+                *ngIf="productVariants.length === 0"
+                class="alert alert-info mb-3"
+              >
+                Selecciona una tienda para ver las variantes de producto
+                disponibles.
               </div>
-              <div *ngFor="let item of orderItems.controls; let i = index" [formGroup]="getOrderItemFormGroup(i)" class="border p-3 mb-2 rounded bg-light-subtle">
+              <div
+                *ngFor="let item of orderItems.controls; let i = index"
+                [formGroup]="getOrderItemFormGroup(i)"
+                class="border p-3 mb-2 rounded bg-light-subtle"
+              >
                 <c-row class="d-flex align-items-end g-2">
                   <c-col md="7">
-                    <label class="mb-0">Variante <span class="text-danger">*</span></label>
+                    <label class="mb-0"
+                      >Variante <span class="text-danger">*</span></label
+                    >
                     <ng-select
                       class="form-control form-control-sm variant-select"
                       formControlName="productVariantId"
@@ -222,29 +390,60 @@
                       [searchable]="true"
                       [clearable]="false"
                     ></ng-select>
-                    <small class="text-muted d-block mt-1">Solo se muestran variantes con inventario disponible en la tienda seleccionada.</small>
+                    <small class="text-muted d-block mt-1"
+                      >Solo se muestran variantes con inventario disponible en
+                      la tienda seleccionada.</small
+                    >
                   </c-col>
                   <c-col md="3">
-                    <label class="mb-0">Cantidad <span class="text-danger">*</span></label>
-                    <input type="number" class="form-control form-control-sm" formControlName="quantity" placeholder="Cantidad" style="height: 32px;" />
-                    <small class="text-muted">Máximo: {{ getVariantMaxQuantity(item) }}</small>
+                    <label class="mb-0"
+                      >Cantidad <span class="text-danger">*</span></label
+                    >
+                    <input
+                      type="number"
+                      class="form-control form-control-sm"
+                      formControlName="quantity"
+                      placeholder="Cantidad"
+                      style="height: 32px"
+                    />
+                    <small class="text-muted"
+                      >Máximo: {{ getVariantMaxQuantity(item) }}</small
+                    >
                   </c-col>
                   <c-col md="2" class="text-end">
                     <label class="d-block mb-0">&nbsp;</label>
-                    <button cButton type="button" color="danger" (click)="removeItem(i)">
+                    <button
+                      cButton
+                      type="button"
+                      color="danger"
+                      (click)="removeItem(i)"
+                    >
                       Eliminar
                     </button>
                   </c-col>
                 </c-row>
               </div>
-              <button cButton type="button" color="primary" (click)="addItem()" [disabled]="productVariants.length === 0">
+              <button
+                cButton
+                type="button"
+                color="primary"
+                (click)="addItem()"
+                [disabled]="productVariants.length === 0"
+              >
                 Agregar producto
               </button>
             </c-card-body>
           </c-card>
 
           <div class="mt-4 text-end">
-            <button cButton type="submit" color="success" [disabled]="form?.invalid">Guardar Orden</button>
+            <button
+              cButton
+              type="submit"
+              color="success"
+              [disabled]="form?.invalid"
+            >
+              Guardar Orden
+            </button>
           </div>
         </form>
       </c-card-body>

@@ -1,0 +1,107 @@
+<c-row>
+  <c-col>
+    <c-card class="mb-4">
+      <c-card-header class="d-flex justify-content-between align-items-center">
+        <div>
+          <strong>Inventario</strong>
+          <!-- <small class="text-muted">Consulta el inventario de productos por bodega</small> -->
+        </div>
+        <button *hasRole="['tienda']" type="button" class="btn btn-primary btn-sm" (click)="downloadSku()">
+          <svg [cIcon]="icons.cilCloudDownload" size="sm"></svg>
+          Descargar SKU
+        </button>
+      </c-card-header>
+      <c-card-body>
+        <!-- Filtros -->
+        <form [formGroup]="filterForm" class="mb-4">
+          <c-row>
+            <c-col md="6">
+              <label cLabel for="query">Buscar producto</label>
+              <input
+                cFormControl
+                id="query"
+                formControlName="query"
+                type="text"
+                class="form-control"
+                placeholder="Nombre del producto o SKU"
+                (input)="onFilterChange()"
+              />
+            </c-col>
+            <c-col md="6" *ngIf="!authService.hasRole('tienda')">
+              <label cLabel for="storeId">Filtrar por tienda</label>
+              <ng-select
+                [items]="[]"
+                bindLabel="name"
+                bindValue="id"
+                formControlName="storeId"
+                placeholder="Todas las tiendas"
+                [clearable]="true"
+                [searchable]="false"
+                (change)="onFilterChange()"
+              >
+              </ng-select>
+            </c-col>
+          </c-row>
+        </form>
+
+        <!-- Loading -->
+        <app-loading-overlay *ngIf="isLoading"></app-loading-overlay>
+
+        <!-- Tabla de productos -->
+        <div *ngIf="!isLoading && products.length > 0" class="table-responsive">
+          <table cTable [hover]="true" [striped]="true">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>SKU</th>
+                <th>Variantes</th>
+                <!-- <th>Total Cantidad</th> -->
+                <th *ngIf="!authService.hasRole('tienda')">Bodegas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of products">
+                <td>
+                  <div class="fw-bold">{{ product.name }}</div>
+                  <!-- <small class="text-muted">{{ product.description }}</small> -->
+                </td>
+                <td>
+                  <span class="badge bg-secondary">{{ product.sku }}</span>
+                </td>
+                <td>
+                  <div *ngFor="let variant of product.variants" class="mb-1">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span class="small">{{ variant.name }}</span>
+                      <span class="badge bg-info">{{ variant.quantity || 0 }}</span>
+                    </div>
+                    <small class="text-muted">{{ variant.sku }}</small>
+                  </div>
+                </td>
+                <!-- <td>
+                  <span class="badge bg-primary fs-6">
+                    {{ getTotalQuantity(product.variants) }}
+                  </span>
+                </td> -->
+                <td *ngIf="!authService.hasRole('tienda')">
+                  <div *ngIf="hasWarehouseInfo(product.variants)" class="small">
+                    {{ getWarehouseNames(product.variants) }}
+                  </div>
+                  <div *ngIf="!hasWarehouseInfo(product.variants)" class="text-muted small">
+                    Sin información de bodegas
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Mensaje cuando no hay datos -->
+        <div *ngIf="!isLoading && products.length === 0" class="text-center py-5">
+          <svg [cIcon]="icons.cilInbox" size="3xl" class="text-muted mb-3"></svg>
+          <h5 class="text-muted">No se encontraron productos</h5>
+          <p class="text-muted">Intenta ajustar los filtros de búsqueda</p>
+        </div>
+      </c-card-body>
+    </c-card>
+  </c-col>
+</c-row> 

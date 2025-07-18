@@ -94,19 +94,24 @@
         </td>
         <td *ngIf="hasColumn('warehouseName')">{{ order.warehouseName }}</td>
         <td *ngIf="hasColumn('status')" style="min-width: 155px">
-          <select
+          <ng-select
             *hasRole="['admin']"
-            class="form-select form-select-sm"
+            [items]="getAvailableStatuses(order)"
+            bindLabel="name"
+            bindValue="id"
             [(ngModel)]="order.statusId"
             (ngModelChange)="onStatusChange(order.id, $event)"
             [disabled]="(order.scheduledDate === null || order.timeSlotStartTime === null) || order.statusId === getStatusDelivered()"
             (mousedown)="previousStatusId = order.statusId"
+            placeholder="Seleccione..."
+            [clearable]="false"
+            [searchable]="false"
+            [appendTo]="'body'"
           >
-            <option [value]="null" disabled>Seleccione...</option>
-            <option *ngFor="let status of statusOptions" [value]="status.id">
-              {{ status.name }}
-            </option>
-          </select>
+            <ng-template ng-option-tmp let-item="item">
+              <span [ngClass]="{'text-muted': item.disabled}">{{ item.name }}</span>
+            </ng-template>
+          </ng-select>
 
           <button
             *ngIf="order.statusId == getStatusScheduled() && authService.hasRole('bodega')"

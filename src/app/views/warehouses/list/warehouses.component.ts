@@ -4,7 +4,7 @@ import { WarehouseDto } from '../../../models/warehouse.dto';
 import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { LoadingOverlayComponent } from 'src/app/shared/components/loading-overlay/loading-overlay.component';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 
 import {
   RowComponent,

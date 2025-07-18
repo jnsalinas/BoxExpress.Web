@@ -25,6 +25,7 @@
           </button>
 
           <button
+            *hasRole="['admin', 'tienda']"
             type="button"
             class="btn btn-primary"
             [routerLink]="['/orders/create']"

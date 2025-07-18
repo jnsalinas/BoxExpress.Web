@@ -36,7 +36,8 @@ import { WarehouseInventoryFilter } from '../../../models/warehouse-inventory-fi
 import { LoadingOverlayComponent } from 'src/app/shared/components/loading-overlay/loading-overlay.component';
 import { WarehouseInventoryItemEditModalComponent } from '../../warehouse-transfers/components/warehouse-inventory-item-edit-modal/warehouse-inventory-item-edit-modal.component';
 import { WarehouseInventoryDto } from '../../../models/warehouse-inventory.dto';
-import {HasRoleDirective} from '../../../shared/directives/has-role.directive';
+import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
+import { MessageService } from '../../../services/message.service';
 @Component({
   selector: 'app-warehouse-detail',
   standalone: true,
@@ -60,14 +61,16 @@ import {HasRoleDirective} from '../../../shared/directives/has-role.directive';
     RouterLinkWithHref,
     LoadingOverlayComponent,
     WarehouseInventoryItemEditModalComponent,
-    HasRoleDirective
+    HasRoleDirective,
   ],
   templateUrl: './warehouse-detail.component.html',
 })
 export class WarehouseDetailComponent implements OnInit {
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
-  @ViewChild(WarehouseInventoryItemEditModalComponent) inventoryItemModal!: WarehouseInventoryItemEditModalComponent;
-  @ViewChild(WarehouseProductModalComponent) inventoryModal!: WarehouseProductModalComponent;
+  @ViewChild(WarehouseInventoryItemEditModalComponent)
+  inventoryItemModal!: WarehouseInventoryItemEditModalComponent;
+  @ViewChild(WarehouseProductModalComponent)
+  inventoryModal!: WarehouseProductModalComponent;
   private route = inject(ActivatedRoute);
   isModalInventoryVisible = false;
   isModalTransferVisible = false;
@@ -86,7 +89,8 @@ export class WarehouseDetailComponent implements OnInit {
   constructor(
     private warehouseService: WarehouseService,
     private warehouseInventoryService: WarehouseInventoryService,
-    private fb: FormBuilder // private routerLink: RouterLink,
+    private fb: FormBuilder,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -178,6 +182,7 @@ export class WarehouseDetailComponent implements OnInit {
           if (this.inventoryModal) {
             this.inventoryModal.resetSavingState();
           }
+          this.messageService.showSuccess('Inventario creado correctamente');
         },
         error: (err) => {
           console.error('Error isLoading warehouses', err);

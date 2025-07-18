@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { NgSelectModule } from '@ng-select/ng-select';
 import {
   RowComponent,
   ColComponent,
@@ -19,9 +20,10 @@ import { WarehouseDto } from '../../../../models/warehouse.dto';
 import { OrderDto } from '../../../../models/order.dto';
 import { IconDirective } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
-import { HasRoleDirective } from 'src/app/shared/directives/has-role.directive';
 import { OrderStatusName } from '../../../../models/enums/order-status.enum';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from '../../../../services/auth.service';
+import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
+
 @Component({
   standalone: true,
   selector: 'app-order-table',
@@ -34,6 +36,7 @@ import { AuthService } from 'src/app/services/auth.service';
     ButtonDirective,
     ButtonModule,
     HasRoleDirective,
+    NgSelectModule,
   ],
   templateUrl: './order-table.component.html',
   styleUrl: './order-table.component.scss',
@@ -57,12 +60,12 @@ export class OrderTableComponent {
   @Output() scheduleOrder = new EventEmitter<OrderDto>();
   previousStatusId: number = 0;
   
-  validationsAvailableStatus = {
-    Delivered: [], // No puede pasar a ningún otro estado desde Delivered
-    Scheduled: ['Delivered', 'InTransit'],
-    // Puedes agregar más:
-    InTransit: ['Delivered'],
-    Cancelled: [],
+  validationsAvailableStatus: { [key in OrderStatusName]: OrderStatusName[] } = {
+    [OrderStatusName.Unscheduled]: [OrderStatusName.Scheduled],
+    [OrderStatusName.Scheduled]: [OrderStatusName.InTransit],
+    [OrderStatusName.InTransit]: [OrderStatusName.Delivered, OrderStatusName.Cancelled],
+    [OrderStatusName.Delivered]: [],
+    [OrderStatusName.Cancelled]: [OrderStatusName.Delivered, OrderStatusName.Scheduled],
   };
 
   constructor(public authService: AuthService) {}
@@ -125,5 +128,24 @@ export class OrderTableComponent {
 
   getStatusClass(status: string): string {
     return 'bg-' + status.toLowerCase().replace(/ /g, '-');
+  }
+
+  getAvailableStatuses(order: any): any[] {
+    const currentStatusName = this.getCurrentStatusName(order) as OrderStatusName;
+    const allowedStatusNames = this.validationsAvailableStatus[currentStatusName] || [];
+    // Incluye el estado actual como opción deshabilitada
+    const currentStatus = this.statusOptions.find(s => s.name === currentStatusName);
+    const allowedStatuses = this.statusOptions.filter(status =>
+      allowedStatusNames.includes(status.name as OrderStatusName)
+    );
+    // Devuelve el estado actual (deshabilitado) + los permitidos (habilitados)
+    return [
+      currentStatus ? { ...currentStatus, disabled: true } : null,
+      ...allowedStatuses
+    ].filter(Boolean);
+  }
+
+  getCurrentStatusName(order: any): string {
+    return order.status || this.statusOptions.find(s => s.id === order.statusId)?.name || '';
   }
 }

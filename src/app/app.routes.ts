@@ -66,6 +66,13 @@ export const routes: Routes = [
         data: { roles: ['administrador', 'admin', 'tienda'] },
       },
       {
+        path: 'warehouse-inventories',
+        loadChildren: () =>
+          import('./views/warehouse-inventories/routes').then((m) => m.routes),
+        canActivate: [RoleGuard],
+        data: { roles: ['administrador', 'admin', 'bodega', 'tienda'] },
+      },
+      {
         path: 'dashboard',
         loadChildren: () =>
           import('./views/dashboard/routes').then((m) => m.routes),

@@ -29,6 +29,9 @@ import { CurrencyDto } from '../../../../models/currency.dto';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { WarehouseInventoryService } from '../../../../services/warehouse-inventory.service';
 import { ProductVariantDto } from '../../../../models/product-variant.dto';
+import { AuthService } from '../../../../services/auth.service';
+import { OrderService } from '../../../../services/order.service';
+import { MessageService } from '../../../../services/message.service';
 
 @Component({
   selector: 'app-order-form',
@@ -46,7 +49,7 @@ import { ProductVariantDto } from '../../../../models/product-variant.dto';
     FormControlDirective,
     ButtonDirective,
     LoadingOverlayComponent,
-    NgSelectModule
+    NgSelectModule,
   ],
   templateUrl: './order-form.component.html',
   styleUrls: ['./order-form.component.scss'],
@@ -92,8 +95,11 @@ export class OrderFormComponent implements OnInit {
     private orderStatusService: OrderStatusService,
     private documentTypeService: DocumentTypeService,
     private currencyService: CurrencyService,
-    private warehouseInventoryService: WarehouseInventoryService  
-  ) { }
+    private warehouseInventoryService: WarehouseInventoryService,
+    public authService: AuthService,
+    private orderService: OrderService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.getData();
@@ -123,12 +129,19 @@ export class OrderFormComponent implements OnInit {
           this.form?.get('cityId')?.setValue(this.cities[0].id);
           this.form?.get('cityId')?.disable();
         }
+        
+        // If user is tienda, disable storeId control and deliveryFee
+        if (this.authService.hasRole('tienda')) {
+          this.form?.get('storeId')?.disable();
+          this.form?.get('deliveryFee')?.disable();
+          this.form?.get('currencyId')?.disable();
+          this.onStoreChange(this.authService.getStoreId() ?? 0);
+        }
         // this.cateogryOptions = responses.categories.data;
         // this.warehouseOptions = responses.warehouses.data;
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error loading data:', error);
         this.isLoading = false;
       },
     });
@@ -153,7 +166,10 @@ export class OrderFormComponent implements OnInit {
       clientAddress2: [''],
 
       // Orden
-      storeId: ['', Validators.required],
+      storeId: [
+        this.authService.hasRole('tienda') ? this.authService.getStoreId() : '',
+        Validators.required,
+      ],
       deliveryFee: [150, [Validators.required, Validators.min(0)]],
       currencyId: [1, Validators.required],
       code: ['', Validators.required],
@@ -177,19 +193,19 @@ export class OrderFormComponent implements OnInit {
       quantity: [1, [Validators.required, Validators.min(1)]],
     });
     // Escuchar cambios en la variante seleccionada para actualizar el validador de cantidad
-    item.get('productVariantId')?.valueChanges.subscribe(variantId => {
-      const variant = this.productVariants.find(v => v.id === variantId);
+    item.get('productVariantId')?.valueChanges.subscribe((variantId) => {
+      const variant = this.productVariants.find((v) => v.id === variantId);
       const quantityControl = item.get('quantity');
       if (variant) {
         quantityControl?.setValidators([
           Validators.required,
           Validators.min(1),
-          Validators.max(variant.quantity)
+          Validators.max(variant.quantity),
         ]);
       } else {
         quantityControl?.setValidators([
           Validators.required,
-          Validators.min(1)
+          Validators.min(1),
         ]);
       }
       quantityControl?.updateValueAndValidity();
@@ -207,9 +223,18 @@ export class OrderFormComponent implements OnInit {
       return;
     }
     const payload = this.form.getRawValue();
-    console.log('Orden enviada:', JSON.stringify(payload, null, 2));
-    // Aquí puedes hacer la llamada a tu servicio
-    // this.orderService.create(payload).subscribe(...)
+    this.isLoading = true;
+    this.orderService.create(payload).subscribe({
+      next: (res) => {
+        console.log('Orden creada:', res);
+        this.messageService.showSuccess('Orden creada correctamente');
+        this.isLoading = false;
+        this.router.navigate(['/orders']);
+      },
+      error: (error) => {
+        this.isLoading = false;
+      },
+    });
   }
 
   getOrderItemFormGroup(index: number): FormGroup {
@@ -218,29 +243,33 @@ export class OrderFormComponent implements OnInit {
 
   getVariantMaxQuantity(item: FormGroup): number | string {
     const variantId = item.get('productVariantId')?.value;
-    const variant = this.productVariants.find(v => v.id === variantId);
-    return variant && typeof variant.quantity === 'number' ? variant.quantity : '-';
+    const variant = this.productVariants.find((v) => v.id === variantId);
+    return variant && typeof variant.quantity === 'number'
+      ? variant.quantity
+      : '-';
   }
 
-  onStoreChange(store: StoreDto) {
+  onStoreChange(storeId: number) {
     this.isLoading = true;
-    this.warehouseInventoryService.getWarehouseProductSummaryAsync({ storeId: store.id, isAll: true }).subscribe({
-      next: (res) => {
-        this.productVariants = res.data.flatMap(product =>
-          (product.variants || []).map(variant => ({
-            ...variant,
-            displayName: `${product.name} - ${variant.name}`
-          }))
-        );
-        // Limpiar productos seleccionados
-        this.orderItems.clear();
-        this.isLoading = false;
-      },
-      error: () => {
-        this.productVariants = [];
-        this.orderItems.clear();
-        this.isLoading = false;
-      }
-    });
+    this.warehouseInventoryService
+      .getWarehouseProductSummaryAsync({ storeId: storeId, isAll: true })
+      .subscribe({
+        next: (res) => {
+          this.productVariants = res.data.flatMap((product) =>
+            (product.variants || []).map((variant) => ({
+              ...variant,
+              displayName: `${product.name} - ${variant.name}`,
+            }))
+          );
+          // Limpiar productos seleccionados
+          this.orderItems.clear();
+          this.isLoading = false;
+        },
+        error: () => {
+          this.productVariants = [];
+          this.orderItems.clear();
+          this.isLoading = false;
+        },
+      });
   }
 }

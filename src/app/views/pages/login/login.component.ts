@@ -27,6 +27,7 @@ import {
 import { MessageService } from '../../../services/message.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 
 @Component({
   selector: 'app-login',
@@ -53,6 +54,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
     CommonModule,
     FontAwesomeModule,
     IconComponent,
+    LoadingOverlayComponent
   ],
 })
 export class LoginComponent {
@@ -93,13 +95,16 @@ export class LoginComponent {
 
     this.isLoading = true;
     const credentials = this.loginForm.value;
-    console.log('estas son las credenciales: ', credentials);
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
         if (response) {
           this.authService.saveAuth(response);
-          this.router.navigate(['/dashboard']);
+          if (this.authService.hasAnyRole(['tienda', 'admin'])) {
+            this.router.navigate(['/orders']);
+          } else {
+            this.router.navigate(['/warehouses']);
+          }
         }
       },
       error: (error) => {
