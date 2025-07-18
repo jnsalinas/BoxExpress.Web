@@ -140,7 +140,7 @@ export class OrderTableComponent {
     );
     // Devuelve el estado actual (deshabilitado) + los permitidos (habilitados)
     return [
-      currentStatus ? { ...currentStatus, disabled: true } : null,
+      currentStatus ? { ...currentStatus, disabled: false } : null,
       ...allowedStatuses
     ].filter(Boolean);
   }

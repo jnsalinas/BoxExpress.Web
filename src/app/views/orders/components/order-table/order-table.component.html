@@ -96,7 +96,7 @@
         <td *ngIf="hasColumn('status')" style="min-width: 155px">
           <ng-select
             *hasRole="['admin']"
-            [items]="getAvailableStatuses(order)"
+            [items]="statusOptions"
             bindLabel="name"
             bindValue="id"
             [(ngModel)]="order.statusId"
