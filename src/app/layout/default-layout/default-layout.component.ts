@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { AsyncPipe } from '@angular/common';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { Subscription } from 'rxjs';
 
 import { IconDirective, IconModule } from '@coreui/icons-angular';
 import {
@@ -13,6 +15,7 @@ import {
   SidebarNavComponent,
   SidebarToggleDirective,
   SidebarTogglerDirective,
+  INavData,
 } from '@coreui/angular';
 
 import { DefaultFooterComponent, DefaultHeaderComponent } from './';
@@ -20,6 +23,7 @@ import { navItems } from './_nav';
 import { freeSet } from '@coreui/icons';
 import { AuthService } from '../../services/auth.service';
 import { CustomNavData } from '../../models/custom-nav-data.dto';
+import { NavBadgeService } from '../../services/nav-badge.service';
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -49,14 +53,54 @@ function isOverflown(element: HTMLElement) {
     RouterLink,
     ShadowOnScrollDirective,
     IconModule,
+    AsyncPipe,
   ],
 })
-export class DefaultLayoutComponent {
+export class DefaultLayoutComponent implements OnInit, OnDestroy {
   icons = freeSet;
   public navItems = [...navItems];
-  constructor(private auth: AuthService) {
-    const role = this.auth.role; // O this.auth.roles si es array
+  private subscription = new Subscription();
+
+  constructor(
+    private auth: AuthService,
+    private navBadgeService: NavBadgeService,
+    private cdr: ChangeDetectorRef
+  ) {
+    const role = this.auth.role;
     this.navItems = this.filterNavByRole(navItems, role ?? '');
+  }
+
+  ngOnInit() {
+    // Suscribirse a los cambios del contador de transferencias pendientes
+    this.subscription.add(
+      this.navBadgeService.pendingTransfersCount$.subscribe(count => {
+        console.log('navBadgeService - count', count);
+        this.updateNavItems(count);
+      })
+    );
+  }
+
+  private updateNavItems(pendingCount: number) {
+    console.log('Actualizando navItems con count:', pendingCount);
+    const transferItem = this.navItems.find(item => item.name === 'Transferencias');
+    if (transferItem) {
+      if (!transferItem.badge) {
+        transferItem.badge = { color: 'warning', text: '0' };
+      }
+      transferItem.badge.text = pendingCount.toString();
+      transferItem.badge.color = pendingCount > 0 ? 'warning' : 'secondary';
+      console.log('Badge actualizado:', transferItem.badge);
+      
+      // Crear nueva referencia del array para forzar la detección de cambios
+      this.navItems = [...this.navItems];
+      
+      // Forzar la detección de cambios
+      this.cdr.detectChanges();
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   filterNavByRole(navItems: any[], userRole: string): CustomNavData[] {

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { WarehouseDto } from '../models/warehouse.dto';
+import {  CreateWarehouseDto } from '../models/create-warehouse.dto';
 import { WarehouseFilter } from '../models/warehouse-filter.model';
 import { BaseApiService } from './base-api.service';
 import { HttpClient } from '@angular/common/http';
@@ -14,6 +15,15 @@ export class WarehouseService extends BaseApiService<
 > {
   constructor(http: HttpClient) {
     super(http, 'warehouses');
+  }
+
+  createWarehouse(warehouseData: CreateWarehouseDto): Observable<WarehouseDto> {
+    return this.http
+      .post<ApiResponse<WarehouseDto>>(
+        `${environment.apiUrl}/warehouses/create`,
+        warehouseData
+      )
+      .pipe(this.handleResponse());
   }
 
   addInventory(warehouseId: number, inventoryData: any): Observable<void> {

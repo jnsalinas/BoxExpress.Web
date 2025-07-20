@@ -37,4 +37,13 @@ export class WarehouseInventoryTransferService extends BaseApiService<
       )
       .pipe(this.handleResponse());
   }
+
+  getPendingTransfers(filter: any): Observable<number> {
+    return this.http
+      .post<ApiResponse<number>>(
+        `${environment.apiUrl}/warehouseinventorytransfers/pending-transfers`,
+        {}
+      )
+      .pipe(this.handleResponse());
+  }
 }

@@ -7,51 +7,53 @@
     <c-card class="mb-4">
       <c-card-header>
         <strong>Bodegas</strong>
+        <button
+          type="button"
+          class="float-end btn btn-primary"
+          (click)="openCreateModal()"
+        >
+          <svg [cIcon]="icons.cilPlus"></svg>
+          Crear Bodega
+        </button>
       </c-card-header>
       <c-card-body>
-        <table [hover]="true" [striped]="true" cTable>
-          <thead>
-            <tr>
-              <th>Id</th>
-              <th>Nombre</th>
-              <th>Dirección</th>
-              <th>Encargado</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let warehouse of warehouses">
-              <td>{{ warehouse.id }}</td>
-              <td>{{ warehouse.name }}</td>
-              <td>{{ warehouse.address }}</td>
-              <td>{{ warehouse.manager }}</td>
-              <td>
-                <!-- <button
-                  class="btn btn-sm btn-primary"
-                  (click)="openModal(warehouse)"
-                >
-                  Agregar productos
-                </button> -->
-                <button
-                  class="btn btn-sm btn-outline-primary"
-                  [routerLink]="[warehouse.id]"
-                >
-                  Ver Detalle
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div style="overflow-x: auto; width: 100%">
+          <table [hover]="true" [striped]="true" cTable>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Ciudad</th>
+                <th>País</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let warehouse of warehouses">
+                <th scope="row">{{ warehouse.id }}</th>
+                <td>{{ warehouse.name }}</td>
+                <td>{{ warehouse.cityName }}</td>
+                <td>{{ warehouse.countryName }}</td>
+                <td>
+                  <button
+                    class="btn btn-sm btn-outline-primary me-2"
+                    [routerLink]="[warehouse.id]"
+                  >
+                    <svg [cIcon]="icons.cilPencil"></svg>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </c-card-body>
     </c-card>
   </c-col>
 </c-row>
 
-<!-- <app-warehouse-product-modal
-  *ngIf="selectedWarehouseId"
-  [warehouseId]="selectedWarehouseId"
-  [warehouseName]="selectedWarehouseName"
-  (onSave)="handleSave($event)"
-  (onClose)="handleClose($event)"
->
-</app-warehouse-product-modal> -->
+<app-warehouse-create-modal
+  #createModal
+  *ngIf="showCreateModal"
+  (onClose)="onModalClose()"
+  (onSave)="onModalSave($event)"
+></app-warehouse-create-modal>

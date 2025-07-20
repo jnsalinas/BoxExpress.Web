@@ -113,23 +113,47 @@
           <tbody>
             <tr *ngFor="let tx of warehouseInventoryTransfers; let i = index">
               <th scope="row">{{ tx.id }}</th>
-              <td>{{ tx.fromWarehouse }} → {{ tx.toWarehouse }}</td>
+              <td>
+                <span class="fw-bold">{{ tx.fromWarehouse }}</span>
+                <span class="mx-1 text-muted">→</span>
+                <span class="fw-bold">{{ tx.toWarehouse }}</span>
+              </td>
               <td>{{ tx.createdAt | utcDate }}</td>
-              <td>{{ getStatusLabel(tx.status) }}</td>
+              <td>
+                <c-badge
+                  [color]="
+                    getStatusLabel(tx.status) === 'Aprobado' ? 'success' :
+                    getStatusLabel(tx.status) === 'Pendiente' ? 'warning' :
+                    getStatusLabel(tx.status) === 'Rechazada' ? 'danger' : 'secondary'
+                  "
+                  class="rounded-pill px-3 py-1"
+                >
+                  {{ getStatusLabel(tx.status) }}
+                </c-badge>
+              </td>
               <td>{{ tx.creator }}</td>
               <td>{{ tx.acceptedBy }}</td>
-              <td>{{ tx.rejectionReason }}</td>
+              <td>
+                <span *ngIf="tx.rejectionReason; else noRechazo" class="text-danger">
+                  {{ tx.rejectionReason }}
+                </span>
+                <ng-template #noRechazo>
+                  <span class="text-muted">-</span>
+                </ng-template>
+              </td>
               <td>
                 <div *ngFor="let item of tx.transferDetails; let last = last">
-                  {{ item.product }} {{ item.productVariant }}
-                  {{ item.quantity }}
-                  <hr *ngIf="!last" style="margin: 8px 0" />
+                  <span class="fw-semibold">{{ item.product }}</span>
+                  <span class="text-muted">{{ item.productVariant }}</span>
+                  <span class="badge bg-secondary ms-1">{{ item.quantity }}</span>
+                  <hr *ngIf="!last" class="my-1" />
                 </div>
               </td>
               <td>
                 <button
                   class="btn btn-sm btn-outline-primary me-2"
                   (click)="showDetail(tx)"
+                  title="Ver detalle"
                 >
                   <svg [cIcon]="icons.cilPencil"></svg>
                 </button>

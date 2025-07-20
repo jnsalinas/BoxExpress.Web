@@ -218,7 +218,7 @@ export class WarehouseDetailComponent implements OnInit {
         this.isLoading = true;
         this.warehouseService.transfer(this.warehouseId!, data).subscribe({
           next: (data) => {
-            console.log('Warehouse transfer:', data);
+            this.messageService.showSuccess('Transferencia creada correctamente');
             this.isLoading = false;
             this.handleTransferClose(null);
           },

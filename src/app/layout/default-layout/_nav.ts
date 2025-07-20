@@ -8,16 +8,14 @@ export const navItems: CustomNavData[] = [
     roles: ['admin',  'bodega'],
   },
   {
-    name: 'Inventario',
-    url: '/warehouse-inventories',
-    iconComponent: { name: 'cil-puzzle' },
-    roles: ['admin', 'tienda'],
-  },
-  {
     name: 'Transferencias',
     url: '/transfers',
     iconComponent: { name: 'cil-loop-circular' },
-    roles: ['admin'],
+    roles: ['admin', 'bodega'],
+    badge: {
+      color: 'warning',
+      text: '0', // Este número se actualizará dinámicamente
+    },
   },
   {
     name: 'Devoluciones',
@@ -30,6 +28,12 @@ export const navItems: CustomNavData[] = [
     url: '/orders',
     iconComponent: { name: 'cil-task' },
     roles: ['administrador', 'admin', 'bodega', 'tienda'],
+  },
+  {
+    name: 'Inventario',
+    url: '/warehouse-inventories',
+    iconComponent: { name: 'cil-puzzle' },
+    roles: ['admin', 'tienda'],
   },
   {
     name: 'Wallet',

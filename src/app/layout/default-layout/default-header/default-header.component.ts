@@ -1,7 +1,14 @@
 import { CommonModule, NgTemplateOutlet } from '@angular/common';
-import { Component, computed, inject, input, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  computed,
+  inject,
+  input,
+  OnInit,
+} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-
+import { navItems } from '../_nav';
 import {
   AvatarComponent,
   BadgeComponent,
@@ -28,6 +35,8 @@ import { IconDirective } from '@coreui/icons-angular';
 import { AuthService } from '../../../services/auth.service';
 import { WalletService } from '../../../services/wallet.service';
 import { StoreDto } from '../../../models/store.dto';
+import { WarehouseInventoryTransferService } from '../../../services/warehouse-inventory-transfer.service';
+import { NavBadgeService } from '../../../services/nav-badge.service';
 
 @Component({
   selector: 'app-default-header',
@@ -80,17 +89,24 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private walletService: WalletService
+    private walletService: WalletService,
+    private warehouseInventoryTransferService: WarehouseInventoryTransferService,
+    private cdr: ChangeDetectorRef,
+    private navBadgeService: NavBadgeService
   ) {
     super();
   }
 
   ngOnInit(): void {
     this.getBalanceInformation();
+    this.getPendingTransfers();
   }
 
   getBalanceInformation() {
-    if (this.authService.hasAnyRole(['tienda', 'admin']) && this.authService.getToken()) {
+    if (
+      this.authService.hasAnyRole(['tienda', 'admin']) &&
+      this.authService.getToken()
+    ) {
       this.walletService.summary().subscribe({
         next: (res) => {
           console.log(res);
@@ -102,124 +118,32 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
       });
     }
   }
+  navItems = [...navItems];
+
+  getPendingTransfers() {
+    this.warehouseInventoryTransferService.getPendingTransfers({}).subscribe({
+      next: (response) => {
+        const count = response;
+        console.log('count', count);
+        this.navBadgeService.updatePendingTransfersCount(count);
+      },
+      error: (err) => {
+        console.error('Error cargando transferencias', err);
+      },
+    });
+
+    // const transferItem = navItems.find(
+    //   (item) => item.name === 'Transferencias'
+    // );
+    // if (transferItem && transferItem.badge) {
+    //   const count = 10;
+    //   transferItem.badge.text = count.toString();
+    //   transferItem.badge.color = count > 0 ? 'warning' : 'secondary';
+    // }
+  }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }
-
-  // sidebarId = input('sidebar1');
-
-  // public newMessages = [
-  //   {
-  //     id: 0,
-  //     from: 'Jessica Williams',
-  //     avatar: '7.jpg',
-  //     status: 'success',
-  //     title: 'Urgent: System Maintenance Tonight',
-  //     time: 'Just now',
-  //     link: 'apps/email/inbox/message',
-  //     message:
-  //       "Attention team, we'll be conducting critical system maintenance tonight from 10 PM to 2 AM. Plan accordingly...",
-  //   },
-  //   {
-  //     id: 1,
-  //     from: 'Richard Johnson',
-  //     avatar: '6.jpg',
-  //     status: 'warning',
-  //     title: 'Project Update: Milestone Achieved',
-  //     time: '5 minutes ago',
-  //     link: 'apps/email/inbox/message',
-  //     message:
-  //       "Kudos on hitting sales targets last quarter! Let's keep the momentum. New goals, new victories ahead...",
-  //   },
-  //   {
-  //     id: 2,
-  //     from: 'Angela Rodriguez',
-  //     avatar: '5.jpg',
-  //     status: 'danger',
-  //     title: 'Social Media Campaign Launch',
-  //     time: '1:52 PM',
-  //     link: 'apps/email/inbox/message',
-  //     message:
-  //       'Exciting news! Our new social media campaign goes live tomorrow. Brace yourselves for engagement...',
-  //   },
-  //   {
-  //     id: 3,
-  //     from: 'Jane Lewis',
-  //     avatar: '4.jpg',
-  //     status: 'info',
-  //     title: 'Inventory Checkpoint',
-  //     time: '4:03 AM',
-  //     link: 'apps/email/inbox/message',
-  //     message:
-  //       "Team, it's time for our monthly inventory check. Accurate counts ensure smooth operations. Let's nail it...",
-  //   },
-  //   {
-  //     id: 3,
-  //     from: 'Ryan Miller',
-  //     avatar: '4.jpg',
-  //     status: 'info',
-  //     title: 'Customer Feedback Results',
-  //     time: '3 days ago',
-  //     link: 'apps/email/inbox/message',
-  //     message:
-  //       "Our latest customer feedback is in. Let's analyze and discuss improvements for an even better service...",
-  //   },
-  // ];
-
-  // public newNotifications = [
-  //   {
-  //     id: 0,
-  //     title: 'New user registered',
-  //     icon: 'cilUserFollow',
-  //     color: 'success',
-  //   },
-  //   { id: 1, title: 'User deleted', icon: 'cilUserUnfollow', color: 'danger' },
-  //   {
-  //     id: 2,
-  //     title: 'Sales report is ready',
-  //     icon: 'cilChartPie',
-  //     color: 'info',
-  //   },
-  //   { id: 3, title: 'New client', icon: 'cilBasket', color: 'primary' },
-  //   {
-  //     id: 4,
-  //     title: 'Server overloaded',
-  //     icon: 'cilSpeedometer',
-  //     color: 'warning',
-  //   },
-  // ];
-
-  // public newStatus = [
-  //   {
-  //     id: 0,
-  //     title: 'CPU Usage',
-  //     value: 25,
-  //     color: 'info',
-  //     details: '348 Processes. 1/4 Cores.',
-  //   },
-  //   {
-  //     id: 1,
-  //     title: 'Memory Usage',
-  //     value: 70,
-  //     color: 'warning',
-  //     details: '11444GB/16384MB',
-  //   },
-  //   {
-  //     id: 2,
-  //     title: 'SSD 1 Usage',
-  //     value: 90,
-  //     color: 'danger',
-  //     details: '243GB/256GB',
-  //   },
-  // ];
-
-  // public newTasks = [
-  //   { id: 0, title: 'Upgrade NPM', value: 0, color: 'info' },
-  //   { id: 1, title: 'ReactJS Version', value: 25, color: 'danger' },
-  //   { id: 2, title: 'VueJS Version', value: 50, color: 'warning' },
-  //   { id: 3, title: 'Add new layouts', value: 75, color: 'info' },
-  //   { id: 4, title: 'Angular Version', value: 100, color: 'success' },
-  // ];
 }

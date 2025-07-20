@@ -1,0 +1,134 @@
+<c-modal [visible]="true" size="lg" backdrop="static">
+  <c-modal-header>
+    <h5 class="modal-title">Crear Nueva Bodega</h5>
+  </c-modal-header>
+
+  <c-modal-body>
+    <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="name" class="form-label">
+            Nombre de la Bodega <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            formControlName="name"
+            placeholder="Ingrese el nombre de la bodega"
+            [class.is-invalid]="form.get('name')?.invalid && (form.get('name')?.touched || submitted)"
+          />
+          <div *ngIf="form.get('name')?.invalid && (form.get('name')?.touched || submitted)" class="invalid-feedback d-block">
+            <span *ngIf="form.get('name')?.errors?.['required']">El nombre es obligatorio.</span>
+            <span *ngIf="form.get('name')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres.</span>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="cityId" class="form-label">
+            Ciudad <span class="text-danger">*</span>
+          </label>
+          <select
+            id="cityId"
+            class="form-select"
+            formControlName="cityId"
+            [class.is-invalid]="form.get('cityId')?.invalid && (form.get('cityId')?.touched || submitted)"
+          >
+            <option value="">Seleccione una ciudad</option>
+            <option *ngFor="let city of cities" [value]="city.id">
+              {{ city.name }}
+            </option>
+          </select>
+          <div *ngIf="form.get('cityId')?.invalid && (form.get('cityId')?.touched || submitted)" class="invalid-feedback d-block">
+            <span *ngIf="form.get('cityId')?.errors?.['required']">Debe seleccionar una ciudad.</span>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label for="address" class="form-label">
+            Dirección <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            id="address"
+            class="form-control"
+            formControlName="address"
+            placeholder="Ingrese la dirección completa"
+            [class.is-invalid]="form.get('address')?.invalid && (form.get('address')?.touched || submitted)"
+          />
+          <div *ngIf="form.get('address')?.invalid && (form.get('address')?.touched || submitted)" class="invalid-feedback d-block">
+            <span *ngIf="form.get('address')?.errors?.['required']">La dirección es obligatoria.</span>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <label for="manager" class="form-label">
+            Gerente <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            id="manager"
+            class="form-control"
+            formControlName="manager"
+            placeholder="Ingrese el nombre del gerente"
+            [class.is-invalid]="form.get('manager')?.invalid && (form.get('manager')?.touched || submitted)"
+          />
+          <div *ngIf="form.get('manager')?.invalid && (form.get('manager')?.touched || submitted)" class="invalid-feedback d-block">
+            <span *ngIf="form.get('manager')?.errors?.['required']">El gerente es obligatorio.</span>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="email" class="form-label">
+            Email <span class="text-danger">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="Ingrese el email del usuario"
+            [class.is-invalid]="form.get('email')?.invalid && (form.get('email')?.touched || submitted)"
+          />
+          <div *ngIf="form.get('email')?.invalid && (form.get('email')?.touched || submitted)" class="invalid-feedback d-block">
+            <span *ngIf="form.get('email')?.errors?.['required']">El email es obligatorio.</span>
+            <span *ngIf="form.get('email')?.errors?.['email']">Ingrese un email válido.</span>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="password" class="form-label">
+            Contraseña <span class="text-danger">*</span>
+          </label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Ingrese la contraseña"
+            [class.is-invalid]="form.get('password')?.invalid && (form.get('password')?.touched || submitted)"
+          />
+          <div *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || submitted)" class="invalid-feedback d-block">
+            <span *ngIf="form.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
+            <span *ngIf="form.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </c-modal-body>
+
+  <c-modal-footer>
+    <button type="button" class="btn btn-secondary" (click)="close()" [disabled]="isLoading">
+      Cancelar
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="save()"
+      [disabled]="form.invalid || isLoading"
+    >
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"></span>
+      {{ isLoading ? 'Creando...' : 'Crear Bodega' }}
+    </button>
+  </c-modal-footer>
+</c-modal> 

@@ -26,12 +26,15 @@
         <div
           *ngFor="let variant of transferDetails.controls; let i = index"
           [formGroupName]="i"
-          class="border rounded p-3 mb-3"
+          class="border rounded p-3 mb-3 bg-light"
         >
           <div class="row g-2 align-items-end">
             <div class="col-md-7">
-              <label class="form-label">Variante</label>
+              <label class="form-label fw-bold">
+                Variante <span class="text-danger">*</span>
+              </label>
               <ng-select
+                class="form-control"
                 [items]="getVariantOptions(i)"
                 bindLabel="displayName"
                 bindValue="id"
@@ -42,31 +45,30 @@
                 [typeahead]="variantInputSubjects[i]"
                 placeholder="Selecciona variante"
                 [virtualScroll]="true"
-              >
-              </ng-select>
+              ></ng-select>
             </div>
-
             <div class="col-md-3">
-              <label class="form-label">Cantidad</label>
+              <label class="form-label fw-bold">
+                Cantidad <span class="text-danger">*</span>
+              </label>
               <input
                 type="number"
                 class="form-control"
                 formControlName="quantity"
                 [attr.min]="1"
-                [attr.max]="transferDetails.at(i).get('max')?.value"
-                [class.is-invalid]="
-                  transferDetails.at(i).get('quantity')?.invalid &&
-                  transferDetails.at(i).get('quantity')?.touched
-                "
+                [attr.max]="variant.get('max')?.value"
               />
+              <!-- <small class="text-muted" *ngIf="variant.get('max')?.value !== null">
+                Disponible: {{ variant.get('max')?.value }}
+              </small> -->
             </div>
-
             <div class="col-md-2 text-end">
               <button
                 type="button"
                 class="btn btn-danger"
                 (click)="removeProductVariant(i)"
                 *ngIf="transferDetails.length > 1"
+                title="Eliminar variante"
               >
                 <svg [cIcon]="icons.cilXCircle"></svg>
               </button>
@@ -77,12 +79,16 @@
 
       <button
         type="button"
-        class="btn btn-secondary w-100"
+        class="btn btn-outline-primary w-100 mb-4"
         (click)="addProductVariant()"
       >
         <svg [cIcon]="icons.cilPlus"></svg>
         Agregar Variante
       </button>
+
+      <div *ngIf="transferDetails.length === 0" class="alert alert-warning mt-3">
+        Debes agregar al menos un producto/variante para transferir.
+      </div>
 
       <div class="mt-4">
         <c-card>
@@ -127,12 +133,11 @@
     <button type="button" class="btn btn-secondary" (click)="close()">
       Cancelar
     </button>
-
     <button
       type="button"
       class="btn btn-primary"
       (click)="save()"
-      [disabled]="form.invalid"
+      [disabled]="transferDetails.length === 0 || form.invalid"
     >
       Transferir
     </button>

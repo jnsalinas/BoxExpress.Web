@@ -87,6 +87,7 @@ export class WarehouseInventoriesComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.products = response.data;
+          console.log('this.products',this.products);
           this.isLoading = false;
         },
         error: (error) => {

@@ -28,14 +28,7 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./views/warehouse-transfers/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin'] },
-      },
-      {
-        path: 'inventory-returns',
-        loadChildren: () =>
-          import('./views/inventory-returns/routes').then((m) => m.routes),
-        canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin',  'bodega'] },
+        data: { roles: ['admin', 'bodega'] },
       },
       {
         path: 'orders',
@@ -43,6 +36,13 @@ export const routes: Routes = [
           import('./views/orders/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
         data: { roles: ['administrador', 'admin',  'bodega', 'tienda'] },
+      },
+      {
+        path: 'inventory-returns',
+        loadChildren: () =>
+          import('./views/inventory-returns/routes').then((m) => m.routes),
+        canActivate: [RoleGuard],
+        data: { roles: ['administrador', 'admin',  'bodega'] },
       },
       {
         path: 'wallet',

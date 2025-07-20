@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { WarehouseService } from '../../../services/warehouse.service';
 import { WarehouseDto } from '../../../models/warehouse.dto';
+import { CreateWarehouseDto } from '../../../models/create-warehouse.dto';
 import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
+import { WarehouseCreateModalComponent } from '../components/warehouse-create-modal/warehouse-create-modal.component';
 
 import {
   RowComponent,
@@ -14,6 +16,9 @@ import {
   CardBodyComponent,
   TableDirective,
 } from '@coreui/angular';
+import { IconDirective } from '@coreui/icons-angular';
+import { freeSet } from '@coreui/icons';
+import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
 
 @Component({
   standalone: true,
@@ -30,11 +35,18 @@ import {
     TableDirective,
     RouterLink,
     LoadingOverlayComponent,
+    IconDirective,
+    WarehouseCreateModalComponent,
+    HasRoleDirective,
   ],
 })
 export class WarehousesComponent implements OnInit {
+  @ViewChild('createModal') createModal!: WarehouseCreateModalComponent;
+  
   //todo: renombrar a WrehousesListComponent
   selectedWarehouseId: number | undefined;
+  icons = freeSet;
+  showCreateModal = false;
 
   warehouses: WarehouseDto[] = [
     {
@@ -77,6 +89,38 @@ export class WarehousesComponent implements OnInit {
         console.error('Error isLoading warehouses', err);
         this.isLoading = false;
       },
+    });
+  }
+
+  openCreateModal() {
+    console.log('Abriendo modal de crear bodega...');
+    this.showCreateModal = true;
+    console.log('showCreateModal:', this.showCreateModal);
+  }
+
+  onModalClose() {
+    this.showCreateModal = false;
+    console.log('Modal cerrado');
+  }
+
+  onModalSave(warehouseData: CreateWarehouseDto) {
+    console.log('Datos de bodega recibidos:', warehouseData);
+    
+    this.warehouseService.createWarehouse(warehouseData).subscribe({
+      next: (response) => {
+        console.log('Bodega creada exitosamente:', response);
+        this.showCreateModal = false;
+        // Recargar la lista de bodegas
+        this.loadWarehouses();
+      },
+      error: (error) => {
+        console.error('Error al crear bodega:', error);
+        // Resetear el loading del modal en caso de error
+        if (this.createModal) {
+          this.createModal.resetLoading();
+        }
+        // Aquí podrías mostrar un mensaje de error al usuario
+      }
     });
   }
 

@@ -8,6 +8,7 @@ import {
   ColComponent,
   RowComponent,
   TableDirective,
+  BadgeModule,
 } from '@coreui/angular';
 import {
   FormBuilder,
@@ -55,6 +56,7 @@ import { GenericModalComponent } from '../../shared/components/generic-modal/gen
     IconDirective,
     WarehouseTransferModalDetailComponent,
     GenericModalComponent,
+    BadgeModule,
   ],
   templateUrl: './warehouse-transfers-list.component.html',
   styleUrl: './warehouse-transfers-list.component.scss',

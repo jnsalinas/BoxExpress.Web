@@ -50,6 +50,7 @@ export class WarehouseTransferModalComponent implements OnInit {
 
   variantsList: ProductVariantAutocompleteDto[] = [];
   form: FormGroup = this.fb.group({});
+  submitted = false;
   variantInputSubjects: Subject<string>[] = [];
   variantOptions: ProductVariantAutocompleteDto[][] = [];
   warehouses: WarehouseDto[] = [];
@@ -230,12 +231,13 @@ export class WarehouseTransferModalComponent implements OnInit {
   }
 
   save(): void {
-    if (this.form.valid) {
-      this.onSave.emit(this.form.value);
-      // this.resetForm(); todo: descomentar
-    } else {
-      console.log('Formulario inválido:', this.form.value);
+    this.submitted = true;
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+      return;
     }
+    this.onSave.emit(this.form.value);
+    // this.resetForm(); todo: descomentar
   }
 
   close(): void {

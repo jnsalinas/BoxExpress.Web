@@ -111,7 +111,7 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
         this.warehouseInventoryItem?.quantity || 0,
         [Validators.required, Validators.min(0)],
       ],
-      storeId: [this.warehouseInventoryItem?.store?.id || null, Validators.required],
+      storeId: [this.warehouseInventoryItem?.store?.id || null],
     });
   }
 
