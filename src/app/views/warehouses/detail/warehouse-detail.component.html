@@ -42,110 +42,35 @@
               Limpiar
             </button>
           </form>
-
-          <!-- <span class="input-group-text">🔍</span>
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Buscar producto"
-            [(ngModel)]="searchTerm"
-            (input)="filterProducts()"
-          /> -->
-
-          <!-- <input
-            type="text"
-            class="form-control"
-            placeholder="Buscar producto"
-          />
-          <button class="btn btn-outline-primary" (click)="clearSearch()">
-            Filtrar
-          </button>
-          <button class="btn btn-outline-secondary" (click)="clearSearch()">
-            Limpiar
-          </button> -->
         </div>
 
-        <table class="table table-bordered">
-          <tbody>
-            <tr *ngFor="let product of filteredProducts">
-              <td>
-                <!-- Producto Header -->
-                <div
-                  class="d-flex justify-content-between align-items-center bg-light p-2"
-                >
-                  <div>
-                    <strong>📦 {{ product.name }}</strong>
-                    <span class="badge bg-secondary ms-2">{{
-                      product.sku
-                    }}</span>
-                  </div>
-                </div>
+        <ng-template #actions let-variant>
+          <span>
+            <a
+              class="btn btn-sm btn-outline-primary"
+              [routerLink]="['/warehouses', warehouseDetail?.id, 'inventory', variant.warehouseInventoryId]"
+            >
+              Ver historial
+            </a>
+          </span>
+          <a
+            *hasRole="['admin']"
+            class="btn btn-sm btn-outline-primary"
+            (click)="openInventoryItemModal(variant)"
+            >Editar</a
+          >
+        </ng-template>
 
-                <!-- Tabla de variantes -->
-                <table class="table table-sm mt-2">
-                  <thead class="table-light">
-                    <tr>
-                      <th>Variante</th>
-                      <th>Tienda</th>
-                      <th>Disponible</th>
-                      <th>Procesamiento</th>
-                      <th>En devolución</th>
-                      <th>Total</th>
-                      <th>Shopify ID</th>
-                      <th>SKU</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let variant of product.variants">
-                      <td>
-                        <strong>{{ variant.name }}</strong>
-                      </td>
-                      <td>{{ variant.store?.name }}</td>
-                      <td>{{ variant.availableQuantity }}</td>
-                      <td>{{ variant.reservedQuantity }}</td>
-                      <td>{{ variant.pendingReturnQuantity }}</td>
-                      <td>{{ variant.quantity }}</td>
-                      <td>{{ variant.shopifyVariantId || "-" }}</td>
-                      <td>
-                        <span *ngIf="variant.sku" class="badge bg-secondary">
-                          {{ variant.sku }}
-                        </span>
-                      </td>
-                      <td style="display: flex; gap: 0.5rem">
-                        <span>
-                          <a
-                            class="btn btn-sm btn-outline-primary"
-                            [routerLink]="[
-                              '/warehouses',
-                              warehouseDetail?.id,
-                              'inventory',
-                              variant.warehouseInventoryId
-                            ]"
-                          >
-                            Ver historial
-                          </a>
-                        </span>
-                        <!-- <button class="me-1 btn btn-outline-primary">✏️</button> -->
-                        <a *hasRole="['admin']"
-                          class="btn btn-sm btn-outline-primary"
-                          (click)="openInventoryItemModal(variant)"
-                          >Editar</a
-                        >
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <app-generic-pagination
+        <app-inventory-table
+          [products]="filteredProducts || []"
+          [showActions]="authService.hasRole('admin')"
+          [showStore]="true"
           [pagination]="pagination"
           [currentPage]="currentPage"
           (pageChange)="onPageChange($event)"
+          [actionsTemplate]="actions"
         >
-        </app-generic-pagination>
+        </app-inventory-table>
       </c-card-body>
     </c-card>
   </c-col>

@@ -230,7 +230,7 @@
                       bindValue="id"
                       formControlName="storeId"
                       placeholder="Seleccione"
-                      (change)="onStoreChange($event)"
+                      (change)="onStoreChange($event?.id)"
                     ></ng-select>
                     <small class="text-muted"
                       >Al cambiar la tienda, se actualizarán las variantes de

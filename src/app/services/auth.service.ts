@@ -37,7 +37,6 @@ export class AuthService extends BaseApiService<any, any> {
   }
 
   saveAuth(auth: AuthDto): void {
-    console.log(auth);
     localStorage.setItem('auth_token', auth.token ?? '');
     localStorage.setItem('auth_role', auth.role?.toLowerCase() ?? '');
     if (auth.storeId) {

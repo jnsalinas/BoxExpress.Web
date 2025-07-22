@@ -1,236 +1,182 @@
-<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+<div class="bg-light min-vh-100 d-flex flex-row align-items-center">
   <c-container>
     <c-row class="justify-content-center">
-      <c-col lg="10" md="10" xl="9">
-        <c-card class="mx-4">
-          <c-card-body class="p-4">
-            <form [formGroup]="registerForm" (ngSubmit)="register()">
-              <h1>Registrar Tienda</h1>
-              <p class="text-body-secondary">Registra una tienda nueva</p>
+      <c-col lg="8" xl="7">
+        <h1 class="mb-2 text-center">Registrar Tienda</h1>
+        <p class="text-body-secondary mb-4 text-center">
+          Registra una tienda nueva
+        </p>
+        <form [formGroup]="registerForm" (ngSubmit)="register()" novalidate>
+          <!-- Card Datos Personales -->
+          <c-card class="shadow-sm rounded-4 mb-4">
+            <c-card-body>
+              <h5 class="mb-3">Datos Personales</h5>
+              <c-row>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Nombre</label>
+                  <input
+                    cInput
+                    formControlName="firstName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Nombre"
+                    [class.input-error]="isInvalid('firstName')"
+                  />
+                </c-col>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Apellido</label>
+                  <input
+                    cInput
+                    formControlName="lastName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Apellido"
+                    [class.input-error]="isInvalid('lastName')"
+                  />
+                </c-col>
+              </c-row>
+              <c-row>
+                <c-col md="12" class="mb-3">
+                  <label class="form-label">Teléfono</label>
+                  <input
+                    cInput
+                    formControlName="phone"
+                    type="tel"
+                    class="form-control"
+                    placeholder="Teléfono"
+                    [class.input-error]="isInvalid('phone')"
+                  />
+                </c-col>
+              </c-row>
+            </c-card-body>
+          </c-card>
+          <!-- Card Datos de la Tienda -->
+          <c-card class="shadow-sm rounded-4 mb-4">
+            <c-card-body>
+              <h5 class="mb-3">Datos de la Tienda</h5>
+              <c-row>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Correo electrónico</label>
+                  <input
+                    cInput
+                    formControlName="email"
+                    type="email"
+                    class="form-control"
+                    placeholder="Email"
+                    [class.input-error]="isInvalid('email')"
+                  />
+                </c-col>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Contraseña</label>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="form-group position-relative">
+                      <input
+                        formControlName="password"
+                        [type]="showPassword ? 'text' : 'password'"
+                        class="form-control"
+                        placeholder="Contraseña"
+                        [class.input-error]="isInvalid('password')"
+                      />
 
-                <c-row class="mb-2">
-                  <c-col md="6">
-                    <c-card class="equal-height" >
-                    <c-card-header>
-                      <strong>Datos Personales</strong>
-                    </c-card-header>
-                    <c-card-body>
-                      <c-col md="12">
-                        <c-input-group class="mb-3">
-                    <span cInputGroupText>
-                      <svg cIcon name="cilUser"></svg>
-                    </span>
-                          <div class="form-group">
-                            <input
-                              formControlName="firstName"
-                              type="text"
-                              [ngClass]="{'input-error': registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched}"
-                              class="form-control"
-                              placeholder="Nombre"
-                            />
-                            <div *ngIf="registerForm.get('firstName')?.invalid && registerForm.get('firstName')?.touched" class="my-error-message">
-                              Este campo es obligatorio
-                            </div>
-                          </div>
-                        </c-input-group>
-
-                        <c-input-group class="mb-3">
-                    <span cInputGroupText>
-                      <svg cIcon name="cilUser"></svg>
-                    </span>
-                          <div class="form-group">
-                            <input
-                              formControlName="lastName"
-                              type="text"
-                              [ngClass]="{'input-error': registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched}"
-                              class="form-control"
-                              placeholder="Apellido"
-                            />
-                            <div *ngIf="registerForm.get('lastName')?.invalid && registerForm.get('lastName')?.touched" class="my-error-message">
-                              Este campo es obligatorio
-                            </div>
-                          </div>
-                        </c-input-group>
-
-                        <c-input-group class="mb-3">
-                    <span cInputGroupText>
-                      <svg cIcon name="cilEnvelopeClosed"></svg>
-                    </span>
-                          <div class="form-group">
-                            <input
-                              autoComplete="email"
-                              formControlName="email"
-                              type="email"
-                              [ngClass]="{'input-error': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
-                              class="form-control"
-                              placeholder="Email"
-                            />
-                            <div *ngIf="registerForm.get('email')?.touched">
-                              <div *ngIf="registerForm.get('email')?.errors?.['required']" class="my-error-message">
-                                Este campo es obligatorio.
-                              </div>
-
-                              <div *ngIf="!registerForm.get('email')?.errors?.['required'] && registerForm.get('email')?.errors?.['email']" class="my-error-message">
-                                Ingresa un correo válido.
-                              </div>
-                            </div>
-
-                          </div>
-                        </c-input-group>
-
-                        <c-input-group class="mb-3">
-                    <span cInputGroupText>
-                      <svg [cIcon]="icons.cilMobile"></svg>
-                    </span>
-                          <div class="form-group">
-                            <input
-                              autoComplete="tel"
-                              formControlName="phone"
-                              [ngClass]="{'input-error': registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched}"
-                              class="form-control"
-                              placeholder="Telefono"
-                            />
-                            <div *ngIf="registerForm.get('phone')?.invalid && registerForm.get('phone')?.touched" class="my-error-message">
-                              Este campo es obligatorio
-                            </div>
-                          </div>
-                        </c-input-group>
-
-                      </c-col>
-                    </c-card-body>
-
-
-                  </c-card></c-col>
-
-                  <c-col md="6">
-                    <c-card class="equal-height">
-                      <c-card-header>
-                        <strong>Datos de la Tienda</strong>
-                      </c-card-header>
-                      <c-card-body>
-
-                        <c-input-group class="mb-3">
-                        <span cInputGroupText>
-                          <svg cIcon name="cilDescription"></svg>
-                        </span>
-                          <div class="form-group">
-                            <input
-                              formControlName="legalName"
-                              [ngClass]="{'input-error': registerForm.get('legalName')?.invalid && registerForm.get('legalName')?.touched}"
-                              class="form-control"
-                              placeholder="Nombre legal"
-                            />
-                            <div
-                              *ngIf="registerForm.get('legalName')?.invalid && registerForm.get('legalName')?.touched"
-                              class="my-error-message"
-                            >
-                              Este campo es obligatorio
-                            </div>
-                          </div>
-                        </c-input-group>
-
-                        <c-input-group class="mb-3">
-                          <span cInputGroupText>
-                            <svg cIcon name="cilFile"></svg>
-                          </span>
-                          <div class="form-group">
-                            <input
-                              formControlName="documentNumber"
-                              [ngClass]="{'input-error': registerForm.get('documentNumber')?.invalid && registerForm.get('documentNumber')?.touched}"
-                              class="form-control"
-                              placeholder="Número de documento"
-                            />
-                            <div
-                              *ngIf="registerForm.get('documentNumber')?.invalid && registerForm.get('documentNumber')?.touched"
-                              class="my-error-message"
-                            >
-                              Este campo es obligatorio
-                            </div>
-                          </div>
-                        </c-input-group>
-
-                        <c-input-group class="mb-3">
-                        <span cInputGroupText>
-                          <svg [cIcon]="icons.cilCart"></svg>
-                        </span>
-                          <div class="form-group">
-                            <input
-                              formControlName="storeName"
-                              [ngClass]="{'input-error': registerForm.get('storeName')?.invalid && registerForm.get('storeName')?.touched}"
-                              class="form-control"
-                              placeholder="Nombre de la tienda"
-                            />
-                            <div
-                              *ngIf="registerForm.get('storeName')?.invalid && registerForm.get('storeName')?.touched"
-                              class="my-error-message"
-                            >
-                              Este campo es obligatorio
-                            </div>
-                          </div>
-                        </c-input-group>
-                        <c-input-group class="mb-3">
-                          <span cInputGroupText>
-                            <svg cIcon name="cilLocationPin"></svg>
-                          </span>
-                          <div class="form-group w-100">
-                            <select
-                              matNativeControl [disabled]= "loadCity"
-                              formControlName="city"
-                              [ngClass]="{'input-error': registerForm.get('city')?.invalid && registerForm.get('city')?.touched}"
-                              class="form-select"
-                            >
-                              <option value="">Seleccione una ciudad</option>
-                              <option *ngFor="let city of cities" [value]="city.id">{{ city.name }}</option>
-                            </select>
-                            <div
-                              *ngIf="registerForm.get('city')?.invalid && registerForm.get('city')?.touched"
-                              class="my-error-message"
-                            >
-                              Este campo es obligatorio
-                            </div>
-                          </div>
-                        </c-input-group>
-
-                        <c-input-group class="mb-4">
-                          <span cInputGroupText>
-                            <svg cIcon name="cilLockLocked"></svg>
-                          </span>
-                          <div class="form-group">
-                            <input
-                              autoComplete="new-password"
-                              formControlName="password"
-                              type="password"
-                              [ngClass]="{'input-error': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
-                              class="form-control"
-                              placeholder="Contraseña"
-                            />
-                            <div *ngIf="registerForm.get('password')?.touched">
-                              <div *ngIf="registerForm.get('password')?.errors?.['required']" class="my-error-message">
-                                Este campo es obligatorio
-                              </div>
-                              <div *ngIf="registerForm.get('password')?.errors?.['pattern'] " class="my-error-message">
-                                Debe incluir una mayúscula y un número.
-                              </div>
-                            </div>
-
-                          </div>
-                        </c-input-group>
-                      </c-card-body>
-
-                    </c-card></c-col>
-                </c-row>
-
-              <div class="d-grid">
-                <button
-                  cButton color="success"
-                  type="submit"
-                  [disabled]="!registerForm.valid">
-                  Crear Tienda
-                </button>
-              </div>
-            </form>
-          </c-card-body>
-        </c-card>
+                      <!-- Botón ojito -->
+                      <button
+                        type="button"
+                        class="btn btn-sm position-absolute end-0 me-2 bg-transparent border-0"
+                        (click)="togglePasswordVisibility()"
+                        style="top: 50%; transform: translateY(-50%)"
+                      >
+                        <img
+                          *ngIf="!showPassword"
+                          src="assets/eye-solid.svg"
+                          alt="Mostrar contraseña"
+                          width="20"
+                          height="20"
+                        />
+                        <img
+                          *ngIf="showPassword"
+                          src="assets/eye-slash-solid.svg"
+                          alt="Ocultar contraseña"
+                          width="20"
+                          height="20"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </c-col>
+              </c-row>
+              <c-row>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Nombre legal</label>
+                  <input
+                    cInput
+                    formControlName="legalName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Nombre legal"
+                    [class.input-error]="isInvalid('legalName')"
+                  />
+                </c-col>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Número de documento</label>
+                  <input
+                    cInput
+                    formControlName="documentNumber"
+                    type="text"
+                    class="form-control"
+                    placeholder="Número de documento"
+                    [class.input-error]="isInvalid('documentNumber')"
+                  />
+                </c-col>
+              </c-row>
+              <c-row>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Nombre de la tienda</label>
+                  <input
+                    cInput
+                    formControlName="storeName"
+                    type="text"
+                    class="form-control"
+                    placeholder="Nombre de la tienda"
+                    [class.input-error]="isInvalid('storeName')"
+                  />
+                </c-col>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Ciudad</label>
+                  <select
+                    cSelect
+                    formControlName="city"
+                    class="form-select"
+                    [class.input-error]="isInvalid('city')"
+                    [disabled]="loadCity"
+                  >
+                    <option value="">Seleccione una ciudad</option>
+                    <option *ngFor="let city of cities" [value]="city.id">
+                      {{ city.name }}
+                    </option>
+                  </select>
+                </c-col>
+              </c-row>
+            </c-card-body>
+          </c-card>
+          <!-- Botón fuera de las cards, centrado -->
+          <c-row class="mt-4">
+            <c-col class="d-flex justify-content-center">
+              <button
+                cButton
+                color="primary"
+                type="submit"
+                [disabled]="registerForm.invalid || isLoading"
+                class="px-5 py-2"
+              >
+                <span
+                  *ngIf="isLoading"
+                  class="spinner-border spinner-border-sm me-2"
+                ></span>
+                Crear Tienda
+              </button>
+            </c-col>
+          </c-row>
+        </form>
       </c-col>
     </c-row>
   </c-container>

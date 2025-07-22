@@ -38,6 +38,9 @@ import { WarehouseInventoryItemEditModalComponent } from '../../warehouse-transf
 import { WarehouseInventoryDto } from '../../../models/warehouse-inventory.dto';
 import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
 import { MessageService } from '../../../services/message.service';
+import { InventoryTableComponent } from '../../../shared/components/inventory-table/inventory-table.component';
+import { AuthService } from '../../../services/auth.service';
+
 @Component({
   selector: 'app-warehouse-detail',
   standalone: true,
@@ -62,6 +65,7 @@ import { MessageService } from '../../../services/message.service';
     LoadingOverlayComponent,
     WarehouseInventoryItemEditModalComponent,
     HasRoleDirective,
+    InventoryTableComponent,
   ],
   templateUrl: './warehouse-detail.component.html',
 })
@@ -90,7 +94,8 @@ export class WarehouseDetailComponent implements OnInit {
     private warehouseService: WarehouseService,
     private warehouseInventoryService: WarehouseInventoryService,
     private fb: FormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -118,7 +123,7 @@ export class WarehouseDetailComponent implements OnInit {
   loadWarehouseInventories(): void {
     this.isLoading = true;
     this.warehouseInventoryService
-      .getWarehouseProductSummaryAsync(this.getFilters())
+      .getWarehouseInventories(this.getFilters())
       .subscribe({
         next: (response) => {
           console.log('Warehouse inventories:', response);

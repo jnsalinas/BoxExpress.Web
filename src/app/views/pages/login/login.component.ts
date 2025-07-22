@@ -16,7 +16,7 @@ import {
   ButtonDirective,
 } from '@coreui/angular';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -54,7 +54,8 @@ import { LoadingOverlayComponent } from '../../../shared/components/loading-over
     CommonModule,
     FontAwesomeModule,
     IconComponent,
-    LoadingOverlayComponent
+    LoadingOverlayComponent,
+    RouterLink
   ],
 })
 export class LoginComponent {

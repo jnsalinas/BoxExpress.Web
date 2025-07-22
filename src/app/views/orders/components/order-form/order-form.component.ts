@@ -62,28 +62,6 @@ export class OrderFormComponent implements OnInit {
   statuses: OrderStatusDto[] = [];
   currencies: CurrencyDto[] = [];
   documentTypes: DocumentTypeDto[] = [];
-
-  // Datos simulados, reemplaza con servicios reales
-  clients = [
-    { id: 1, name: 'Cliente A' },
-    { id: 2, name: 'Cliente B' },
-  ];
-
-  addresses = [
-    { id: 1, address: 'Calle 123' },
-    { id: 2, address: 'Carrera 45' },
-  ];
-
-  // cities = [
-  //   { id: 1, name: 'Bogotá' },
-  //   { id: 2, name: 'Medellín' },
-  // ];
-
-  // stores = [
-  //   { id: 1, name: 'Tienda Norte' },
-  //   { id: 2, name: 'Tienda Sur' },
-  // ];
-
   productVariants: ProductVariantDto[] = [];
 
   constructor(
@@ -252,7 +230,7 @@ export class OrderFormComponent implements OnInit {
   onStoreChange(storeId: number) {
     this.isLoading = true;
     this.warehouseInventoryService
-      .getWarehouseProductSummaryAsync({ storeId: storeId, isAll: true })
+      .getWarehouseInventories({ storeId: storeId, isAll: true })
       .subscribe({
         next: (res) => {
           this.productVariants = res.data.flatMap((product) =>

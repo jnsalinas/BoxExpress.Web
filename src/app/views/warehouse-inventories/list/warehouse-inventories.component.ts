@@ -24,6 +24,9 @@ import { IconDirective } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
+import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
+import { PaginationDto } from '../../../models/common/pagination.dto';
+import { InventoryTableComponent } from '../../../shared/components/inventory-table/inventory-table.component';
 
 @Component({
   selector: 'app-warehouse-inventories',
@@ -46,15 +49,25 @@ import { HasRoleDirective } from '../../../shared/directives/has-role.directive'
     IconDirective,
     NgSelectModule,
     HasRoleDirective,
+    GenericPaginationComponent,
+    InventoryTableComponent, 
   ],
   templateUrl: './warehouse-inventories.component.html',
   styleUrls: ['./warehouse-inventories.component.scss'],
 })
 export class WarehouseInventoriesComponent implements OnInit {
   isLoading: boolean = false;
-  products: ProductDto[] = [];
+  filteredProducts: ProductDto[] = [];
+  pagination: PaginationDto = {
+    page: 1,
+    pageSize: 10,
+    totalPages: 0,
+    totalCount: 0,
+  };
   filterForm: FormGroup;
   icons = freeSet;
+  currentPage: number = 1;
+  pageSize: number = 10;
 
   constructor(
     private warehouseInventoryService: WarehouseInventoryService,
@@ -80,14 +93,17 @@ export class WarehouseInventoriesComponent implements OnInit {
     this.isLoading = true;
     const filter: WarehouseInventoryFilter = {
       ...this.filterForm.value,
+      page: this.currentPage,
+      pageSize: this.pageSize,
     };
 
     this.warehouseInventoryService
-      .getWarehouseProductSummaryAsync(filter)
+      .getWarehouseInventories(filter)
       .subscribe({
         next: (response) => {
-          this.products = response.data;
-          console.log('this.products',this.products);
+          this.filteredProducts = response.data;
+          this.pagination = response.pagination;
+          console.log('this.products',this.filteredProducts);
           this.isLoading = false;
         },
         error: (error) => {
@@ -138,5 +154,10 @@ export class WarehouseInventoriesComponent implements OnInit {
         a.click();
         this.isLoading = false;
       });
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadData();
   }
 }

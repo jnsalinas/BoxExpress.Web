@@ -30,7 +30,7 @@ export class WarehouseInventoryService extends BaseApiService<
       .pipe(this.handleResponse());
   }
 
-  getWarehouseProductSummaryAsync(
+  getWarehouseInventories(
     filter: WarehouseInventoryFilter
   ): Observable<{ data: ProductDto[]; pagination: PaginationDto }> {
     return this.http

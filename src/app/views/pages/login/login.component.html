@@ -2,7 +2,9 @@
   *ngIf="isLoading"
   [loadingText]="'Cargando...'"
 ></app-loading-overlay>
-<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+<div
+  class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center"
+>
   <c-container breakpoint="md">
     <c-row class="justify-content-center">
       <c-col lg="10" xl="8">
@@ -21,12 +23,19 @@
                     <input
                       formControlName="username"
                       type="text"
-                      [ngClass]="{ 'input-error': loginForm.get('username')?.invalid && loginForm.get('username')?.touched }"
+                      [ngClass]="{
+                        'input-error':
+                          loginForm.get('username')?.invalid &&
+                          loginForm.get('username')?.touched
+                      }"
                       class="form-control"
                       placeholder="Usuario"
                     />
                     <div *ngIf="loginForm.get('username')?.touched">
-                      <div *ngIf="loginForm.get('username')?.errors?.['required']" class="my-error-message">
+                      <div
+                        *ngIf="loginForm.get('username')?.errors?.['required']"
+                        class="my-error-message"
+                      >
                         Este campo es obligatorio.
                       </div>
                       <div
@@ -41,17 +50,19 @@
 
                 <!-- Campo Contraseña -->
                 <c-input-group class="mb-4">
-  <span cInputGroupText>
-    <svg cIcon name="cilLockLocked"></svg>
-  </span>
+                  <span cInputGroupText>
+                    <svg cIcon name="cilLockLocked"></svg>
+                  </span>
 
                   <div class="form-group position-relative">
                     <input
                       formControlName="password"
                       [type]="showPassword ? 'text' : 'password'"
                       [ngClass]="{
-        'input-error': loginForm.get('password')?.invalid && loginForm.get('password')?.touched
-      }"
+                        'input-error':
+                          loginForm.get('password')?.invalid &&
+                          loginForm.get('password')?.touched
+                      }"
                       class="form-control"
                       placeholder="Contraseña"
                     />
@@ -61,7 +72,7 @@
                       type="button"
                       class="btn btn-sm position-absolute end-0 me-2 bg-transparent border-0"
                       (click)="togglePasswordVisibility()"
-                      style="top: 50%; transform: translateY(-50%);"
+                      style="top: 50%; transform: translateY(-50%)"
                     >
                       <img
                         *ngIf="!showPassword"
@@ -98,32 +109,42 @@
                   </div>
                 </c-input-group>
 
-
-
                 <c-row>
                   <c-col xs="6">
-                    <button cButton class="px-4" color="primary" type="submit">Ingresar</button>
+                    <button cButton class="px-4" color="primary" type="submit">
+                      Ingresar
+                    </button>
                   </c-col>
                 </c-row>
               </form>
             </c-card-body>
           </c-card>
 
-          <c-card [ngStyle]="{ 'minWidth.%': 44 }" class="bg-primary overflow-hidden p-0">
+          <c-card
+            [ngStyle]="{ 'minWidth.%': 44 }"
+            class="bg-primary overflow-hidden p-0"
+          >
             <div
               class="position-relative h-100 w-100"
-              style="padding: 0.5px; box-sizing: border-box;"
+              style="padding: 0.5px; box-sizing: border-box"
             >
               <img
                 src="assets/images/BoxExpressBlackLogo.png"
                 alt="Logo"
                 class="w-100 h-100 position-absolute"
-                style="object-fit: cover; box-sizing: border-box;"
+                style="object-fit: cover; box-sizing: border-box"
               />
               <div
                 class="d-flex flex-column justify-content-end align-items-center position-absolute w-100 h-100"
               >
-                <button cButton color="primary" style="background-color: black;" class="px-4 mb-4" type="button" >
+                <button
+                  [routerLink]="['/register']"
+                  cButton
+                  color="primary"
+                  style="background-color: black"
+                  class="px-4 mb-4"
+                  type="button"
+                >
                   Registrar
                 </button>
               </div>

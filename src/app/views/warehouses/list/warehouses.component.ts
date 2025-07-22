@@ -4,7 +4,7 @@ import { WarehouseDto } from '../../../models/warehouse.dto';
 import { CreateWarehouseDto } from '../../../models/create-warehouse.dto';
 import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { WarehouseCreateModalComponent } from '../components/warehouse-create-modal/warehouse-create-modal.component';
 
@@ -38,35 +38,15 @@ import { HasRoleDirective } from '../../../shared/directives/has-role.directive'
     IconDirective,
     WarehouseCreateModalComponent,
     HasRoleDirective,
+    RouterLink,
   ],
 })
 export class WarehousesComponent implements OnInit {
   @ViewChild('createModal') createModal!: WarehouseCreateModalComponent;
-  
-  //todo: renombrar a WrehousesListComponent
   selectedWarehouseId: number | undefined;
   icons = freeSet;
   showCreateModal = false;
-
-  warehouses: WarehouseDto[] = [
-    {
-      id: 1,
-      name: 'Main Warehouse',
-      cityId: 1,
-      countryId: 1,
-      cityName: 'Bogotá',
-      countryName: 'Colombia',
-    },
-    {
-      id: 1,
-      name: 'Secondary Warehouse',
-      cityId: 1,
-      countryId: 1,
-      cityName: 'Bogotá',
-      countryName: 'Colombia',
-    },
-  ];
-
+  warehouses: WarehouseDto[] = [];
   isLoading = false;
 
   constructor(private warehouseService: WarehouseService) {}
@@ -105,7 +85,7 @@ export class WarehousesComponent implements OnInit {
 
   onModalSave(warehouseData: CreateWarehouseDto) {
     console.log('Datos de bodega recibidos:', warehouseData);
-    
+
     this.warehouseService.createWarehouse(warehouseData).subscribe({
       next: (response) => {
         console.log('Bodega creada exitosamente:', response);
@@ -120,7 +100,7 @@ export class WarehousesComponent implements OnInit {
           this.createModal.resetLoading();
         }
         // Aquí podrías mostrar un mensaje de error al usuario
-      }
+      },
     });
   }
 

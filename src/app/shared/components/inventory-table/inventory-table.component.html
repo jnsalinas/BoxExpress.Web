@@ -1,0 +1,59 @@
+<table class="table table-bordered">
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>
+        <!-- Producto Header -->
+        <div class="d-flex justify-content-between align-items-center bg-light p-2">
+          <div>
+            <strong>📦 {{ product.name }}</strong>
+            <span class="badge bg-secondary ms-2">{{ product.sku }}</span>
+          </div>
+        </div>
+
+        <!-- Tabla de variantes -->
+        <table class="table table-sm mt-2">
+          <thead class="table-light">
+            <tr>
+              <th>Variante</th>
+              <th *ngIf="showStore">Tienda</th>
+              <th>Disponible</th>
+              <th>Procesamiento</th>
+              <th>En devolución</th>
+              <th>Total</th>
+              <th>Shopify ID</th>
+              <th>SKU</th>
+              <th *ngIf="showActions">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let variant of product.variants">
+              <td><strong>{{ variant.name }}</strong></td>
+              <td *ngIf="showStore">{{ variant.store?.name }}</td>
+              <td>{{ variant.availableQuantity }}</td>
+              <td>{{ variant.reservedQuantity }}</td>
+              <td>{{ variant.pendingReturnQuantity }}</td>
+              <td>{{ variant.quantity }}</td>
+              <td>{{ variant.shopifyVariantId || '-' }}</td>
+              <td>
+                <span *ngIf="variant.sku" class="badge bg-secondary">
+                  {{ variant.sku }}
+                </span>
+              </td>
+              <td *ngIf="showActions" style="display: flex; gap: 0.5rem">
+                <ng-container *ngIf="actionsTemplate">
+                  <ng-template [ngTemplateOutlet]="actionsTemplate" [ngTemplateOutletContext]="{ $implicit: variant }"></ng-template>
+                </ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<app-generic-pagination
+  *ngIf="pagination"
+  [pagination]="pagination"
+  [currentPage]="currentPage"
+  (pageChange)="onPageChange($event)"
+></app-generic-pagination> 
