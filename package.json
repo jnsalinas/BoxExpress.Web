@@ -12,10 +12,10 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "nx serve -o",
-    "build": "nx build",
-    "watch": "nx build --watch --configuration development",
-    "test": "nx test"
+    "start": "ng serve -o",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
   },
   "private": true,
   "dependencies": {
@@ -54,8 +54,6 @@
     "@angular/cli": "^19.2.3",
     "@angular/compiler-cli": "^19.2.2",
     "@angular/localize": "^19.2.2",
-    "@nx/angular": "21.3.1",
-    "@nx/workspace": "21.3.1",
     "@schematics/angular": "^19.2.3",
     "@types/jasmine": "^5.1.7",
     "@types/lodash-es": "^4.17.12",
@@ -66,7 +64,6 @@
     "karma-coverage": "^2.2.1",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
-    "nx": "21.3.1",
     "typescript": "~5.7.3"
   },
   "engines": {
