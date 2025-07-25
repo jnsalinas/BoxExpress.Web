@@ -1,8 +1,8 @@
 export const environment = {
     production: false,
-    // apiUrl: 'https://boxexpress-api.onrender.com/api',
-    apiUrl: 'http://localhost:5143/api', //run
-    // apiUrl: 'https://localhost:7001/api', //debug 
+    apiUrl: 'https://boxexpress-api.onrender.com/api',
+    //apiUrl: 'http://localhost:5143/api', //run
+    //  apiUrl: 'https://localhost:7001/api', //debug 
     auth: '/Auth/login',
     defaultValues: {
       cityId: 1,
