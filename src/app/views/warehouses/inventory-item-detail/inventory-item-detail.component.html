@@ -47,6 +47,7 @@
                 <tr>
                   <th>#</th>
                   <th>Bodega</th>
+                  <th>Creado por</th>
                   <th>Tipo</th>
                   <th>Cantidad</th>
                   <th>Orden</th>
@@ -59,6 +60,7 @@
                 <tr *ngFor="let movement of inventoryMovements">
                   <td>{{ movement.id }}</td>
                   <td>{{ movement?.warehouse?.name }}</td>
+                  <td>{{ movement?.creator }}</td>
                   <td>
                     {{ getInventoryMovementTypeText(movement.movementType) }}
                   </td>

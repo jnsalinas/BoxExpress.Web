@@ -101,9 +101,9 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
     const variant = this.warehouseInventoryItem?.productVariant;
 
     this.warehouseInventoryForm = this.fb.group({
-      productName: [variant?.productName || '', Validators.required],
+      // productName: [variant?.productName || '', Validators.required],
       variantName: [variant?.name || '', Validators.required],
-      productSku: [variant?.productSku || '', Validators.required],
+      // productSku: [variant?.productSku || '', Validators.required],
       variantSku: [variant?.sku || '', Validators.required],
       shopifyVariantId: [variant?.shopifyVariantId || ''],
       price: [variant?.price || 0, [Validators.required, Validators.min(0)]],
@@ -111,7 +111,10 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
         this.warehouseInventoryItem?.quantity || 0,
         [Validators.required, Validators.min(0)],
       ],
-      storeId: [this.warehouseInventoryItem?.store?.id || null],
+      storeId: [{
+        value: this.warehouseInventoryItem?.store?.id || null,
+        disabled: !!this.warehouseInventoryItem?.store?.id
+      }],
     });
   }
 
@@ -127,9 +130,9 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
       const formData = this.warehouseInventoryForm.value;
       const submitData = {
         id: this.warehouseInventoryId,
-        productName: formData.productName,
+        // productName: formData.productName,
         variantName: formData.variantName,
-        productSku: formData.productSku,
+        // productSku: formData.productSku,
         variantSku: formData.variantSku,
         shopifyVariantId: formData.shopifyVariantId,
         price: formData.price,

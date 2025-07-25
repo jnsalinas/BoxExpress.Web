@@ -13,4 +13,5 @@ export interface InventoryMovementDto extends BaseDto {
   transferId?: number;
   reference?: string;
   notes?: string;
+  creator: string;
 }

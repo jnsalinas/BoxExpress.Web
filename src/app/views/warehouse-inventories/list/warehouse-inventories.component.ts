@@ -103,7 +103,6 @@ export class WarehouseInventoriesComponent implements OnInit {
         next: (response) => {
           this.filteredProducts = response.data;
           this.pagination = response.pagination;
-          console.log('this.products',this.filteredProducts);
           this.isLoading = false;
         },
         error: (error) => {

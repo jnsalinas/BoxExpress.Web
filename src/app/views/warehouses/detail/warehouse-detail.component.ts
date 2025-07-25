@@ -190,12 +190,14 @@ export class WarehouseDetailComponent implements OnInit {
           this.messageService.showSuccess('Inventario creado correctamente');
         },
         error: (err) => {
+          console.log('Error isLoading warehouses', err);
           console.error('Error isLoading warehouses', err);
           this.handleInventoryClose(null);
           // Resetear el estado de guardado en el modal
           if (this.inventoryModal) {
             this.inventoryModal.resetSavingState();
           }
+          this.messageService.showMessageError(err);
         },
       });
   }
@@ -223,7 +225,9 @@ export class WarehouseDetailComponent implements OnInit {
         this.isLoading = true;
         this.warehouseService.transfer(this.warehouseId!, data).subscribe({
           next: (data) => {
-            this.messageService.showSuccess('Transferencia creada correctamente');
+            this.messageService.showSuccess(
+              'Transferencia creada correctamente'
+            );
             this.isLoading = false;
             this.handleTransferClose(null);
           },
@@ -316,6 +320,11 @@ export class WarehouseDetailComponent implements OnInit {
     if (this.inventoryItemModal) {
       this.inventoryItemModal.resetSavingState();
     }
+  }
+
+  onAddVariant(product: ProductDto) {
+    console.log('Add variant:', product);
+    this.editProduct(product);
   }
   //#endregion
 }

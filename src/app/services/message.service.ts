@@ -8,6 +8,10 @@ import { AppMessages } from '../resources/messages';
 export class MessageService {
   constructor(private toastr: ToastrService) {}
 
+  showMessageError(message: string,  title?: string): void {
+    this.toastr.error(message, title || 'Error');
+  }
+
   showError(messageKey: string, title?: string): void {
     const message = this.getMessageByKey(messageKey, AppMessages.errors);
     this.toastr.error(message, title || 'Error');

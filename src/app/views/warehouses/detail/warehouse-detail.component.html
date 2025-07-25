@@ -69,6 +69,7 @@
           [currentPage]="currentPage"
           (pageChange)="onPageChange($event)"
           [actionsTemplate]="actions"
+          (addVariant)="onAddVariant($event)"
         >
         </app-inventory-table>
       </c-card-body>

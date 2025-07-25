@@ -45,8 +45,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ModalFooterComponent,
     ReactiveFormsModule,
     IconDirective,
-    NgSelectModule
-  ]
+    NgSelectModule,
+  ],
 })
 export class WarehouseProductModalComponent implements OnInit {
   @Input() warehouseId: number | null = null;
@@ -61,7 +61,7 @@ export class WarehouseProductModalComponent implements OnInit {
   stores: StoreDto[] = [];
   isSaving = false;
 
-  constructor(private fb: FormBuilder, private storeService: StoreService) { }
+  constructor(private fb: FormBuilder, private storeService: StoreService) {}
 
   ngOnInit(): void {
     this.loadStores();
@@ -69,7 +69,7 @@ export class WarehouseProductModalComponent implements OnInit {
     this.productForm = this.fb.group({
       products: this.fb.array([this.createProduct()]), // Inicializar con un producto
     });
-    
+
     // Configurar listeners para cambios en SKU del producto
     this.setupSkuListeners();
   }
@@ -90,36 +90,6 @@ export class WarehouseProductModalComponent implements OnInit {
     }
   }
 
-  initializeFormWithProducts(product: ProductDto) {
-    const productGroup = this.fb.group({
-      id: [product.id || 0],
-      name: [product.name || '', Validators.required],
-      sku: [product.sku || ''],
-      variants: this.fb.array(
-        (product.variants || []).map((v: ProductVariantDto, index: number) =>
-          this.fb.group({
-            id: [v.id || 0],
-            name: [v.name || '', Validators.required],
-            shopifyId: [v.shopifyVariantId || ''],
-            sku: [v.sku || this.generateVariantSku(product.sku || '', index)],
-            price: [v.price || 0],
-            quantity: [
-              v.quantity || 0,
-              [Validators.required, Validators.min(1)],
-            ],
-          })
-        )
-      ),
-    });
-
-    this.productForm = this.fb.group({
-      products: this.fb.array([productGroup]),
-    });
-    
-    // Configurar listeners después de crear el formulario
-    this.setupSkuListeners();
-  }
-
   resetForm() {
     this.productForm = this.fb.group({
       products: this.fb.array([this.createProduct()]),
@@ -127,14 +97,29 @@ export class WarehouseProductModalComponent implements OnInit {
   }
 
   // Crear un nuevo FormGroup para un producto
-  createProduct(): FormGroup {
+  createProduct(product?: ProductDto): FormGroup {
     return this.fb.group({
-      id: [0],
-      name: ['', Validators.required], // Nombre del producto
-      sku: [''],
-      price: [null],
+      id: [product?.id || 0],
+      name: [product?.name || '', Validators.required],
+      price: [product?.price || null],
       variants: this.fb.array([this.createVariant()], [minLengthArray(1)]),
     });
+  }
+
+  initializeFormWithProducts(product: ProductDto) {
+    const productGroup = this.fb.group({
+      id: [product.id || 0],
+      name: [product.name || '', Validators.required],
+      sku: [product.sku || ''],
+      variants: this.fb.array([this.createVariant()], [minLengthArray(1)]),
+    });
+
+    this.productForm = this.fb.group({
+      products: this.fb.array([productGroup]),
+    });
+
+    // Configurar listeners después de crear el formulario
+    this.setupSkuListeners();
   }
 
   // Crear un nuevo FormGroup para una variante
@@ -142,12 +127,12 @@ export class WarehouseProductModalComponent implements OnInit {
     return this.fb.group({
       id: [0],
       storeId: [null],
-      name: ['', Validators.required], // Nombre de la variante
+      name: ['', Validators.required],
       productCode: [''],
       sku: [''],
       shopifyId: [''],
       price: [null],
-      quantity: [null, [Validators.required, Validators.min(1)]], // Cantidad de la variante
+      quantity: [null, [Validators.required, Validators.min(0)]],
     });
   }
 
@@ -165,7 +150,7 @@ export class WarehouseProductModalComponent implements OnInit {
   addProduct(): void {
     this.products.push(this.createProduct());
     // Configurar listeners para el nuevo producto
-    this.setupSkuListeners();
+    // this.setupSkuListeners();
   }
 
   // Eliminar un producto del FormArray
@@ -175,7 +160,12 @@ export class WarehouseProductModalComponent implements OnInit {
 
   // Agregar una variante a un producto
   addVariant(productIndex: number): void {
-    this.addVariantWithAutoSku(productIndex);
+    const productsArray = this.productForm.get('products') as FormArray;
+    const productGroup = productsArray.at(productIndex);
+    const variantsArray = productGroup.get('variants') as FormArray;
+    variantsArray.push(this.createVariant());
+
+    // this.addVariantWithAutoSku(productIndex);
   }
 
   // Eliminar una variante de un producto
@@ -213,11 +203,11 @@ export class WarehouseProductModalComponent implements OnInit {
   // Función para actualizar SKUs de todas las variantes
   updateVariantSkus() {
     const productsArray = this.productForm.get('products') as FormArray;
-    
+
     productsArray.controls.forEach((productGroup, productIndex) => {
       const productSku = productGroup.get('sku')?.value || '';
       const variantsArray = productGroup.get('variants') as FormArray;
-      
+
       variantsArray.controls.forEach((variantGroup, variantIndex) => {
         const generatedSku = this.generateVariantSku(productSku, variantIndex);
         variantGroup.patchValue({ sku: generatedSku });
@@ -228,13 +218,13 @@ export class WarehouseProductModalComponent implements OnInit {
   // Configurar listeners para cambios en SKU del producto
   setupSkuListeners() {
     const productsArray = this.productForm.get('products') as FormArray;
-    
+
     // Limpiar listeners anteriores para evitar duplicados
     productsArray.controls.forEach((productGroup, productIndex) => {
       const skuControl = productGroup.get('sku');
       if (skuControl) {
         // Desuscribirse de listeners anteriores si existen
-        skuControl.valueChanges.subscribe(newSku => {
+        skuControl.valueChanges.subscribe((newSku) => {
           this.updateVariantSkus();
         });
       }
@@ -247,7 +237,7 @@ export class WarehouseProductModalComponent implements OnInit {
     const productGroup = productsArray.at(productIndex);
     const variantsArray = productGroup.get('variants') as FormArray;
     const productSku = productGroup.get('sku')?.value || '';
-    
+
     const newVariant = this.fb.group({
       id: [0],
       storeId: [null],
@@ -258,7 +248,7 @@ export class WarehouseProductModalComponent implements OnInit {
       price: [null],
       quantity: [null, [Validators.required, Validators.min(1)]],
     });
-    
+
     variantsArray.push(newVariant);
   }
 }

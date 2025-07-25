@@ -1,4 +1,9 @@
-<c-modal [visible]="warehouseInventoryItem && warehouseInventoryForm" size="lg" backdrop="static" keyboard="false">
+<c-modal
+  [visible]="warehouseInventoryItem && warehouseInventoryForm"
+  size="lg"
+  backdrop="static"
+  keyboard="false"
+>
   <c-modal-header>
     <h5 class="modal-title">
       <svg [cIcon]="icons.cilPencil" class="me-2"></svg>
@@ -16,12 +21,9 @@
     </div>
 
     <!-- Form content -->
-    <form
-      [formGroup]="warehouseInventoryForm"
-      *ngIf="warehouseInventoryItem"
-    >
+    <form [formGroup]="warehouseInventoryForm" *ngIf="warehouseInventoryItem">
       <!-- Información del Producto -->
-      <div class="product-info-section mb-4">
+      <!-- <div class="product-info-section mb-4">
         <h6 class="section-title text-primary mb-3">
           <svg [cIcon]="icons.cilTag" class="me-2"></svg>
           Información del Producto
@@ -90,7 +92,7 @@
             </div>
           </c-col>
         </c-row>
-      </div>
+      </div> -->
 
       <!-- Información de Shopify -->
       <div class="shopify-info-section mb-4">
@@ -98,7 +100,7 @@
           <svg [cIcon]="icons.cilLink" class="me-2"></svg>
           Información de Shopify
         </h6>
-        
+
         <c-row>
           <c-col col="12">
             <div class="form-group">
@@ -112,7 +114,9 @@
                 formControlName="shopifyVariantId"
                 placeholder="ID de la variante en Shopify"
               />
-              <small class="text-muted">Solo la variante tiene ID de Shopify</small>
+              <small class="text-muted"
+                >Solo la variante tiene ID de Shopify</small
+              >
             </div>
           </c-col>
         </c-row>
@@ -124,7 +128,7 @@
           <svg [cIcon]="icons.cilDollar" class="me-2"></svg>
           Precios y Cantidades
         </h6>
-        
+
         <c-row>
           <c-col col="6">
             <div class="form-group">
@@ -168,7 +172,7 @@
           <svg [cIcon]="icons.cilHome" class="me-2"></svg>
           Tienda
         </h6>
-        
+
         <c-row>
           <c-col col="12">
             <div class="form-group">
@@ -186,7 +190,9 @@
                 class="form-control"
               >
               </ng-select>
-              <small class="text-muted">Selecciona la tienda donde se encuentra el producto</small>
+              <small class="text-muted"
+                >Selecciona la tienda donde se encuentra el producto</small
+              >
             </div>
           </c-col>
         </c-row>
@@ -206,7 +212,7 @@
       [disabled]="!warehouseInventoryForm.valid || isSaving"
     >
       <svg [cIcon]="icons.cilCheck" class="me-1"></svg>
-      {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+      {{ isSaving ? "Guardando..." : "Guardar Cambios" }}
     </button>
   </c-modal-footer>
 </c-modal>

@@ -18,4 +18,5 @@ export interface ProductVariantDto extends BaseDto {
   productName?: string;
   productSku?: string;
   productPrice?: number;
+  totalQuantity?: number;
 }

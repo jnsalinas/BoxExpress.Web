@@ -6,4 +6,6 @@ export interface ProductDto extends BaseDto {
     sku?: string;
     price?: number;
     variants: ProductVariantDto[];
+    quantity?: number;
+    totalQuantity?: number;
 }
