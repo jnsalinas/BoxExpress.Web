@@ -18,6 +18,8 @@ import { DocumentTypeDto } from '../../../../models/document-type.dto';
 import { WithdrawalRequestStatus } from 'src/app/constants/withdrawal-request-status';
 import { AuthService } from '../../../../services/auth.service';
 import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
+import { IconDirective } from '@coreui/icons-angular';
+import { freeSet } from '@coreui/icons';
 
 @Component({
   selector: 'app-withdrawal-request-modal',
@@ -31,6 +33,7 @@ import { HasRoleDirective } from '../../../../shared/directives/has-role.directi
     NgSelectModule,
     NgSelectComponent,
     HasRoleDirective,
+    IconDirective
   ],
   templateUrl: './withdrawal-request-modal.component.html',
   styleUrl: './withdrawal-request-modal.component.scss',
@@ -42,6 +45,7 @@ export class WithdrawalRequestModalComponent implements OnInit {
   @Output() onSave = new EventEmitter<any>();
   @Output() onApprove = new EventEmitter<{ id: number; reason: string }>();
   @Output() onReject = new EventEmitter<{ id: number; reason: string }>();
+  icons = freeSet;
   stores: StoreDto[] = [];
   documentTypes: DocumentTypeDto[] = [];
   form: FormGroup = new FormGroup({});

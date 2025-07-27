@@ -28,6 +28,7 @@ import { MessageService } from '../../../services/message.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
+import { passwordPattern } from '../../../shared/validators/custom-validators';
 
 @Component({
   selector: 'app-login',
@@ -55,7 +56,7 @@ import { LoadingOverlayComponent } from '../../../shared/components/loading-over
     FontAwesomeModule,
     IconComponent,
     LoadingOverlayComponent,
-    RouterLink
+    RouterLink,
   ],
 })
 export class LoginComponent {
@@ -67,8 +68,7 @@ export class LoginComponent {
   showPassword = false;
   faEye = faEye;
   faEyeSlash = faEyeSlash;
-  private passwordPattern =
-    /^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+=\-{}[\]:;"'<>?,./]{8,}$/;
+
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -77,10 +77,7 @@ export class LoginComponent {
   ) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.email]],
-      password: [
-        '',
-        [Validators.required, Validators.pattern(this.passwordPattern)],
-      ],
+      password: ['', [Validators.required, passwordPattern]],
     });
   }
 

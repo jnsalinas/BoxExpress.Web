@@ -7,196 +7,107 @@
   <c-modal-header>
     <h5 class="modal-title">
       <svg [cIcon]="icons.cilPencil" class="me-2"></svg>
-      Modificar Producto de Inventario
+      Editar Variante de Inventario
     </h5>
   </c-modal-header>
 
   <c-modal-body>
-    <!-- Loading state -->
     <div *ngIf="!warehouseInventoryItem" class="text-center py-4">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Cargando...</span>
       </div>
-      <p class="mt-2 text-muted">Cargando datos del producto...</p>
+      <p class="mt-2 text-muted">Cargando datos de la variante...</p>
     </div>
 
-    <!-- Form content -->
     <form [formGroup]="warehouseInventoryForm" *ngIf="warehouseInventoryItem">
-      <!-- Información del Producto -->
-      <!-- <div class="product-info-section mb-4">
-        <h6 class="section-title text-primary mb-3">
-          <svg [cIcon]="icons.cilTag" class="me-2"></svg>
-          Información del Producto
-        </h6>
-        
-        <c-row>
-          <c-col col="6">
-            <div class="form-group">
-              <label for="productName" class="form-label fw-semibold">
-                Nombre del Producto
-              </label>
-              <input
-                type="text"
-                id="productName"
-                class="form-control"
-                formControlName="productName"
-                placeholder="Ej: Camiseta Básica"
-              />
-            </div>
-          </c-col>
-
-          <c-col col="6">
-            <div class="form-group">
-              <label for="variantName" class="form-label fw-semibold">
-                Nombre de la Variante
-              </label>
-              <input
-                type="text"
-                id="variantName"
-                class="form-control"
-                formControlName="variantName"
-                placeholder="Ej: Talla M - Color Azul"
-              />
-            </div>
-          </c-col>
-        </c-row>
-
-        <c-row>
-          <c-col col="6">
-            <div class="form-group">
-              <label for="productSku" class="form-label fw-semibold">
-                SKU del Producto
-              </label>
-              <input
-                type="text"
-                id="productSku"
-                class="form-control"
-                formControlName="productSku"
-                placeholder="SKU-PRODUCTO-001"
-              />
-            </div>
-          </c-col>
-
-          <c-col col="6">
-            <div class="form-group">
-              <label for="variantSku" class="form-label fw-semibold">
-                SKU de la Variante
-              </label>
-              <input
-                type="text"
-                id="variantSku"
-                class="form-control"
-                formControlName="variantSku"
-                placeholder="SKU-VARIANTE-001"
-              />
-            </div>
-          </c-col>
-        </c-row>
-      </div> -->
-
-      <!-- Información de Shopify -->
-      <div class="shopify-info-section mb-4">
-        <h6 class="section-title text-info mb-3">
-          <svg [cIcon]="icons.cilLink" class="me-2"></svg>
-          Información de Shopify
-        </h6>
-
-        <c-row>
-          <c-col col="12">
-            <div class="form-group">
-              <label for="shopifyVariantId" class="form-label fw-semibold">
-                Shopify Variant ID
-              </label>
-              <input
-                type="text"
-                id="shopifyVariantId"
-                class="form-control"
-                formControlName="shopifyVariantId"
-                placeholder="ID de la variante en Shopify"
-              />
-              <small class="text-muted"
-                >Solo la variante tiene ID de Shopify</small
-              >
-            </div>
-          </c-col>
-        </c-row>
-      </div>
-
-      <!-- Información de Precios y Cantidades -->
-      <div class="pricing-section mb-4">
-        <h6 class="section-title text-success mb-3">
-          <svg [cIcon]="icons.cilDollar" class="me-2"></svg>
-          Precios y Cantidades
-        </h6>
-
-        <c-row>
-          <c-col col="6">
-            <div class="form-group">
-              <label for="price" class="form-label fw-semibold">Precio</label>
-              <div class="input-group">
-                <span class="input-group-text">$</span>
-                <input
-                  type="number"
-                  id="price"
-                  class="form-control"
-                  formControlName="price"
-                  placeholder="0.00"
-                  min="0"
-                  step="0.01"
-                />
-              </div>
-            </div>
-          </c-col>
-
-          <c-col col="6">
-            <div class="form-group">
-              <label for="quantity" class="form-label fw-semibold">
-                Cantidad Total
-              </label>
+      <c-row>
+        <c-col col="12">
+          <div class="form-group mb-3">
+            <label for="variantName" class="form-label">Nombre de la Variante</label>
+            <input
+              type="text"
+              id="variantName"
+              class="form-control"
+              formControlName="variantName"
+              placeholder="Nombre de la variante"
+            />
+          </div>
+        </c-col>
+      </c-row>
+      <c-row>
+        <c-col col="12">
+          <div class="form-group mb-3">
+            <label for="variantSku" class="form-label">SKU de la Variante</label>
+            <input
+              type="text"
+              id="variantSku"
+              class="form-control"
+              formControlName="variantSku"
+              placeholder="SKU de la variante"
+            />
+          </div>
+        </c-col>
+      </c-row>
+      <c-row>
+        <c-col col="6">
+          <div class="form-group mb-3">
+            <label for="price" class="form-label">Precio</label>
+            <div class="input-group">
+              <span class="input-group-text">$</span>
               <input
                 type="number"
-                id="quantity"
+                id="price"
                 class="form-control"
-                formControlName="quantity"
-                placeholder="0"
+                formControlName="price"
+                placeholder="0.00"
                 min="0"
+                step="0.01"
               />
             </div>
-          </c-col>
-        </c-row>
-      </div>
-
-      <!-- Selección de Tienda -->
-      <div class="store-section mb-4">
-        <h6 class="section-title text-warning mb-3">
-          <svg [cIcon]="icons.cilHome" class="me-2"></svg>
-          Tienda
-        </h6>
-
-        <c-row>
-          <c-col col="12">
-            <div class="form-group">
-              <label for="storeId" class="form-label fw-semibold">
-                Seleccionar Tienda
-              </label>
-              <ng-select
-                id="storeId"
-                [items]="stores"
-                [clearable]="false"
-                bindLabel="name"
-                bindValue="id"
-                placeholder="Selecciona una tienda..."
-                formControlName="storeId"
-                class="form-control"
-              >
-              </ng-select>
-              <small class="text-muted"
-                >Selecciona la tienda donde se encuentra el producto</small
-              >
-            </div>
-          </c-col>
-        </c-row>
-      </div>
+          </div>
+        </c-col>
+        <c-col col="6">
+          <div class="form-group mb-3">
+            <label for="quantity" class="form-label">Cantidad</label>
+            <input
+              type="number"
+              id="quantity"
+              class="form-control"
+              formControlName="quantity"
+              placeholder="0"
+              min="0"
+            />
+          </div>
+        </c-col>
+      </c-row>
+      <c-row>
+        <c-col col="6">
+          <div class="form-group mb-3">
+            <label for="storeId" class="form-label">Tienda</label>
+            <ng-select
+              id="storeId"
+              [items]="stores"
+              [clearable]="false"
+              bindLabel="name"
+              bindValue="id"
+              placeholder="Selecciona una tienda..."
+              formControlName="storeId"
+            ></ng-select>
+          </div>
+        </c-col>
+        <c-col col="6">
+          <div class="form-group mb-3">
+            <label for="shopifyVariantId" class="form-label">Shopify Variant ID</label>
+            <input
+              type="text"
+              id="shopifyVariantId"
+              class="form-control"
+              formControlName="shopifyVariantId"
+              placeholder="ID de la variante en Shopify"
+            />
+          </div>
+        </c-col>
+      </c-row>
     </form>
   </c-modal-body>
 
@@ -212,7 +123,7 @@
       [disabled]="!warehouseInventoryForm.valid || isSaving"
     >
       <svg [cIcon]="icons.cilCheck" class="me-1"></svg>
-      {{ isSaving ? "Guardando..." : "Guardar Cambios" }}
+      {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
     </button>
   </c-modal-footer>
 </c-modal>

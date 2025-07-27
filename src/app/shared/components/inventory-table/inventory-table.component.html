@@ -28,6 +28,7 @@
             <tr>
               <th>Variante</th>
               <th *ngIf="showStore">Tienda</th>
+              <th *ngIf="showStore">Bodega</th>
               <th>Disponible</th>
               <th>Procesamiento</th>
               <th>En devolución</th>
@@ -43,6 +44,7 @@
                 <strong>{{ variant.name }}</strong>
               </td>
               <td *ngIf="showStore">{{ variant.store?.name }}</td>
+              <td *ngIf="showStore">{{ variant.warehouseName }}</td>
               <td>{{ variant.availableQuantity }}</td>
               <td>{{ variant.reservedQuantity }}</td>
               <td>{{ variant.pendingReturnQuantity }}</td>

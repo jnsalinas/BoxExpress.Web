@@ -100,18 +100,52 @@
           <label for="password" class="form-label">
             Contraseña <span class="text-danger">*</span>
           </label>
-          <input
-            type="password"
-            id="password"
-            class="form-control"
-            formControlName="password"
-            placeholder="Ingrese la contraseña"
-            [class.is-invalid]="form.get('password')?.invalid && (form.get('password')?.touched || submitted)"
-          />
+          <div class="d-flex align-items-center gap-2">
+            <div class="form-group position-relative w-100">
+              <input
+                type="{{ showPassword ? 'text' : 'password' }}"
+                id="password"
+                class="form-control"
+                formControlName="password"
+                placeholder="Ingrese la contraseña"
+                [class.is-invalid]="form.get('password')?.invalid && (form.get('password')?.touched || submitted)"
+              />
+              <!-- Botón ojito -->
+              <button
+                type="button"
+                class="btn btn-sm position-absolute end-0 me-2 bg-transparent border-0"
+                (click)="togglePasswordVisibility()"
+                style="top: 50%; transform: translateY(-50%)"
+                tabindex="-1"
+              >
+                <img
+                  *ngIf="!showPassword"
+                  src="assets/eye-solid.svg"
+                  alt="Mostrar contraseña"
+                  width="20"
+                  height="20"
+                />
+                <img
+                  *ngIf="showPassword"
+                  src="assets/eye-slash-solid.svg"
+                  alt="Ocultar contraseña"
+                  width="20"
+                  height="20"
+                />
+              </button>
+            </div>
+          </div>
           <div *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || submitted)" class="invalid-feedback d-block">
             <span *ngIf="form.get('password')?.errors?.['required']">La contraseña es obligatoria.</span>
-            <span *ngIf="form.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres.</span>
           </div>
+          <small
+            [ngClass]="{
+              'form-text text-muted ms-1': !form.get('password')?.errors?.['passwordPattern'] || !(form.get('password')?.touched || submitted),
+              'text-danger ms-1': form.get('password')?.errors?.['passwordPattern'] && (form.get('password')?.touched || submitted)
+            }"
+          >
+            La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.
+          </small>
         </div>
       </div>
     </form>

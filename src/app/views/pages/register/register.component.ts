@@ -39,6 +39,7 @@ import { AuthService } from '../../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { environment } from '../../../../environments/environment';
 import { CityService } from '../../../services/city.service';
+import { passwordPattern } from '../../../shared/validators/custom-validators';
 
 @Component({
   selector: 'app-register',
@@ -75,8 +76,7 @@ export class RegisterComponent {
   registerForm: FormGroup;
   cities: any[] = [];
   loadCity: boolean = false;
-  private passwordPattern =
-    /^(?=.*[A-Z])(?=.*\d)[a-zA-Z\d!@#$%^&*()_+=\-{}[\]:;"'<>?,./]{8,}$/;
+
   constructor(
     private fb: FormBuilder,
     private registerService: RegisterService,
@@ -95,10 +95,7 @@ export class RegisterComponent {
       documentNumber: ['', Validators.required],
       storeName: ['', Validators.required],
       city: [{ value: 1, disabled: true }, Validators.required], // ← deshabilitado desde el inicio
-      password: [
-        '',
-        [Validators.pattern(this.passwordPattern), Validators.required],
-      ],
+      password: ['', [passwordPattern, Validators.required]],
     });
   }
 

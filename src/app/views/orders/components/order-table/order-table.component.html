@@ -14,13 +14,21 @@
         <th *ngIf="hasColumn('deliveryFee')">Flete</th>
         <th *ngIf="hasColumn('contains')">Contiene</th>
         <th *ngIf="hasColumn('city')">Ciudad</th>
-        <th *ngIf="hasColumn('category') && authService.hasRole('admin')">Categoría</th>
+        <th *ngIf="hasColumn('category') && authService.hasRole('admin')">
+          Categoría
+        </th>
         <!-- Todo solo para el admin validar permisos -->
         <th *ngIf="hasColumn('warehouseName')">Bodega</th>
         <th *ngIf="hasColumn('status')">Estado</th>
         <th *ngIf="hasColumn('scheduledDate')">Fecha programada</th>
         <!-- <th *ngIf="hasColumn('timeSlot')">Horario de entrega</th> -->
-        <th *ngIf="hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])" >Acciones</th>
+        <th
+          *ngIf="
+            hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])
+          "
+        >
+          Acciones
+        </th>
       </tr>
     </thead>
 
@@ -28,7 +36,7 @@
       <tr *ngFor="let order of orders" [ngClass]="getStatusClass(order.status)">
         <td *ngIf="hasColumn('id')">
           <!-- {{getStatusClass(order.status)}} -->
-          {{ order.id }}  {{ order.status }}
+          {{ order.id }} {{ order.status }}
         </td>
         <td *ngIf="hasColumn('code')">{{ order.code }}</td>
         <td *ngIf="hasColumn('clientFullName')">{{ order.clientFullName }}</td>
@@ -74,8 +82,11 @@
         <td *ngIf="hasColumn('city')" style="min-width: 155px">
           {{ order.city }}
         </td>
-        <td *ngIf="hasColumn('category') && authService.hasRole('admin')" style="min-width: 185px">
-          <select
+        <td
+          *ngIf="hasColumn('category') && authService.hasRole('admin')"
+          style="min-width: 185px"
+        >
+          <select *ngIf="order.categoryId != 2"
             class="form-select form-select-sm"
             [(ngModel)]="order.warehouseId"
             (ngModelChange)="onWarehouseChange(order.id, $event)"
@@ -91,6 +102,10 @@
               {{ warehouse.name }}
             </option>
           </select>
+          
+          <span *ngIf="order.categoryId == 2" class="text-muted">
+            Tradicional
+          </span>
         </td>
         <td *ngIf="hasColumn('warehouseName')">{{ order.warehouseName }}</td>
         <td *ngIf="hasColumn('status')" style="min-width: 155px">
@@ -101,7 +116,11 @@
             bindValue="id"
             [(ngModel)]="order.statusId"
             (ngModelChange)="onStatusChange(order.id, $event)"
-            [disabled]="(order.scheduledDate === null || order.timeSlotStartTime === null) || order.statusId === getStatusDelivered()"
+            [disabled]="
+              order.scheduledDate === null ||
+              order.timeSlotStartTime === null ||
+              order.statusId === getStatusDelivered()
+            "
             (mousedown)="previousStatusId = order.statusId"
             placeholder="Seleccione..."
             [clearable]="false"
@@ -109,12 +128,17 @@
             [appendTo]="'body'"
           >
             <ng-template ng-option-tmp let-item="item">
-              <span [ngClass]="{'text-muted': item.disabled}">{{ item.name }}</span>
+              <span [ngClass]="{ 'text-muted': item.disabled }">{{
+                item.name
+              }}</span>
             </ng-template>
           </ng-select>
 
           <button
-            *ngIf="order.statusId == getStatusScheduled() && authService.hasRole('bodega')"
+            *ngIf="
+              order.statusId == getStatusScheduled() &&
+              authService.hasRole('bodega')
+            "
             cButton
             color="warning"
             size="sm"
@@ -124,8 +148,13 @@
             Enrutar
           </button>
 
-          <span *ngIf="order.statusId !== getStatusScheduled() && authService.hasAnyRole(['bodega', 'tienda'])">
-              {{ order.status }}
+          <span
+            *ngIf="
+              order.statusId !== getStatusScheduled() &&
+              authService.hasAnyRole(['bodega', 'tienda'])
+            "
+          >
+            {{ order.status }}
           </span>
         </td>
         <td *ngIf="hasColumn('scheduledDate')" style="min-width: 125px">
@@ -141,17 +170,29 @@
         {{ order.timeSlotEndTime | slice : 0 : 5 }}
       </td> -->
         <!-- Acciones -->
-        <td *ngIf="hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])">
+        <td
+          *ngIf="
+            hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])
+          "
+        >
           <div class="d-flex">
             <button
-              *ngIf="(authService.hasRole('tienda') && order.statusId == getStatusUnscheduled()) || authService.hasRole('admin')"
+              *ngIf="
+                (authService.hasRole('tienda') &&
+                  order.statusId == getStatusUnscheduled()) ||
+                authService.hasRole('admin')
+              "
               class="btn btn-sm btn-outline-primary me-2"
               [routerLink]="[order.id]"
             >
               <svg [cIcon]="icons.cilPencil"></svg>
             </button>
             <button
-              *ngIf="hasColumn('action-edit') && order.statusId !== getStatusDelivered() && authService.hasRole('admin')"
+              *ngIf="
+                hasColumn('action-edit') &&
+                order.statusId !== getStatusDelivered() &&
+                authService.hasRole('admin')
+              "
               class="btn btn-sm btn-outline-primary"
               (click)="onScheduleOrder(order)"
             >

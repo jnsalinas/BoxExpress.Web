@@ -23,6 +23,7 @@ import { WarehouseService } from '../../../../services/warehouse.service';
 import { CityService } from '../../../../services/city.service';
 import { CreateWarehouseDto } from '../../../../models/create-warehouse.dto';
 import { CityDto } from '../../../../models/city.dto';
+import { passwordPattern } from '../../../../shared/validators/custom-validators';
 
 @Component({
   selector: 'app-warehouse-create-modal',
@@ -56,6 +57,7 @@ export class WarehouseCreateModalComponent implements OnInit {
   cities: CityDto[] = [];
   isLoading = false;
   submitted = false;
+  showPassword = false;
 
   constructor(
     private fb: FormBuilder,
@@ -68,7 +70,7 @@ export class WarehouseCreateModalComponent implements OnInit {
       address: ['', Validators.required],
       manager: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, passwordPattern]],
     });
   }
 
@@ -99,6 +101,10 @@ export class WarehouseCreateModalComponent implements OnInit {
   // Método para resetear el loading desde el padre
   resetLoading() {
     this.isLoading = false;
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   private loadCities() {

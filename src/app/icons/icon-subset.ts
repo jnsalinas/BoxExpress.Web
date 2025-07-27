@@ -202,7 +202,7 @@ export const iconSubset = {
   signet,
   cilLoopCircular,
   cilArrowCircleLeft,
-  cilPlus
+  cilPlus, 
 };
 
 export enum IconSubset {

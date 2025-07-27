@@ -6,19 +6,29 @@
   scrollable
 >
   <c-modal-header>
-    <strong *ngIf="(form.value.id ?? 0) === 0">Nuevo Retiro</strong>
-    <strong *ngIf="(form.value.id ?? 0) !== 0">Gestionar Retiro</strong>
+    <h5 class="modal-title">
+      <svg [cIcon]="icons.cilMoney" class="me-2"></svg>
+      <span *ngIf="(form.value.id ?? 0) === 0">Nuevo Retiro</span>
+      <span *ngIf="(form.value.id ?? 0) !== 0">Gestionar Retiro</span>
+    </h5>
   </c-modal-header>
 
   <c-modal-body>
-    <p *ngIf="store">
-      <strong>Balance disponible: </strong>{{ store.balance | currency }}
-    </p>
+    <!-- Balance Info -->
+    <div *ngIf="store" class="alert alert-info d-flex align-items-center mb-4">
+      <svg [cIcon]="icons.cilWallet" class="me-2"></svg>
+      <strong>Balance disponible: </strong>
+      <span class="ms-1">{{ store.balance | currency }}</span>
+    </div>
 
     <form [formGroup]="form">
+      <!-- Store Selection (Admin only) -->
       <div class="row" *hasRole="['admin']">
-        <div class="col-md-12 mb-3">
-          <label class="form-label">Tienda</label>
+        <div class="col-12 mb-3">
+          <label class="form-label">
+            <svg [cIcon]="icons.cilHome" class="me-1"></svg>
+            Tienda
+          </label>
           <ng-select
             [items]="stores"
             bindLabel="name"
@@ -32,31 +42,51 @@
         </div>
       </div>
 
+      <!-- Amount and Account Holder -->
       <div class="row">
         <div class="col-md-6 mb-3">
-          <label class="form-label">Monto</label>
-          <input
-            type="number"
-            class="form-control"
-            formControlName="amount"
-            [max]="store?.balance ?? 0"
-          />
-          <div *ngIf="form.get('amount')?.errors?.['max']" class="text-danger">
+          <label class="form-label">
+            <svg [cIcon]="icons.cilDollar" class="me-1"></svg>
+            Monto
+          </label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
+            <input
+              type="number"
+              class="form-control"
+              formControlName="amount"
+              [max]="store?.balance ?? 0"
+              placeholder="0.00"
+              step="0.01"
+            />
+          </div>
+          <div *ngIf="form.get('amount')?.errors?.['max']" class="text-danger small mt-1">
+            <svg [cIcon]="icons.cilWarning" class="me-1"></svg>
             El monto no puede ser mayor a {{ store?.balance ?? 0 | currency }}
           </div>
         </div>
 
         <div class="col-md-6 mb-3">
-          <label class="form-label">Titular de la cuenta</label>
+          <label class="form-label">
+            <svg [cIcon]="icons.cilUser" class="me-1"></svg>
+            Titular de la cuenta
+          </label>
           <input
             type="text"
             class="form-control"
             formControlName="accountHolder"
+            placeholder="Nombre del titular"
           />
         </div>
+      </div>
 
+      <!-- Document Information -->
+      <div class="row">
         <div class="col-md-6 mb-3">
-          <label class="form-label">Tipo de documento</label>
+          <label class="form-label">
+            <svg [cIcon]="icons.cilUser" class="me-1"></svg>
+            Tipo de documento
+          </label>
           <ng-select
             [items]="documentTypes"
             bindLabel="name"
@@ -69,35 +99,77 @@
         </div>
 
         <div class="col-md-6 mb-3">
-          <label class="form-label">Documento</label>
-          <input type="number" class="form-control" formControlName="document" />
+          <label class="form-label">
+            <svg [cIcon]="icons.cilFile" class="me-1"></svg>
+            Número de documento
+          </label>
+          <input 
+            type="number" 
+            class="form-control" 
+            formControlName="document"
+            placeholder="Número de documento"
+          />
+        </div>
+      </div>
+
+      <!-- Bank Information -->
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">
+            <svg [cIcon]="icons.cilBank" class="me-1"></svg>
+            Banco
+          </label>
+          <input 
+            type="text" 
+            class="form-control" 
+            formControlName="bank"
+            placeholder="Nombre del banco"
+          />
         </div>
 
         <div class="col-md-6 mb-3">
-          <label class="form-label">Banco</label>
-          <input type="text" class="form-control" formControlName="bank" />
-        </div>
-
-        <div class="col-md-6 mb-3">
-          <label class="form-label">Número de cuenta</label>
+          <label class="form-label">
+            <svg [cIcon]="icons.cilCreditCard" class="me-1"></svg>
+            Número de cuenta
+          </label>
           <input
             type="number"
             class="form-control"
             formControlName="accountNumber"
+            placeholder="Número de cuenta"
           />
         </div>
+      </div>
 
-        <div class="col-md-12 mb-3">
-          <label class="form-label">Descripción</label>
+      <!-- Description -->
+      <div class="row">
+        <div class="col-12 mb-3">
+          <label class="form-label">
+            <svg [cIcon]="icons.cilNotes" class="me-1"></svg>
+            Descripción
+          </label>
           <textarea
             class="form-control"
             formControlName="description"
+            placeholder="Descripción del retiro"
+            rows="3"
           ></textarea>
         </div>
+      </div>
 
-        <div class="col-md-12 mb-3" *hasRole="['admin']">
-          <label class="form-label">Gestion</label>
-          <textarea class="form-control" formControlName="reason"></textarea>
+      <!-- Management (Admin only) -->
+      <div class="row" *hasRole="['admin']">
+        <div class="col-12 mb-3">
+          <label class="form-label">
+            <svg [cIcon]="icons.cilSettings" class="me-1"></svg>
+            Gestión
+          </label>
+          <textarea 
+            class="form-control" 
+            formControlName="reason"
+            placeholder="Comentarios de gestión"
+            rows="3"
+          ></textarea>
         </div>
       </div>
     </form>
@@ -105,6 +177,7 @@
 
   <c-modal-footer>
     <button class="btn btn-secondary" type="button" (click)="close()">
+      <svg [cIcon]="icons.cilX" class="me-1"></svg>
       Cancelar
     </button>
     <button
@@ -114,6 +187,7 @@
       (click)="save()"
       [disabled]="form.invalid"
     >
+      <svg [cIcon]="icons.cilSave" class="me-1"></svg>
       Guardar
     </button>
     <button
@@ -122,6 +196,7 @@
       class="btn btn-success"
       (click)="approve()"
     >
+      <svg [cIcon]="icons.cilCheck" class="me-1"></svg>
       Aprobar
     </button>
     <button
@@ -130,6 +205,7 @@
       class="btn btn-danger"
       (click)="reject()"
     >
+      <svg [cIcon]="icons.cilXCircle" class="me-1"></svg>
       Rechazar
     </button>
   </c-modal-footer>

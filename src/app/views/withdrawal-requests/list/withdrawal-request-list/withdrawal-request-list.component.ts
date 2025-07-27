@@ -52,7 +52,7 @@ import { HasRoleDirective } from '../../../../shared/directives/has-role.directi
     WithdrawalRequestModalComponent,
     GenericModalComponent,
     NgSelectModule,
-    HasRoleDirective
+    HasRoleDirective,
   ],
   templateUrl: './withdrawal-request-list.component.html',
   styleUrl: './withdrawal-request-list.component.scss',
@@ -170,13 +170,13 @@ export class WithdrawalRequestListComponent implements OnInit {
           .approve(payload.id, { reason: payload.reason })
           .subscribe({
             next: (data) => {
-              //todo mostrar mensaje de crecion
-              console.log('data', data);
               this.loadWithdrawalRequest();
               this.isLoading = false;
+              this.handleWithdrawalRequestClose();
             },
             error: (err) => {
               console.error('Error approved withdrawal', err);
+              this.isLoading = false;
             },
           });
       },
@@ -203,9 +203,11 @@ export class WithdrawalRequestListComponent implements OnInit {
               console.log('data', data);
               this.loadWithdrawalRequest();
               this.isLoading = false;
+              this.handleWithdrawalRequestClose();
             },
             error: (err) => {
               console.error('Error reject withdrawal', err);
+              this.handleWithdrawalRequestClose();
             },
           });
       },

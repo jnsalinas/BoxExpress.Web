@@ -283,7 +283,6 @@ export class WarehouseDetailComponent implements OnInit {
             .update(this.warehouseInventoryId, data)
             .subscribe({
               next: (data) => {
-                console.log('Warehouse transfer:', data);
                 this.handleInventoryItemClose();
                 this.loadWarehouseInventories();
                 this.warehouseInventoryId = null;
@@ -291,6 +290,7 @@ export class WarehouseDetailComponent implements OnInit {
                 if (this.inventoryItemModal) {
                   this.inventoryItemModal.resetSavingState();
                 }
+                this.messageService.showSuccess("Inventario actualizado");
               },
               error: (err) => {
                 console.error('Error isLoading warehouses', err);
@@ -299,6 +299,7 @@ export class WarehouseDetailComponent implements OnInit {
                 if (this.inventoryItemModal) {
                   this.inventoryItemModal.resetSavingState();
                 }
+                this.messageService.showMessageError(err);
               },
             });
         } else {
