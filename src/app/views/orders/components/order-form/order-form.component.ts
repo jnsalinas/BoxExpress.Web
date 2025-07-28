@@ -22,8 +22,6 @@ import { StoreService } from '../../../../services/store.service';
 import { OrderStatusService } from '../../../../services/order-status.service';
 import { OrderStatusDto } from '../../../../models/order-status.dto';
 import { LoadingOverlayComponent } from '../../../../shared/components/loading-overlay/loading-overlay.component';
-import { DocumentTypeService } from '../../../../services/document-type.service';
-import { DocumentTypeDto } from '../../../../models/document-type.dto';
 import { CurrencyService } from '../../../../services/currency.service';
 import { CurrencyDto } from '../../../../models/currency.dto';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -61,7 +59,6 @@ export class OrderFormComponent implements OnInit {
   stores: StoreDto[] = [];
   statuses: OrderStatusDto[] = [];
   currencies: CurrencyDto[] = [];
-  documentTypes: DocumentTypeDto[] = [];
   productVariants: ProductVariantDto[] = [];
 
   constructor(
@@ -71,7 +68,6 @@ export class OrderFormComponent implements OnInit {
     private cityService: CityService,
     private storeService: StoreService,
     private orderStatusService: OrderStatusService,
-    private documentTypeService: DocumentTypeService,
     private currencyService: CurrencyService,
     private warehouseInventoryService: WarehouseInventoryService,
     public authService: AuthService,
@@ -91,7 +87,6 @@ export class OrderFormComponent implements OnInit {
       cities: this.cityService.getAll({}),
       stores: this.storeService.getAll({ isAll: true }),
       statuses: this.orderStatusService.getAll(),
-      documentTypes: this.documentTypeService.getAll(),
       currencies: this.currencyService.getAll(),
       // categories: this.orderCategoryService.getAll(),
       // warehouses: this.warehouseService.getAll(),
@@ -100,14 +95,12 @@ export class OrderFormComponent implements OnInit {
         this.cities = responses.cities.data;
         this.stores = responses.stores.data;
         this.statuses = responses.statuses.data;
-        this.documentTypes = responses.documentTypes.data;
         this.currencies = responses.currencies.data;
         // Set first city as default and disable cityId
         if (this.cities.length > 0) {
           this.form?.get('cityId')?.setValue(this.cities[0].id);
-          this.form?.get('cityId')?.disable();
         }
-        
+
         // If user is tienda, disable storeId control and deliveryFee
         if (this.authService.hasRole('tienda')) {
           this.form?.get('storeId')?.disable();
@@ -130,18 +123,16 @@ export class OrderFormComponent implements OnInit {
       // Cliente
       clientFirstName: ['', Validators.required],
       clientLastName: ['', Validators.required],
-      clientDocumentTypeId: ['', Validators.required],
-      clientDocument: ['', Validators.required],
-      clientEmail: ['', [Validators.required, Validators.email]],
-      clientExternalId: [''],
+      clientEmail: ['', [Validators.email]],
+      // clientExternalId: [''],
 
       // Dirección
       clientAddress: ['', Validators.required],
-      clientAddressComplement: [''],
+      clientAddressComplement: ['', Validators.required],
       cityId: [1, Validators.required],
       latitude: [''],
       longitude: [''],
-      clientAddress2: [''],
+      postalCode: [''],
 
       // Orden
       storeId: [
@@ -150,11 +141,11 @@ export class OrderFormComponent implements OnInit {
       ],
       deliveryFee: [150, [Validators.required, Validators.min(0)]],
       currencyId: [1, Validators.required],
-      code: ['', Validators.required],
+      code: [''],
       contains: [''],
-      totalAmount: [0, [Validators.required, Validators.min(0)]],
+      // totalAmount: [0, [Validators.required, Validators.min(0)]],
       notes: [''],
-      externalId: [''],
+      // externalId: [''],
 
       // Productos
       orderItems: this.fb.array([]),

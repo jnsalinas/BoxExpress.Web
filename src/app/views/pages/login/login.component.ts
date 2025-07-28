@@ -101,7 +101,7 @@ export class LoginComponent {
           if (this.authService.hasAnyRole(['tienda', 'admin'])) {
             this.router.navigate(['/orders']);
           } else {
-            this.router.navigate(['/warehouses']);
+            this.router.navigate(['/warehouse-inventories']);
           }
         }
       },

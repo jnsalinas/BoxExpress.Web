@@ -42,6 +42,9 @@ export class AuthService extends BaseApiService<any, any> {
     if (auth.storeId) {
       localStorage.setItem('storeId', auth.storeId.toString());
     }
+    if (auth.warehouseName) {
+      localStorage.setItem('warehouseName', auth.warehouseName.toString());
+    }
   }
 
   logout(): void {

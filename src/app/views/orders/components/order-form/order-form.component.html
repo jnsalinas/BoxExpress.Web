@@ -47,43 +47,11 @@
                 </c-col>
               </c-row>
               <c-row>
-                <!-- Fila 2: Tipo de Documento y Documento -->
-                <c-col md="6">
-                  <div class="mb-3">
-                    <label cLabel for="clientDocumentTypeId"
-                      >Tipo de Documento
-                      <span class="text-danger">*</span></label
-                    >
-                    <ng-select
-                      [items]="documentTypes"
-                      bindLabel="name"
-                      bindValue="id"
-                      formControlName="clientDocumentTypeId"
-                      placeholder="Seleccione"
-                    ></ng-select>
-                  </div>
-                </c-col>
-                <c-col md="6">
-                  <div class="mb-3">
-                    <label cLabel for="clientDocument"
-                      >Documento <span class="text-danger">*</span></label
-                    >
-                    <input
-                      cFormControl
-                      id="clientDocument"
-                      formControlName="clientDocument"
-                      class="form-control"
-                      placeholder="Número de documento"
-                    />
-                  </div>
-                </c-col>
-              </c-row>
-              <c-row>
                 <!-- Fila 3: Email y External ID -->
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="clientEmail"
-                      >Email <span class="text-danger">*</span></label
+                      >Email </label
                     >
                     <input
                       cFormControl
@@ -92,18 +60,6 @@
                       class="form-control"
                       type="email"
                       placeholder="Correo electrónico"
-                    />
-                  </div>
-                </c-col>
-                <c-col md="6">
-                  <div class="mb-3">
-                    <label cLabel for="clientExternalId">External ID</label>
-                    <input
-                      cFormControl
-                      id="clientExternalId"
-                      formControlName="clientExternalId"
-                      class="form-control"
-                      placeholder="ID externo (opcional)"
                     />
                   </div>
                 </c-col>
@@ -138,14 +94,13 @@
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="clientAddressComplement"
-                      >Complemento</label
+                      >Colonia<span class="text-danger">*</span></label
                     >
                     <input
                       cFormControl
                       id="clientAddressComplement"
                       formControlName="clientAddressComplement"
                       class="form-control"
-                      placeholder="Apartamento, piso, etc."
                     />
                   </div>
                 </c-col>
@@ -159,53 +114,82 @@
                       bindLabel="name"
                       bindValue="id"
                       formControlName="cityId"
-                      [disabled]="true"
                       placeholder="Ciudad"
                     ></ng-select>
                   </div>
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="clientAddress2">Dirección 2</label>
+                    <label cLabel for="postalCode">Código postal</label>
                     <input
                       cFormControl
-                      id="clientAddress2"
-                      formControlName="clientAddress2"
+                      id="postalCode"
+                      formControlName="postalCode"
                       class="form-control"
-                      placeholder="Otra referencia (opcional)"
                     />
                   </div>
                 </c-col>
               </c-row>
-              <c-row>
-                <!-- Latitud y Longitud al final, solo números -->
-                <c-col md="6">
-                  <div class="mb-3">
-                    <label cLabel for="latitude">Latitud</label>
-                    <input
-                      cFormControl
-                      id="latitude"
-                      formControlName="latitude"
-                      class="form-control"
-                      step="any"
-                      placeholder="Latitud (ej: 4.60971)"
-                    />
+              <!-- Sección de Coordenadas -->
+              <c-card class="mb-4 shadow-sm">
+                <c-card-header class="bg-light">
+                  <div class="d-flex align-items-center">
+                    <!-- <svg [cIcon]="icons.cilLocationPin" class="me-2 text-primary"></svg> -->
+                    <h6 class="mb-0 text-primary">¿Tienes las coordenadas exactas?</h6>
                   </div>
-                </c-col>
-                <c-col md="6">
-                  <div class="mb-3">
-                    <label cLabel for="longitude">Longitud</label>
-                    <input
-                      cFormControl
-                      id="longitude"
-                      formControlName="longitude"
-                      class="form-control"
-                      step="any"
-                      placeholder="Longitud (ej: -74.08175)"
-                    />
-                  </div>
-                </c-col>
-              </c-row>
+                  <small class="text-muted">Opcional - Ayuda a mejorar la precisión de la entrega</small>
+                </c-card-header>
+                <c-card-body>
+                  <c-row>
+                    <c-col md="6">
+                      <div class="mb-3">
+                        <label cLabel for="latitude" class="fw-semibold">
+                          <!-- <svg [cIcon]="icons.cilLocationPin" class="me-1 text-success"></svg> -->
+                          Latitud
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <!-- <svg [cIcon]="icons.cilLocationPin" class="text-success"></svg> -->
+                          </span>
+                          <input
+                            cFormControl
+                            id="latitude"
+                            formControlName="latitude"
+                            class="form-control"
+                            type="number"
+                            step="any"
+                            placeholder="Ej: 4.60971"
+                          />
+                        </div>
+                        <small class="text-muted">Coordenada norte-sur del punto de entrega</small>
+                      </div>
+                    </c-col>
+                    <c-col md="6">
+                      <div class="mb-3">
+                        <label cLabel for="longitude" class="fw-semibold">
+                          <!-- <svg [cIcon]="icons.cilLocationPin" class="me-1 text-info"></svg> -->
+                          Longitud
+                        </label>
+                        <div class="input-group">
+                          <span class="input-group-text">
+                            <!-- <svg [cIcon]="icons.cilLocationPin" class="text-info"></svg> -->
+                          </span>
+                          <input
+                            cFormControl
+                            id="longitude"
+                            formControlName="longitude"
+                            class="form-control"
+                            type="number"
+                            step="any"
+                            placeholder="Ej: -74.08175"
+                          />
+                        </div>
+                        <small class="text-muted">Coordenada este-oeste del punto de entrega</small>
+                      </div>
+                    </c-col>
+                  </c-row>
+                </c-card-body>
+              </c-card>
             </c-card-body>
           </c-card>
 
@@ -280,7 +264,7 @@
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="code"
-                      >Código <span class="text-danger">*</span></label
+                      >Código</label
                     >
                     <input
                       cFormControl
@@ -288,26 +272,12 @@
                       id="code"
                       type="text"
                       class="form-control"
-                      placeholder="Código de la orden"
+                      placeholder="Código interno de tu tienda si tienes"
                     />
                   </div>
                 </c-col>
               </c-row>
               <c-row>
-                <!-- Contiene y Notas -->
-                <c-col md="6">
-                  <div class="mb-3">
-                    <label cLabel for="contains">Contiene</label>
-                    <textarea
-                      cFormControl
-                      formControlName="contains"
-                      id="contains"
-                      class="form-control"
-                      rows="2"
-                      placeholder="Descripción del contenido (opcional)"
-                    ></textarea>
-                  </div>
-                </c-col>
                 <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="notes">Notas</label>
@@ -324,7 +294,7 @@
               </c-row>
               <c-row>
                 <!-- Valor Total y External ID -->
-                <c-col md="6">
+                <!-- <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="totalAmount"
                       >Valor Total <span class="text-danger">*</span></label
@@ -338,19 +308,7 @@
                       placeholder="Valor total de la orden"
                     />
                   </div>
-                </c-col>
-                <c-col md="6">
-                  <div class="mb-3">
-                    <label cLabel for="externalId">External ID</label>
-                    <input
-                      cFormControl
-                      id="externalId"
-                      formControlName="externalId"
-                      class="form-control"
-                      placeholder="ID externo (opcional)"
-                    />
-                  </div>
-                </c-col>
+                </c-col> -->
               </c-row>
             </c-card-body>
           </c-card>

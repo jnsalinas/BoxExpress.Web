@@ -3,4 +3,5 @@ export interface AuthDto {
     expiration?: string;
     role?: string;
     storeId?: number;
+    warehouseName?: string;
 }

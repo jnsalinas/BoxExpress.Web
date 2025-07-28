@@ -31,7 +31,7 @@
                 (input)="onFilterChange()"
               />
             </c-col>
-            <c-col md="6" *ngIf="!authService.hasRole('tienda')">
+            <c-col md="6" *ngIf="authService.hasRole('admin')">
               <label cLabel for="storeId">Filtrar por tienda</label>
               <ng-select
                 [items]="[]"

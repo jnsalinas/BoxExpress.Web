@@ -68,12 +68,35 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   ) {
     const role = this.auth.role;
     this.navItems = this.filterNavByRole(navItems, role ?? '');
+
+    // Actualizar el nombre del menú de inventario si el usuario es bodega
+    if (role === 'bodega') {
+      this.navItems = this.navItems.map((item) => {
+        if (item.name === 'Inventario') {
+          return {
+            ...item,
+            name: this.getWarehouseMenuName(),
+          };
+        }
+        return item;
+      });
+    }
+  }
+
+  // Función que se ejecuta dinámicamente
+  getWarehouseMenuName(): string {
+    const role = localStorage.getItem('auth_role');
+    if (role === 'bodega') {
+      const warehouseName = localStorage.getItem('warehouseName');
+      return warehouseName || 'Inventario';
+    }
+    return 'Inventario';
   }
 
   ngOnInit() {
     // Suscribirse a los cambios del contador de transferencias pendientes
     this.subscription.add(
-      this.navBadgeService.pendingTransfersCount$.subscribe(count => {
+      this.navBadgeService.pendingTransfersCount$.subscribe((count) => {
         console.log('navBadgeService - count', count);
         this.updateNavItems(count);
       })
@@ -82,7 +105,9 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
 
   private updateNavItems(pendingCount: number) {
     console.log('Actualizando navItems con count:', pendingCount);
-    const transferItem = this.navItems.find(item => item.name === 'Transferencias');
+    const transferItem = this.navItems.find(
+      (item) => item.name === 'Transferencias'
+    );
     if (transferItem) {
       if (!transferItem.badge) {
         transferItem.badge = { color: 'warning', text: '0' };
@@ -90,10 +115,10 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
       transferItem.badge.text = pendingCount.toString();
       transferItem.badge.color = pendingCount > 0 ? 'warning' : 'secondary';
       console.log('Badge actualizado:', transferItem.badge);
-      
+
       // Crear nueva referencia del array para forzar la detección de cambios
       this.navItems = [...this.navItems];
-      
+
       // Forzar la detección de cambios
       this.cdr.detectChanges();
     }
