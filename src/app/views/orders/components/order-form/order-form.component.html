@@ -50,9 +50,7 @@
                 <!-- Fila 3: Email y External ID -->
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="clientEmail"
-                      >Email </label
-                    >
+                    <label cLabel for="clientEmail">Email </label>
                     <input
                       cFormControl
                       id="clientEmail"
@@ -135,9 +133,14 @@
                 <c-card-header class="bg-light">
                   <div class="d-flex align-items-center">
                     <!-- <svg [cIcon]="icons.cilLocationPin" class="me-2 text-primary"></svg> -->
-                    <h6 class="mb-0 text-primary">¿Tienes las coordenadas exactas?</h6>
+                    <h6 class="mb-0 text-primary">
+                      ¿Tienes las coordenadas exactas?
+                    </h6>
                   </div>
-                  <small class="text-muted">Opcional - Ayuda a mejorar la precisión de la entrega</small>
+                  <small class="text-muted"
+                    >Opcional - Ayuda a mejorar la precisión de la
+                    entrega</small
+                  >
                 </c-card-header>
                 <c-card-body>
                   <c-row>
@@ -161,7 +164,9 @@
                             placeholder="Ej: 4.60971"
                           />
                         </div>
-                        <small class="text-muted">Coordenada norte-sur del punto de entrega</small>
+                        <small class="text-muted"
+                          >Coordenada norte-sur del punto de entrega</small
+                        >
                       </div>
                     </c-col>
                     <c-col md="6">
@@ -184,7 +189,9 @@
                             placeholder="Ej: -74.08175"
                           />
                         </div>
-                        <small class="text-muted">Coordenada este-oeste del punto de entrega</small>
+                        <small class="text-muted"
+                          >Coordenada este-oeste del punto de entrega</small
+                        >
                       </div>
                     </c-col>
                   </c-row>
@@ -263,9 +270,7 @@
                 </c-col>
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="code"
-                      >Código</label
-                    >
+                    <label cLabel for="code">Código</label>
                     <input
                       cFormControl
                       formControlName="code"
@@ -291,13 +296,10 @@
                     ></textarea>
                   </div>
                 </c-col>
-              </c-row>
-              <c-row>
-                <!-- Valor Total y External ID -->
-                <!-- <c-col md="6">
+                <c-col md="6">
                   <div class="mb-3">
                     <label cLabel for="totalAmount"
-                      >Valor Total <span class="text-danger">*</span></label
+                      >Valor a cobrar <span class="text-danger">*</span></label
                     >
                     <input
                       cFormControl
@@ -308,7 +310,7 @@
                       placeholder="Valor total de la orden"
                     />
                   </div>
-                </c-col> -->
+                </c-col>
               </c-row>
             </c-card-body>
           </c-card>

@@ -25,7 +25,7 @@ import { LoadingOverlayComponent } from '../../../../shared/components/loading-o
 import { CurrencyService } from '../../../../services/currency.service';
 import { CurrencyDto } from '../../../../models/currency.dto';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { WarehouseInventoryService } from '../../../../services/warehouse-inventory.service';
+import { ProductVariantService } from '../../../../services/product-variant.service';
 import { ProductVariantDto } from '../../../../models/product-variant.dto';
 import { AuthService } from '../../../../services/auth.service';
 import { OrderService } from '../../../../services/order.service';
@@ -69,7 +69,7 @@ export class OrderFormComponent implements OnInit {
     private storeService: StoreService,
     private orderStatusService: OrderStatusService,
     private currencyService: CurrencyService,
-    private warehouseInventoryService: WarehouseInventoryService,
+    private productVariantService: ProductVariantService,
     public authService: AuthService,
     private orderService: OrderService,
     private messageService: MessageService
@@ -143,10 +143,9 @@ export class OrderFormComponent implements OnInit {
       currencyId: [1, Validators.required],
       code: [''],
       contains: [''],
-      // totalAmount: [0, [Validators.required, Validators.min(0)]],
+      totalAmount: [0, [Validators.required, Validators.min(0)]],
       notes: [''],
       // externalId: [''],
-
       // Productos
       orderItems: this.fb.array([]),
     });
@@ -195,12 +194,13 @@ export class OrderFormComponent implements OnInit {
     this.isLoading = true;
     this.orderService.create(payload).subscribe({
       next: (res) => {
-        console.log('Orden creada:', res);
         this.messageService.showSuccess('Orden creada correctamente');
         this.isLoading = false;
         this.router.navigate(['/orders']);
       },
       error: (error) => {
+        console.log('error', error);
+        this.messageService.showMessageError(error);
         this.isLoading = false;
       },
     });
@@ -219,26 +219,29 @@ export class OrderFormComponent implements OnInit {
   }
 
   onStoreChange(storeId: number) {
-    this.isLoading = true;
-    this.warehouseInventoryService
-      .getWarehouseInventories({ storeId: storeId, isAll: true })
-      .subscribe({
-        next: (res) => {
-          this.productVariants = res.data.flatMap((product) =>
-            (product.variants || []).map((variant) => ({
-              ...variant,
-              displayName: `${product.name} - ${variant.name}`,
-            }))
-          );
-          // Limpiar productos seleccionados
-          this.orderItems.clear();
-          this.isLoading = false;
-        },
-        error: () => {
-          this.productVariants = [];
-          this.orderItems.clear();
-          this.isLoading = false;
-        },
-      });
+    console.log('storeId', storeId);
+    if (storeId > 0) {
+      this.isLoading = true;
+      this.productVariantService
+        .getAll({ storeId: storeId, isAll: true })
+        .subscribe({
+          next: (res) => {
+            this.productVariants = res.data.map((pv) => ({
+              ...pv,
+              displayName: `${pv.productName} - ${pv.name} - ${pv.sku}`,
+            }));
+            this.orderItems.clear();
+            this.isLoading = false;
+          },
+          error: () => {
+            this.productVariants = [];
+            this.orderItems.clear();
+            this.isLoading = false;
+          },
+        });
+    } else {
+      this.productVariants = [];
+      this.orderItems.clear();
+    }
   }
 }

@@ -3,12 +3,13 @@ import { ToastrService } from 'ngx-toastr';
 import { AppMessages } from '../resources/messages';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MessageService {
   constructor(private toastr: ToastrService) {}
 
-  showMessageError(message: string,  title?: string): void {
+  showMessageError(message: string, title?: string): void {
+    this.scrollToTop();
     this.toastr.error(message, title || 'Error');
   }
 
@@ -45,5 +46,9 @@ export class MessageService {
     }
 
     return typeof result === 'string' ? result : key;
+  }
+
+  private scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
