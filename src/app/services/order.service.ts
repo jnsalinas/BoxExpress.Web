@@ -11,6 +11,7 @@ import { environment } from '../../environments/environment';
 import { OrderScheduleUpdateDto } from '../models/order-schedule-update.dto';
 import { OrderItemDto } from '../models/order-item.dto';
 import { OrderSummaryDto } from '../models/order-summary.dto';
+import { CreateOrderDto } from '../models/create-order.dto';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
@@ -86,6 +87,18 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
   getSummary(filter: OrderFilter): Observable<OrderSummaryDto[]> {
     return this.http
       .post<ApiResponse<null>>(`${environment.apiUrl}/orders/summary`, filter)
+      .pipe(this.handleResponse());
+  }
+
+  createOrder(payload: CreateOrderDto): Observable<OrderDto> {
+    return this.http
+      .post<ApiResponse<null>>(`${environment.apiUrl}/orders`, payload)
+      .pipe(this.handleResponse());
+  }
+
+  updateOrder(orderId: number, payload: CreateOrderDto): Observable<OrderDto> {
+    return this.http
+      .put<ApiResponse<OrderDto>>(`${environment.apiUrl}/orders/${orderId}`, payload)
       .pipe(this.handleResponse());
   }
 }

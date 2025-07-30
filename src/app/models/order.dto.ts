@@ -1,5 +1,6 @@
 import { BaseDto } from './common/base.dto';
 import { OrderItemDto } from './order-item.dto';
+import { ClientDto } from './client.dto';
 
 export interface OrderDto extends BaseDto {
   country?: string;
@@ -8,8 +9,8 @@ export interface OrderDto extends BaseDto {
   rescheduleDate?: Date;
   scheduledDate?: Date;
   contains?: string;
-  latitude?: string;
-  longitude?: string;
+  latitude?: number;
+  longitude?: number;
   clientAddress?: string;
   clientFullName?: string;
   clientDocument?: string;
@@ -29,5 +30,6 @@ export interface OrderDto extends BaseDto {
   timeSlotEndTime?: Date;
   timeSlotId?: number;
   currencyCode?: string;
+  client?: ClientDto;
   orderItems?: OrderItemDto[]
 }

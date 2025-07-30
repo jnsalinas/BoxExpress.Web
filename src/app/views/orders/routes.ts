@@ -19,6 +19,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'edit/:id',
+    loadComponent: () =>
+      import('../orders/edit/order-edit.component').then(
+        (m) => m.OrderEditComponent
+      ),
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('../orders/detail/order-detail.component').then(

@@ -3,6 +3,10 @@
   [loadingText]="'Cargando...'"
 ></app-loading-overlay>
 <app-order-form 
-  [isEditMode]="false"
+  *ngIf="orderToEdit"
+  [isEditMode]="true"
+  [orderToEdit]="orderToEdit"
   (formSubmit)="onFormSubmit($event)"
 />
+
+ 

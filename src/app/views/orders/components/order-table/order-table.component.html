@@ -183,7 +183,7 @@
                 authService.hasRole('admin')
               "
               class="btn btn-sm btn-outline-primary me-2"
-              [routerLink]="[order.id]"
+              [routerLink]="['/orders/edit', order.id]"
             >
               <svg [cIcon]="icons.cilPencil"></svg>
             </button>

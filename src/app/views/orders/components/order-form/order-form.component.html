@@ -6,7 +6,7 @@
 <c-row>
   <c-col xs="12">
     <c-card class="mb-4">
-      <c-card-header><strong>Crear Orden</strong></c-card-header>
+      <c-card-header><strong>{{ isEditMode ? 'Editar Orden' : 'Crear Orden' }}</strong></c-card-header>
       <c-card-body>
         <form cForm [formGroup]="form" (ngSubmit)="onSubmit()">
           <!-- CLIENTE -->
@@ -27,8 +27,12 @@
                       id="clientFirstName"
                       formControlName="clientFirstName"
                       class="form-control"
+                      [class.is-invalid]="isFieldInvalid('clientFirstName')"
                       placeholder="Nombre del cliente"
                     />
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('clientFirstName')">
+                      {{ getFieldError('clientFirstName') }}
+                    </div>
                   </div>
                 </c-col>
                 <c-col md="6">
@@ -41,12 +45,34 @@
                       id="clientLastName"
                       formControlName="clientLastName"
                       class="form-control"
+                      [class.is-invalid]="isFieldInvalid('clientLastName')"
                       placeholder="Apellido del cliente"
                     />
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('clientLastName')">
+                      {{ getFieldError('clientLastName') }}
+                    </div>
                   </div>
                 </c-col>
               </c-row>
               <c-row>
+                <!-- Fila 3: Phone -->
+                <c-col md="6">
+                  <div class="mb-3">
+                    <label cLabel for="clientEmail">Teléfono <span class="text-danger">*</span></label>
+                    <input
+                      cFormControl
+                      id="clientPhone"
+                      formControlName="clientPhone"
+                      class="form-control"
+                      [class.is-invalid]="isFieldInvalid('clientPhone')"
+                      type="number"
+                      placeholder="Teléfono del cliente"
+                    />
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('clientPhone')">
+                      {{ getFieldError('clientPhone') }}
+                    </div>
+                  </div>
+                </c-col>
                 <!-- Fila 3: Email y External ID -->
                 <c-col md="6">
                   <div class="mb-3">
@@ -56,9 +82,13 @@
                       id="clientEmail"
                       formControlName="clientEmail"
                       class="form-control"
+                      [class.is-invalid]="isFieldInvalid('clientEmail')"
                       type="email"
                       placeholder="Correo electrónico"
                     />
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('clientEmail')">
+                      {{ getFieldError('clientEmail') }}
+                    </div>
                   </div>
                 </c-col>
               </c-row>
@@ -85,8 +115,12 @@
                       id="clientAddress"
                       formControlName="clientAddress"
                       class="form-control"
+                      [class.is-invalid]="isFieldInvalid('clientAddress')"
                       placeholder="Dirección principal"
                     />
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('clientAddress')">
+                      {{ getFieldError('clientAddress') }}
+                    </div>
                   </div>
                 </c-col>
                 <c-col md="6">
@@ -99,21 +133,29 @@
                       id="clientAddressComplement"
                       formControlName="clientAddressComplement"
                       class="form-control"
+                      [class.is-invalid]="isFieldInvalid('clientAddressComplement')"
                     />
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('clientAddressComplement')">
+                      {{ getFieldError('clientAddressComplement') }}
+                    </div>
                   </div>
                 </c-col>
               </c-row>
               <c-row>
                 <c-col md="6">
                   <div class="mb-3">
-                    <label cLabel for="cityId">Ciudad</label>
+                    <label cLabel for="cityId">Ciudad <span class="text-danger">*</span></label>
                     <ng-select
                       [items]="cities"
                       bindLabel="name"
                       bindValue="id"
                       formControlName="cityId"
+                      [class.is-invalid]="isFieldInvalid('cityId')"
                       placeholder="Ciudad"
                     ></ng-select>
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('cityId')">
+                      {{ getFieldError('cityId') }}
+                    </div>
                   </div>
                 </c-col>
                 <c-col md="6">
@@ -220,9 +262,13 @@
                       bindLabel="name"
                       bindValue="id"
                       formControlName="storeId"
+                      [class.is-invalid]="isFieldInvalid('storeId')"
                       placeholder="Seleccione"
                       (change)="onStoreChange($event?.id)"
                     ></ng-select>
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('storeId')">
+                      {{ getFieldError('storeId') }}
+                    </div>
                     <small class="text-muted"
                       >Al cambiar la tienda, se actualizarán las variantes de
                       producto disponibles.</small
@@ -239,6 +285,7 @@
                       id="currencyId"
                       formControlName="currencyId"
                       class="form-control"
+                      [class.is-invalid]="isFieldInvalid('currencyId')"
                     >
                       <option value="" disabled selected>Seleccione</option>
                       <option
@@ -248,6 +295,9 @@
                         {{ currency.name }}
                       </option>
                     </select>
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('currencyId')">
+                      {{ getFieldError('currencyId') }}
+                    </div>
                   </div>
                 </c-col>
               </c-row>
@@ -263,9 +313,13 @@
                       id="deliveryFee"
                       formControlName="deliveryFee"
                       class="form-control"
+                      [class.is-invalid]="isFieldInvalid('deliveryFee')"
                       type="number"
                       placeholder="Costo de envío"
                     />
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('deliveryFee')">
+                      {{ getFieldError('deliveryFee') }}
+                    </div>
                   </div>
                 </c-col>
                 <c-col md="6">
@@ -307,8 +361,12 @@
                       id="totalAmount"
                       type="number"
                       class="form-control"
+                      [class.is-invalid]="isFieldInvalid('totalAmount')"
                       placeholder="Valor total de la orden"
                     />
+                    <div class="invalid-feedback" *ngIf="isFieldInvalid('totalAmount')">
+                      {{ getFieldError('totalAmount') }}
+                    </div>
                   </div>
                 </c-col>
               </c-row>
@@ -330,6 +388,9 @@
                 Selecciona una tienda para ver las variantes de producto
                 disponibles.
               </div>
+              <div *ngIf="isFormArrayInvalid('orderItems')" class="alert alert-danger mb-3">
+                {{ getFormArrayError('orderItems') }}
+              </div>
               <div
                 *ngFor="let item of orderItems.controls; let i = index"
                 [formGroup]="getOrderItemFormGroup(i)"
@@ -341,7 +402,6 @@
                       >Variante <span class="text-danger">*</span></label
                     >
                     <ng-select
-                      class="form-control form-control-sm variant-select"
                       formControlName="productVariantId"
                       [items]="productVariants"
                       bindLabel="displayName"
@@ -349,7 +409,11 @@
                       placeholder="Seleccione"
                       [searchable]="true"
                       [clearable]="false"
+                      [class.is-invalid]="isOrderItemFieldInvalid(i, 'productVariantId')"
                     ></ng-select>
+                    <div class="invalid-feedback" *ngIf="isOrderItemFieldInvalid(i, 'productVariantId')">
+                      {{ getOrderItemFieldError(i, 'productVariantId') }}
+                    </div>
                     <small class="text-muted d-block mt-1"
                       >Solo se muestran variantes con inventario disponible en
                       la tienda seleccionada.</small
@@ -363,9 +427,13 @@
                       type="number"
                       class="form-control form-control-sm"
                       formControlName="quantity"
+                      [class.is-invalid]="isOrderItemFieldInvalid(i, 'quantity')"
                       placeholder="Cantidad"
                       style="height: 32px"
                     />
+                    <div class="invalid-feedback" *ngIf="isOrderItemFieldInvalid(i, 'quantity')">
+                      {{ getOrderItemFieldError(i, 'quantity') }}
+                    </div>
                     <small class="text-muted"
                       >Máximo: {{ getVariantMaxQuantity(item) }}</small
                     >
@@ -400,9 +468,8 @@
               cButton
               type="submit"
               color="success"
-              [disabled]="form?.invalid"
             >
-              Guardar Orden
+              {{ isEditMode ? 'Actualizar Orden' : 'Guardar Orden' }}
             </button>
           </div>
         </form>
