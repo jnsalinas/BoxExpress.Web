@@ -1,59 +1,86 @@
 <app-loading-overlay
   *ngIf="isLoading"
-  [loadingText]="'Cargando ordenes...'"
+  [loadingText]="'Cargando órdenes...'"
 ></app-loading-overlay>
-<c-row>
-  <c-col xs="12">
-    <c-card class="mb-4">
-      <c-card-header
-        style="
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        "
-      >
-        <strong>Órdenes</strong>
 
-        <div style="display: flex; gap: 8px">
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="downloadExcel()"
-          >
-            <svg [cIcon]="icons.cilCloudDownload"></svg>
-            Exportar
-          </button>
-
-          <button
-            *hasRole="['admin', 'tienda']"
-            type="button"
-            class="btn btn-primary"
-            [routerLink]="['/orders/create']"
-          >
-            <svg [cIcon]="icons.cilPlus"></svg>
-            Crear
-          </button>
+<div *ngIf="!isLoading" class="orders-list-container">
+  <!-- Header con estadísticas -->
+  <c-card class="mb-4 stats-header-card">
+    <c-card-body class="p-4">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center mb-3">
+            <div class="orders-icon me-3">
+              <i class="fas fa-shopping-cart text-primary fs-2"></i>
+            </div>
+            <div>
+              <h2 class="mb-1 text-primary">Gestión de Órdenes</h2>
+              <p class="text-muted mb-0">Administra y monitorea todas las órdenes del sistema</p>
+            </div>
+          </div>
         </div>
-      </c-card-header>
+        <div class="col-md-4 text-end">
+          <div class="action-buttons">
+            <button
+              type="button"
+              class="btn btn-outline-primary me-2"
+              (click)="downloadExcel()"
+              title="Exportar a Excel"
+            >
+              <i class="fas fa-download me-2"></i>
+              Exportar
+            </button>
+            <button
+              *hasRole="['admin', 'tienda']"
+              type="button"
+              class="btn btn-primary"
+              [routerLink]="['/orders/create']"
+              title="Crear nueva orden"
+            >
+              <i class="fas fa-plus me-2"></i>
+              Nueva Orden
+            </button>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
 
-      <c-card-body>
-        <form
-          [formGroup]="filtersForm"
-          (ngSubmit)="onFilter()"
-          class="mb-4 row g-3 align-items-end"
-        >
+  <!-- Filtros mejorados -->
+  <c-card class="mb-4 filters-card">
+    <c-card-header class="bg-light">
+      <h5 class="mb-0">
+        <i class="fas fa-filter me-2 text-info"></i>
+        Filtros de Búsqueda
+      </h5>
+    </c-card-header>
+    <c-card-body>
+      <form
+        [formGroup]="filtersForm"
+        (ngSubmit)="onFilter()"
+        class="filters-form"
+      >
+        <div class="row g-3">
           <div class="col-md-2">
-            <label cLabel for="orderId" class="form-label">ID Orden</label>
+            <label cLabel for="orderId" class="form-label fw-semibold">
+              <i class="fas fa-hashtag me-1 text-muted"></i>
+              ID Orden
+            </label>
             <input
               cFormControl
               type="number"
               id="orderId"
               formControlName="orderId"
               class="form-control"
+              placeholder="Ej: 12345"
             />
           </div>
+          
           <div class="col-md-2" *hasRole="['admin']">
-            <label for="store" class="form-label">Tienda</label>
+            <label for="store" class="form-label fw-semibold">
+              <i class="fas fa-store me-1 text-muted"></i>
+              Tienda
+            </label>
             <ng-select
               cFormControl
               [items]="stores"
@@ -61,12 +88,17 @@
               bindValue="id"
               formControlName="storeId"
               [searchable]="true"
-              placeholder="Seleccione una tienda"
+              placeholder="Seleccione tienda"
+              class="custom-select"
             >
             </ng-select>
           </div>
+          
           <div class="col-md-2">
-            <label for="startDate" class="form-label">Fecha inicio</label>
+            <label for="startDate" class="form-label fw-semibold">
+              <i class="fas fa-calendar-alt me-1 text-muted"></i>
+              Fecha Inicio
+            </label>
             <input
               type="date"
               id="startDate"
@@ -76,7 +108,10 @@
           </div>
 
           <div class="col-md-2">
-            <label for="endDate" class="form-label">Fecha fin</label>
+            <label for="endDate" class="form-label fw-semibold">
+              <i class="fas fa-calendar-alt me-1 text-muted"></i>
+              Fecha Fin
+            </label>
             <input
               type="date"
               id="endDate"
@@ -84,64 +119,95 @@
               class="form-control"
             />
           </div>
+          
           <div class="col-md-2">
-            <label for="endDate" class="form-label">Programación</label>
+            <label for="scheduledDate" class="form-label fw-semibold">
+              <i class="fas fa-clock me-1 text-muted"></i>
+              Programación
+            </label>
             <input
               type="date"
               id="scheduledDate"
-              formControlName="endDate"
+              formControlName="scheduledDate"
               class="form-control"
             />
           </div>
 
-          <div class="col-md-1 d-grid">
-            <button type="submit" class="btn btn-primary">Filtrar</button>
+          <div class="col-md-2 d-flex align-items-end">
+            <div class="d-grid gap-2 w-100">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-search me-2"></i>
+                Buscar
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                (click)="resetFilters()"
+              >
+                <i class="fas fa-times me-2"></i>
+                Limpiar
+              </button>
+            </div>
           </div>
+        </div>
+      </form>
+    </c-card-body>
+  </c-card>
 
-          <div class="col-md-1 d-grid">
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="resetFilters()"
-            >
-              Limpiar
-            </button>
-          </div>
-        </form>
-        <c-tabs
-          [activeItemKey]="activeTab"
-          (activeItemKeyChange)="handleActiveItemChange($event)"
-        >
-          <c-tabs-list variant="underline-border">
-            <button *hasRole="['admin', 'tienda']" cTab [itemKey]="0">
-              Órdenes
-            </button>
-            <button cTab [itemKey]="1">Express</button>
-            <button *hasRole="['admin', 'tienda']" cTab [itemKey]="2">
-              Tradicional
-            </button>
-          </c-tabs-list>
+  <!-- Contenido principal -->
+  <c-card class="main-content-card">
+    <c-card-body class="p-0">
+      <c-tabs
+        [activeItemKey]="activeTab"
+        (activeItemKeyChange)="handleActiveItemChange($event)"
+      >
+        <c-tabs-list variant="underline-border" class="px-4 pt-3">
+          <button *hasRole="['admin', 'tienda']" cTab [itemKey]="0" class="tab-button">
+            <i class="fas fa-list me-2"></i>
+            Todas las Órdenes
+          </button>
+          <button cTab [itemKey]="1" class="tab-button">
+            <i class="fas fa-bolt me-2"></i>
+            Express
+          </button>
+          <button *hasRole="['admin', 'tienda']" cTab [itemKey]="2" class="tab-button">
+            <i class="fas fa-truck me-2"></i>
+            Tradicional
+          </button>
+        </c-tabs-list>
 
-          <c-tabs-content>
-            <c-tab-panel
-              *ngFor="let i of [0, 1, 2]; let idx = index"
-              [itemKey]="idx"
-              class="p-3"
-            >
-              <c-row class="mb-3">
-                <c-col *ngFor="let status of orderSummary">
+        <c-tabs-content>
+          <c-tab-panel
+            *ngFor="let i of [0, 1, 2]; let idx = index"
+            [itemKey]="idx"
+            class="p-4"
+          >
+            <!-- Resumen de estados -->
+            <div class="status-summary mb-4">
+              <h6 class="mb-3 text-muted">
+                <i class="fas fa-chart-bar me-2"></i>
+                Resumen por Estado
+              </h6>
+              <div class="row g-3">
+                <div class="col-md-2 col-sm-4 col-6" *ngFor="let status of orderSummary">
                   <c-card
-                    class="text-center"
+                    class="status-card text-center h-100"
                     [ngClass]="getStatusClass(status.statusName)"
                   >
-                    <c-card-body>
-                      <h6>{{ status.statusName }}</h6>
-                      <p class="m-0">{{ status.count }}</p>
+                    <c-card-body class="p-3">
+                      <div class="status-icon mb-2">
+                        <i class="fas fa-circle"></i>
+                      </div>
+                      <h6 class="mb-1 status-name">{{ status.statusName }}</h6>
+                      <p class="m-0 status-count">{{ status.count }}</p>
                     </c-card-body>
                   </c-card>
-                </c-col>
-              </c-row>
+                </div>
+              </div>
+            </div>
 
+            <!-- Tabla de órdenes -->
+            <div class="orders-table-container">
               <app-order-table
                 *ngIf="orders"
                 [orders]="orders"
@@ -153,20 +219,25 @@
                 (warehouseChanged)="handleWarehouseChange($event)"
                 (scheduleOrder)="handleScheduleOrder($event)"
               />
-              <app-generic-pagination
-                [pagination]="pagination"
-                [currentPage]="currentPage"
-                (pageChange)="onPageChange($event)"
-              >
-              </app-generic-pagination>
-            </c-tab-panel>
-          </c-tabs-content>
-        </c-tabs>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+              
+              <!-- Paginación -->
+              <div class="pagination-container mt-4">
+                <app-generic-pagination
+                  [pagination]="pagination"
+                  [currentPage]="currentPage"
+                  (pageChange)="onPageChange($event)"
+                >
+                </app-generic-pagination>
+              </div>
+            </div>
+          </c-tab-panel>
+        </c-tabs-content>
+      </c-tabs>
+    </c-card-body>
+  </c-card>
+</div>
 
+<!-- Modales -->
 <app-generic-modal></app-generic-modal>
 <app-order-edit-modal
   *ngIf="orderSelected"

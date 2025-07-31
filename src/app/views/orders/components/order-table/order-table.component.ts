@@ -150,4 +150,5 @@ export class OrderTableComponent {
   getCurrentStatusName(order: any): string {
     return order.status || this.statusOptions.find(s => s.id === order.statusId)?.name || '';
   }
+
 }

@@ -412,6 +412,20 @@ export class OrderListComponent implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    return 'bg-' + status.toLowerCase().replace(/ /g, '-');
+    const statusLower = status.toLowerCase();
+    
+    if (statusLower.includes('pendiente') || statusLower.includes('pending')) {
+      return 'status-pending';
+    } else if (statusLower.includes('procesando') || statusLower.includes('processing')) {
+      return 'status-processing';
+    } else if (statusLower.includes('enviado') || statusLower.includes('shipped')) {
+      return 'status-shipped';
+    } else if (statusLower.includes('entregado') || statusLower.includes('delivered')) {
+      return 'status-delivered';
+    } else if (statusLower.includes('cancelado') || statusLower.includes('cancelled')) {
+      return 'status-cancelled';
+    } else {
+      return 'status-default';
+    }
   }
 }

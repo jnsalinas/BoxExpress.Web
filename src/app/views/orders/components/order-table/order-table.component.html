@@ -1,213 +1,330 @@
-<!-- Se dejan las columnas "fijas" ya que al hacerlo de forma dinamica con swtich o ngif dentro de un ngfor de columnas para hacer el render de los td cuando se pone ngmodule y ngchange se muere el binding y no carga la pagina  -->
-<div style="overflow-x: auto; width: 100%">
-  <table [hover]="true" [striped]="true" cTable>
-    <thead>
-      <tr>
-        <th *ngIf="hasColumn('id')">Guía</th>
-        <th *ngIf="hasColumn('code')">Orden</th>
-        <th *ngIf="hasColumn('clientFullName')">Cliente</th>
-        <th *ngIf="hasColumn('storeName')">Tienda</th>
-        <th *ngIf="hasColumn('clientPhone')">Teléfono</th>
-        <th *ngIf="hasColumn('clientAddress')">Dirección</th>
-        <th *ngIf="hasColumn('notes')">Notas</th>
-        <th *ngIf="hasColumn('totalAmount')">Valor total</th>
-        <th *ngIf="hasColumn('deliveryFee')">Flete</th>
-        <th *ngIf="hasColumn('contains')">Contiene</th>
-        <th *ngIf="hasColumn('city')">Ciudad</th>
-        <th *ngIf="hasColumn('category') && authService.hasRole('admin')">
-          Categoría
-        </th>
-        <!-- Todo solo para el admin validar permisos -->
-        <th *ngIf="hasColumn('warehouseName')">Bodega</th>
-        <th *ngIf="hasColumn('status')">Estado</th>
-        <th *ngIf="hasColumn('scheduledDate')">Fecha programada</th>
-        <!-- <th *ngIf="hasColumn('timeSlot')">Horario de entrega</th> -->
-        <th
-          *ngIf="
-            hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])
-          "
-        >
-          Acciones
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let order of orders" [ngClass]="getStatusClass(order.status)">
-        <td *ngIf="hasColumn('id')">
-          <!-- {{getStatusClass(order.status)}} -->
-          {{ order.id }} {{ order.status }}
-        </td>
-        <td *ngIf="hasColumn('code')">{{ order.code }}</td>
-        <td *ngIf="hasColumn('clientFullName')">{{ order.clientFullName }}</td>
-        <td *ngIf="hasColumn('storeName')">{{ order.storeName }}</td>
-        <td *ngIf="hasColumn('clientPhone')">{{ order.clientPhone }}</td>
-        <td *ngIf="hasColumn('clientAddress')" style="min-width: 200px">
-          {{ order.clientAddress }}
-        </td>
-        <td *ngIf="hasColumn('notes')" style="min-width: 100px">
-          {{ order.notes }}
-        </td>
-        <td *ngIf="hasColumn('totalAmount')" style="min-width: 90px">
-          {{
-            order.totalAmount
-              | currency : order.curencyCode : "symbol" : "1.0-0"
-          }}
-        </td>
-        <td *ngIf="hasColumn('deliveryFee')">
-          {{
-            order.deliveryFee
-              | currency : order.curencyCode : "symbol" : "1.0-0"
-          }}
-        </td>
-
-        <td *ngIf="hasColumn('contains')" style="min-width: 200px">
-          <div
-            *ngIf="order.orderItems?.length; else showContains"
-            style="white-space: normal"
+<div class="orders-table-container">
+  <div class="table-responsive">
+    <table [hover]="true" [striped]="true" cTable class="orders-table">
+      <thead>
+        <tr>
+          <!-- Información principal -->
+          <th *ngIf="hasColumn('id')" class="order-id-column">
+            <svg [cIcon]="icons.cilBadge" class="me-2 text-muted"></svg>
+            ID
+          </th>
+          <th *ngIf="hasColumn('code')" class="order-code-column">
+            <svg [cIcon]="icons.cilBarcode" class="me-2 text-muted"></svg>
+            Código
+          </th>
+          <th *ngIf="hasColumn('status')" class="status-column">
+            <svg [cIcon]="icons.cilTask" class="me-2 text-muted"></svg>
+            Estado
+          </th>
+          
+          <!-- Información del cliente -->
+          <th *ngIf="hasColumn('clientFullName')" class="client-column">
+            <svg [cIcon]="icons.cilUser" class="me-2 text-muted"></svg>
+            Cliente
+          </th>
+          <th *ngIf="hasColumn('clientPhone')" class="phone-column">
+            <svg [cIcon]="icons.cilPhone" class="me-2 text-muted"></svg>
+            Teléfono
+          </th>
+          <th *ngIf="hasColumn('city')" class="city-column">
+            <svg [cIcon]="icons.cilLocationPin" class="me-2 text-muted"></svg>
+            Ciudad
+          </th>
+          
+          <!-- Información de entrega -->
+          <th *ngIf="hasColumn('scheduledDate')" class="date-column">
+            <svg [cIcon]="icons.cilCalendar" class="me-2 text-muted"></svg>
+            Fecha/Hora
+          </th>
+          <th *ngIf="hasColumn('clientAddress')" class="address-column">
+            <svg [cIcon]="icons.cilMap" class="me-2 text-muted"></svg>
+            Dirección
+          </th>
+          
+          <!-- Información comercial -->
+          <th *ngIf="hasColumn('totalAmount')" class="amount-column">
+            <svg [cIcon]="icons.cilDollar" class="me-2 text-muted"></svg>
+            Total
+          </th>
+          <th *ngIf="hasColumn('deliveryFee')" class="fee-column">
+            <svg [cIcon]="icons.cilTruck" class="me-2 text-muted"></svg>
+            Flete
+          </th>
+          
+          <!-- Información de productos -->
+          <th *ngIf="hasColumn('contains')" class="products-column">
+            <svg [cIcon]="icons.cilInbox" class="me-2 text-muted"></svg>
+            Productos
+          </th>
+          
+          <!-- Información administrativa -->
+          <th *ngIf="hasColumn('storeName')" class="store-column">
+            <svg [cIcon]="icons.cilHome" class="me-2 text-muted"></svg>
+            Tienda
+          </th>
+          <th *ngIf="hasColumn('warehouseName')" class="warehouse-column">
+            <svg [cIcon]="icons.cilStorage" class="me-2 text-muted"></svg>
+            Bodega
+          </th>
+          <th *ngIf="hasColumn('category') && authService.hasRole('admin')" class="category-column">
+            <svg [cIcon]="icons.cilTag" class="me-2 text-muted"></svg>
+            Categoría
+          </th>
+          
+          <!-- Notas -->
+          <th *ngIf="hasColumn('notes')" class="notes-column">
+            <svg [cIcon]="icons.cilNotes" class="me-2 text-muted"></svg>
+            Notas
+          </th>
+          
+          <!-- Acciones -->
+          <th
+            *ngIf="hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])"
+            class="actions-column"
           >
-            <div *ngFor="let item of order.orderItems; let last = last">
-              {{ item.productName }} {{ item.productVariantName }}
-              {{ item.quantity }}
-              <hr *ngIf="!last" style="margin: 8px 0" />
+            <svg [cIcon]="icons.cilSettings" class="me-2 text-muted"></svg>
+            Acciones
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let order of orders" [ngClass]="getStatusClass(order.status)" class="order-row">
+          <!-- Información principal -->
+          <td *ngIf="hasColumn('id')" class="order-id-cell">
+            <div class="order-id-badge">
+              <span class="order-number">#{{ order.id }}</span>
             </div>
-          </div>
+          </td>
+          
+          <td *ngIf="hasColumn('code')" class="order-code-cell">
+            <span class="order-code">{{ order.code || 'N/A' }}</span>
+          </td>
+          
+          <td *ngIf="hasColumn('status')" class="status-cell">
+            <div class="status-controls">
+              <ng-select
+                *hasRole="['admin']"
+                [items]="statusOptions"
+                bindLabel="name"
+                bindValue="id"
+                [(ngModel)]="order.statusId"
+                (ngModelChange)="onStatusChange(order.id, $event)"
+                [disabled]="
+                  order.scheduledDate === null ||
+                  order.timeSlotStartTime === null ||
+                  order.statusId === getStatusDelivered()
+                "
+                (mousedown)="previousStatusId = order.statusId"
+                placeholder="Cambiar estado..."
+                [clearable]="false"
+                [searchable]="false"
+                [appendTo]="'body'"
+                class="status-select"
+              >
+                <ng-template ng-option-tmp let-item="item">
+                  <span [ngClass]="{ 'text-muted': item.disabled }">{{
+                    item.name
+                  }}</span>
+                </ng-template>
+              </ng-select>
 
-          <ng-template #showContains>
-            <div>
-              {{ order.contains || "" }}
+              <button
+                *ngIf="
+                  order.statusId == getStatusScheduled() &&
+                  authService.hasRole('bodega')
+                "
+                cButton
+                color="warning"
+                size="sm"
+                class="route-btn"
+                (click)="onStatusChange(order.id, getStatusOnTheWay())"
+                title="Enrutar orden"
+              >
+                <svg [cIcon]="icons.cilArrowRight" class="me-1"></svg>
+                Enrutar
+              </button>
+
+              <span
+                *ngIf="
+                  order.statusId !== getStatusScheduled() &&
+                  authService.hasAnyRole(['bodega', 'tienda'])
+                "
+                class="status-display"
+              >
+                {{ order.status }}
+              </span>
             </div>
-          </ng-template>
-        </td>
-        <td *ngIf="hasColumn('city')" style="min-width: 155px">
-          {{ order.city }}
-        </td>
-        <td
-          *ngIf="hasColumn('category') && authService.hasRole('admin')"
-          style="min-width: 185px"
-        >
-          <select
-            *ngIf="order.categoryId != 2"
-            class="form-select form-select-sm"
-            [(ngModel)]="order.warehouseId"
-            (ngModelChange)="onWarehouseChange(order.id, $event)"
-            [disabled]="
-              warehouseOptions.length === 0 || order.categoryId !== null
-            "
-          >
-            <option [value]="null" disabled>Seleccione...</option>
-            <option
-              *ngFor="let warehouse of warehouseOptions"
-              [value]="warehouse.id"
-            >
-              {{ warehouse.name }}
-            </option>
-          </select>
+          </td>
+          
+          <!-- Información del cliente -->
+          <td *ngIf="hasColumn('clientFullName')" class="client-cell">
+            <div class="client-info">
+              <div class="client-name">{{ order.clientFullName }}</div>
+            </div>
+          </td>
+          
+          <td *ngIf="hasColumn('clientPhone')" class="phone-cell">
+            <a href="tel:{{ order.clientPhone }}" class="phone-link">
+              <svg [cIcon]="icons.cilPhone" class="me-1"></svg>
+              {{ order.clientPhone }}
+            </a>
+          </td>
+          
+          <td *ngIf="hasColumn('city')" class="city-cell">
+            <span class="city-name">{{ order.city || 'N/A' }}</span>
+          </td>
+          
+          <!-- Información de entrega -->
+          <td *ngIf="hasColumn('scheduledDate')" class="date-cell">
+            <div class="delivery-info">
+              <div class="delivery-date">
+                <svg [cIcon]="icons.cilCalendar" class="me-1"></svg>
+                {{ order.scheduledDate | date : "dd/MM/yyyy" }}
+              </div>
+              <div *ngIf="order.timeSlotStartTime" class="delivery-time">
+                <svg [cIcon]="icons.cilClock" class="me-1"></svg>
+                {{ order.timeSlotStartTime | slice : 0 : 5 }} - {{ order.timeSlotEndTime | slice : 0 : 5 }}
+              </div>
+            </div>
+          </td>
+          
+          <td *ngIf="hasColumn('clientAddress')" class="address-cell">
+            <div class="address-info" title="{{ order.clientAddress }}">
+              <svg [cIcon]="icons.cilLocationPin" class="me-1"></svg>
+              <span class="address-text">{{ order.clientAddress }}</span>
+            </div>
+          </td>
+          
+          <!-- Información comercial -->
+          <td *ngIf="hasColumn('totalAmount')" class="amount-cell">
+            <div class="amount-info">
+              <span class="amount-value">
+                {{ order.totalAmount | currency : order.currencyCode : "symbol" : "1.0-0" }}
+              </span>
+            </div>
+          </td>
+          
+          <td *ngIf="hasColumn('deliveryFee')" class="fee-cell">
+            <span class="fee-value">
+              {{ order.deliveryFee | currency : order.currencyCode : "symbol" : "1.0-0" }}
+            </span>
+          </td>
+          
+          <!-- Información de productos -->
+          <td *ngIf="hasColumn('contains')" class="products-cell">
+            <div class="products-info">
+              <div
+                *ngIf="order.orderItems?.length; else showContains"
+                class="products-list"
+              >
+                <div *ngFor="let item of order.orderItems; let last = last" class="product-item">
+                  <span class="product-name">{{ item.productName }}</span>
+                  <span *ngIf="item.productVariantName" class="product-variant">
+                    ({{ item.productVariantName }})
+                  </span>
+                  <span class="product-quantity">x{{ item.quantity }}</span>
+                  <hr *ngIf="!last" class="product-divider" />
+                </div>
+              </div>
 
-          <span *ngIf="order.categoryId == 2" class="text-muted">
-            Tradicional
-          </span>
-        </td>
-        <td *ngIf="hasColumn('warehouseName')">{{ order.warehouseName }}</td>
-        <td *ngIf="hasColumn('status')" style="min-width: 155px">
-          <ng-select
-            *hasRole="['admin']"
-            [items]="statusOptions"
-            bindLabel="name"
-            bindValue="id"
-            [(ngModel)]="order.statusId"
-            (ngModelChange)="onStatusChange(order.id, $event)"
-            [disabled]="
-              order.scheduledDate === null ||
-              order.timeSlotStartTime === null ||
-              order.statusId === getStatusDelivered()
-            "
-            (mousedown)="previousStatusId = order.statusId"
-            placeholder="Seleccione..."
-            [clearable]="false"
-            [searchable]="false"
-            [appendTo]="'body'"
+              <ng-template #showContains>
+                <div class="contains-info">
+                  {{ order.contains || "Sin especificar" }}
+                </div>
+              </ng-template>
+            </div>
+          </td>
+          
+          <!-- Información administrativa -->
+          <td *ngIf="hasColumn('storeName')" class="store-cell">
+            <span class="store-name">{{ order.storeName }}</span>
+          </td>
+          
+          <td *ngIf="hasColumn('warehouseName')" class="warehouse-cell">
+            <span class="warehouse-name">{{ order.warehouseName || 'N/A' }}</span>
+          </td>
+          
+          <td
+            *ngIf="hasColumn('category') && authService.hasRole('admin')"
+            class="category-cell"
           >
-            <ng-template ng-option-tmp let-item="item">
-              <span [ngClass]="{ 'text-muted': item.disabled }">{{
-                item.name
-              }}</span>
-            </ng-template>
-          </ng-select>
-
-          <button
-            *ngIf="
-              order.statusId == getStatusScheduled() &&
-              authService.hasRole('bodega')
-            "
-            cButton
-            color="warning"
-            size="sm"
-            class="ms-2"
-            (click)="onStatusChange(order.id, getStatusOnTheWay())"
-          >
-            Enrutar
-          </button>
-
-          <span
-            *ngIf="
-              order.statusId !== getStatusScheduled() &&
-              authService.hasAnyRole(['bodega', 'tienda'])
-            "
-          >
-            {{ order.status }}
-          </span>
-        </td>
-        <td *ngIf="hasColumn('scheduledDate')" style="min-width: 125px">
-          {{ order.scheduledDate | date : "MM-dd-yyyy" }}
-          <br *ngIf="order.scheduledDate" />
-          <strong *ngIf="order.timeSlotStartTime"
-            >{{ order.timeSlotStartTime | slice : 0 : 5 }} -
-            {{ order.timeSlotEndTime | slice : 0 : 5 }}
-          </strong>
-        </td>
-        <!-- <td *ngIf="hasColumn('timeSlot')">
-        {{ order.timeSlotStartTime | slice : 0 : 5 }} -
-        {{ order.timeSlotEndTime | slice : 0 : 5 }}
-      </td> -->
-        <!-- Acciones -->
-        <td
-          *ngIf="
-            hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])
-          "
-        >
-          <div class="d-flex">
-            <button
-              *ngIf="
-                (authService.hasRole('tienda') && order.categoryId == null) ||
-                authService.hasRole('admin')
+            <select
+              *ngIf="order.categoryId != 2"
+              class="form-select form-select-sm category-select"
+              [(ngModel)]="order.warehouseId"
+              (ngModelChange)="onWarehouseChange(order.id, $event)"
+              [disabled]="
+                warehouseOptions.length === 0 || order.categoryId !== null
               "
-              class="btn btn-sm btn-outline-primary me-2"
-              [routerLink]="['/orders/edit', order.id]"
             >
-              <svg [cIcon]="icons.cilPencil"></svg>
-            </button>
-            <button
-              *ngIf="authService.hasRole('admin')"
-              class="btn btn-sm btn-outline-primary me-2"
-              [routerLink]="[order.id]"
-            >
-              <svg [cIcon]="icons.cilViewModule"></svg>
-            </button>
-            <button
-              *ngIf="
-                hasColumn('action-edit') &&
-                order.statusId !== getStatusDelivered() &&
-                authService.hasRole('admin')
-              "
-              class="btn btn-sm btn-outline-primary"
-              (click)="onScheduleOrder(order)"
-            >
-              <svg cIcon name="cilCalendar"></svg>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+              <option [value]="null" disabled>Seleccione bodega...</option>
+              <option
+                *ngFor="let warehouse of warehouseOptions"
+                [value]="warehouse.id"
+              >
+                {{ warehouse.name }}
+              </option>
+            </select>
+
+            <span *ngIf="order.categoryId == 2" class="category-tag">
+              <svg [cIcon]="icons.cilTruck" class="me-1"></svg>
+              Tradicional
+            </span>
+          </td>
+          
+          <!-- Notas -->
+          <td *ngIf="hasColumn('notes')" class="notes-cell">
+            <div class="notes-info" *ngIf="order.notes" title="{{ order.notes }}">
+              <svg [cIcon]="icons.cilNotes" class="me-1"></svg>
+              <span class="notes-text">{{ order.notes }}</span>
+            </div>
+            <span *ngIf="!order.notes" class="no-notes">Sin notas</span>
+          </td>
+          
+          <!-- Acciones -->
+          <td
+            *ngIf="hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])"
+            class="actions-cell"
+          >
+            <div class="action-buttons">
+              <button
+                *ngIf="
+                  (authService.hasRole('tienda') && order.categoryId == null) ||
+                  authService.hasRole('admin')
+                "
+                class="btn btn-sm btn-outline-primary action-btn"
+                [routerLink]="['/orders/edit', order.id]"
+                title="Editar orden"
+              >
+                <svg [cIcon]="icons.cilPencil"></svg>
+              </button>
+              
+              <button
+                *ngIf="authService.hasRole('admin')"
+                class="btn btn-sm btn-outline-info action-btn"
+                [routerLink]="[order.id]"
+                title="Ver detalles"
+              >
+                <svg [cIcon]="icons.cilViewModule"></svg>
+              </button>
+              
+              <button
+                *ngIf="
+                  hasColumn('action-edit') &&
+                  order.statusId !== getStatusDelivered() &&
+                  authService.hasRole('admin')
+                "
+                class="btn btn-sm btn-outline-warning action-btn"
+                (click)="onScheduleOrder(order)"
+                title="Programar orden"
+              >
+                <svg [cIcon]="icons.cilCalendar"></svg>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
