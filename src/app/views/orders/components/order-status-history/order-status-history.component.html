@@ -1,19 +1,47 @@
 <c-row>
   <c-col xs="12" sm="12" lg="12">
-    <c-card class="h-100">
-      <c-card-header>
-        <strong>Historial de Estados</strong>
+    <c-card class="h-100 status-history-card">
+      <c-card-header class="bg-light">
+        <h5 class="mb-0">
+          <i class="fas fa-tasks me-2 text-warning"></i>
+          Historial de Estados
+        </h5>
       </c-card-header>
-      <c-card-body class="overflow-auto" style="max-height: 500px">
-        <ul cListGroup>
-          <li *ngFor="let status of orderStatusHistory" cListGroupItem>
-            <strong>{{ status.creator }} {{ status.createdAt | date : "short" }}</strong
-            >:
-            <span class="text-muted">
-              {{ status.oldStatus }} → {{ status.newStatus }}
-            </span>
-          </li>
-        </ul>
+      <c-card-body>
+        <div *ngIf="isLoading" class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="mt-2 text-muted">Cargando historial...</p>
+        </div>
+        
+        <div *ngIf="!isLoading && orderStatusHistory.length > 0">
+          <div class="timeline">
+            <div *ngFor="let status of orderStatusHistory; let i = index" class="timeline-item">
+              <div class="timeline-marker">
+                <i class="fas fa-exchange-alt text-warning"></i>
+              </div>
+              <div class="timeline-content">
+                <div class="timeline-header">
+                  <span class="fw-semibold">{{ status.creator }}</span>
+                  <small class="text-muted">{{ status.createdAt | date:'dd/MM/yyyy HH:mm' }}</small>
+                </div>
+                <div class="timeline-body">
+                  <span class="badge bg-light text-dark me-2">{{ status.oldStatus }}</span>
+                  <i class="fas fa-arrow-right text-muted mx-2"></i>
+                  <span class="badge bg-warning">{{ status.newStatus }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="!isLoading && orderStatusHistory.length === 0" class="text-center py-4">
+          <div class="text-muted">
+            <i class="fas fa-tasks fa-2x mb-3"></i>
+            <p class="mb-0">No hay cambios de estado registrados</p>
+          </div>
+        </div>
       </c-card-body>
     </c-card>
   </c-col>

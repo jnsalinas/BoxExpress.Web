@@ -86,7 +86,8 @@
           *ngIf="hasColumn('category') && authService.hasRole('admin')"
           style="min-width: 185px"
         >
-          <select *ngIf="order.categoryId != 2"
+          <select
+            *ngIf="order.categoryId != 2"
             class="form-select form-select-sm"
             [(ngModel)]="order.warehouseId"
             (ngModelChange)="onWarehouseChange(order.id, $event)"
@@ -102,7 +103,7 @@
               {{ warehouse.name }}
             </option>
           </select>
-          
+
           <span *ngIf="order.categoryId == 2" class="text-muted">
             Tradicional
           </span>
@@ -178,14 +179,20 @@
           <div class="d-flex">
             <button
               *ngIf="
-                (authService.hasRole('tienda') &&
-                  order.statusId == getStatusUnscheduled()) ||
+                (authService.hasRole('tienda') && order.categoryId == null) ||
                 authService.hasRole('admin')
               "
               class="btn btn-sm btn-outline-primary me-2"
               [routerLink]="['/orders/edit', order.id]"
             >
               <svg [cIcon]="icons.cilPencil"></svg>
+            </button>
+            <button
+              *ngIf="authService.hasRole('admin')"
+              class="btn btn-sm btn-outline-primary me-2"
+              [routerLink]="[order.id]"
+            >
+              <svg [cIcon]="icons.cilViewModule"></svg>
             </button>
             <button
               *ngIf="

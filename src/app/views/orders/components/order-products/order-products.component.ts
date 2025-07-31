@@ -40,4 +40,10 @@ export class OrderProductsComponent implements OnInit {
       },
     });
   }
+
+  getTotalProducts(): number {
+    return this.products.reduce((total, item) => {
+      return total + ((item.unitPrice || 0) * (item.quantity || 0));
+    }, 0);
+  }
 }

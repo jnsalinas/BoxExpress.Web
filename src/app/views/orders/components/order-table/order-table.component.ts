@@ -86,8 +86,10 @@ export class OrderTableComponent {
   }
 
    getStatusUnscheduled(): number {
-    return this.statusOptions.find((x) => x.name == OrderStatusName.Unscheduled)!
-      .id!;
+    return this.statusOptions.length > 0
+      ? this.statusOptions.find((x) => x.name == OrderStatusName.Unscheduled)!
+          .id!
+      : 0;
   }
   // getStatusColor(status: string): string {
   //   return this.statusStyles[status?.toLowerCase()]?.color || '#dee2e6';

@@ -3,7 +3,7 @@ import {
   provideHttpClient,
   withInterceptorsFromDi,
 } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, LOCALE_ID } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import {
   provideRouter,
@@ -13,6 +13,8 @@ import {
   withRouterConfig,
   withViewTransitions,
 } from '@angular/router';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
 
 import { DropdownModule, SidebarModule } from '@coreui/angular';
 import { IconSetService } from '@coreui/icons-angular';
@@ -20,8 +22,13 @@ import { routes } from './app.routes';
 import { ToastrModule } from 'ngx-toastr';
 import { AuthInterceptor } from './services/http-interceptors/auth.interceptor';
 
+// Registrar el locale español
+registerLocaleData(localeEs);
+
 export const appConfig: ApplicationConfig = {
   providers: [
+    // Configurar el locale en español
+    { provide: LOCALE_ID, useValue: 'es' },
     provideRouter(
       routes,
       withRouterConfig({

@@ -40,6 +40,7 @@ import { WalletTransactionListComponent } from '../../wallet-transactions/list/w
     TabsContentComponent,
     OrderProductsComponent,
     OrderCategoryHistoryComponent,
+    OrderStatusHistoryComponent,
     LoadingOverlayComponent,
     OrderInfoComponent,
     WalletTransactionListComponent,

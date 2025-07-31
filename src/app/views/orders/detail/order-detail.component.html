@@ -1,45 +1,264 @@
 <app-loading-overlay *ngIf="isLoading" [loadingText]="'Cargando orden...'">
 </app-loading-overlay>
 
-<c-row *ngIf="!isLoading">
-  <c-col xs="12">
-    <c-card class="mb-4">
-      <c-card-header>
-        <strong>Orden</strong>
-      </c-card-header>
-      <c-card-body>
-        <c-tabs
-          [activeItemKey]="activeTab"
-          (activeItemKeyChange)="handleActiveItemChange($event)"
-        >
-          <c-tabs-list variant="underline-border">
-            <button cTab [itemKey]="0">Información</button>
-            <button cTab [itemKey]="1">Historial Wallet</button>
-          </c-tabs-list>
+<div *ngIf="!isLoading" class="order-detail-container">
+  <!-- Header con información principal -->
+  <c-card class="mb-4 order-header-card">
+    <c-card-body class="p-4">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center mb-3">
+            <div class="order-icon me-3">
+              <i class="fas fa-shopping-cart text-primary fs-2"></i>
+            </div>
+            <div>
+              <h2 class="mb-1 text-primary">Orden #{{ order.id }}</h2>
+              <p class="text-muted mb-0">{{ order.clientFullName }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="info-item">
+                <small class="text-muted d-block">Estado</small>
+                <span class="badge bg-success fs-6">{{ order.status }}</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="info-item">
+                <small class="text-muted d-block">Categoría</small>
+                <span class="badge bg-info fs-6">{{ order.category }}</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="info-item">
+                <small class="text-muted d-block">Total</small>
+                <span class="fw-bold fs-5 text-success">{{
+                  order.totalAmount | currency : order.currencyCode
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="delivery-info">
+            <div class="mb-2">
+              <i class="fas fa-calendar-alt text-muted me-2"></i>
+              <span class="fw-semibold"
+                >Entrega: {{ order.scheduledDate | date : "dd/MM/yyyy" }}</span
+              >
+            </div>
+            <div class="mb-2">
+              <i class="fas fa-map-marker-alt text-muted me-2"></i>
+              <span class="fw-semibold">{{ order.storeName }}</span>
+            </div>
+            <div>
+              <i class="fas fa-warehouse text-muted me-2"></i>
+              <span class="fw-semibold">Bodega {{ order.warehouseName }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
 
-          <c-tabs-content>
-            <c-tab-panel [itemKey]="0" class="p-3">
-              <div class="mt-3 mb-3">
-                <app-order-products [orderId]="order.id"></app-order-products>
+  <!-- Contenido principal con tabs -->
+  <c-card class="mb-4">
+    <c-card-body class="p-0">
+      <c-tabs
+        [activeItemKey]="activeTab"
+        (activeItemKeyChange)="handleActiveItemChange($event)"
+      >
+        <c-tabs-list variant="underline-border" class="px-4 pt-3">
+          <button cTab [itemKey]="0" class="tab-button">
+            <i class="fas fa-info-circle me-2"></i>
+            Información General
+          </button>
+          <button cTab [itemKey]="1" class="tab-button">
+            <i class="fas fa-history me-2"></i>
+            Historial Wallet
+          </button>
+        </c-tabs-list>
+
+        <c-tabs-content>
+          <c-tab-panel [itemKey]="0" class="p-4">
+            <div class="row">
+              <!-- Información del cliente -->
+              <div class="col-lg-4 mb-4">
+                <c-card class="h-100 client-info-card">
+                  <c-card-header class="bg-light">
+                    <h5 class="mb-0">
+                      <i class="fas fa-user me-2 text-primary"></i>
+                      Información del Cliente
+                    </h5>
+                  </c-card-header>
+                  <c-card-body>
+                    <div class="client-details">
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Nombre</small>
+                        <span class="fw-semibold">{{
+                          order.clientFullName
+                        }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Teléfono</small>
+                        <span class="fw-semibold">{{ order.clientPhone }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Email</small>
+                        <span class="fw-semibold">{{ order.client?.email || "No especificado" }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Ciudad</small>
+                        <span class="fw-semibold">{{ order.city }}</span>
+                      </div>
+                    </div>
+                  </c-card-body>
+                </c-card>
               </div>
-              <div class="mt-3 mb-3">
-                <app-order-category-history
-                  [orderId]="order.id"
-                ></app-order-category-history>
+
+              <!-- Información de entrega -->
+              <div class="col-lg-4 mb-4">
+                <c-card class="h-100 delivery-info-card">
+                  <c-card-header class="bg-light">
+                    <h5 class="mb-0">
+                      <i class="fas fa-truck me-2 text-success"></i>
+                      Información de Entrega
+                    </h5>
+                  </c-card-header>
+                  <c-card-body>
+                    <div class="delivery-details">
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Dirección</small>
+                        <span class="fw-semibold">{{
+                          order.clientAddress || "No especificada"
+                        }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Código Postal</small>
+                        <span class="fw-semibold">{{
+                          order.client?.addresses?.[0]?.postalCode || "No especificado"
+                        }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Latitud</small>
+                        <span class="fw-semibold">{{
+                          order.latitude
+                            ? order.latitude.toFixed(6)
+                            : "No especificada"
+                        }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Longitud</small>
+                        <span class="fw-semibold">{{
+                          order.longitude
+                            ? order.longitude.toFixed(6)
+                            : "No especificada"
+                        }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block"
+                          >Fecha Programada</small
+                        >
+                        <span class="fw-semibold">{{
+                          order.scheduledDate
+                            | date : "EEEE, d 'de' MMMM 'de' yyyy"
+                        }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Franja Horaria</small>
+                        <span class="fw-semibold">{{
+                          order.timeSlotStartTime && order.timeSlotEndTime
+                            ? order.timeSlotStartTime +
+                              " - " +
+                              order.timeSlotEndTime
+                            : "No definida"
+                        }}</span>
+                      </div>
+                    </div>
+                  </c-card-body>
+                </c-card>
               </div>
-              <div class="mt-3 mb-3">
-                <app-order-info [order]="order"></app-order-info>
+
+              <!-- Información económica -->
+              <div class="col-lg-4 mb-4">
+                <c-card class="h-100 financial-info-card">
+                  <c-card-header class="bg-light">
+                    <h5 class="mb-0">
+                      <i class="fas fa-dollar-sign me-2 text-warning"></i>
+                      Información Económica
+                    </h5>
+                  </c-card-header>
+                  <c-card-body>
+                    <div class="financial-details">
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block"
+                          >Total de la Orden</small
+                        >
+                        <span class="fw-bold fs-5 text-success">{{
+                          order.totalAmount | currency : order.currencyCode
+                        }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Costo de Envío</small>
+                        <span class="fw-semibold">{{
+                          order.deliveryFee | currency : order.currencyCode
+                        }}</span>
+                      </div>
+                      <div class="detail-item mb-3">
+                        <small class="text-muted d-block">Moneda</small>
+                        <span class="fw-semibold">{{
+                          order.currencyCode
+                        }}</span>
+                      </div>
+                    </div>
+                  </c-card-body>
+                </c-card>
               </div>
-            </c-tab-panel>
-            <c-tab-panel [itemKey]="1" class="p-3">
-              <app-wallet-transaction-list
+            </div>
+
+            <!-- Productos -->
+            <div class="mb-4">
+              <app-order-products [orderId]="order.id"></app-order-products>
+            </div>
+
+            <!-- Historial de categorías -->
+            <!-- <div class="mb-4">
+              <app-order-category-history
                 [orderId]="order.id"
-                [showFilters]="false"
-              />
-            </c-tab-panel>
-          </c-tabs-content>
-        </c-tabs>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+              ></app-order-category-history>
+            </div> -->
+
+            <!-- Historial de estados -->
+            <div class="mb-4">
+              <app-order-status-history
+                [orderId]="order.id"
+              ></app-order-status-history>
+            </div>
+
+            <!-- Notas -->
+            <div *ngIf="order.notes" class="mb-4">
+              <c-card class="notes-card">
+                <c-card-header class="bg-light">
+                  <h5 class="mb-0">
+                    <i class="fas fa-sticky-note me-2 text-info"></i>
+                    Notas
+                  </h5>
+                </c-card-header>
+                <c-card-body>
+                  <p class="mb-0">{{ order.notes }}</p>
+                </c-card-body>
+              </c-card>
+            </div>
+          </c-tab-panel>
+
+          <c-tab-panel [itemKey]="1" class="p-4">
+            <app-wallet-transaction-list
+              [orderId]="order.id"
+              [showFilters]="false"
+            />
+          </c-tab-panel>
+        </c-tabs-content>
+      </c-tabs>
+    </c-card-body>
+  </c-card>
+</div>
