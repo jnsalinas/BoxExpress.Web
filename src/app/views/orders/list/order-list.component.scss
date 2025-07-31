@@ -1,40 +1,23 @@
-.table td,
-.table th {
+.table td, .table th {
   padding: 0.5rem;
   font-size: 0.875rem;
 }
 
-::ng-deep .bg-sin-programar, ::ng-deep tr.bg-sin-programar td {
-  background-color: #e6f7ff !important;
-}
-::ng-deep .bg-programado, ::ng-deep tr.bg-programado td {
-  background-color: #fffbe6 !important;
-}
-::ng-deep .bg-entregado, ::ng-deep tr.bg-entregado td {
-  background-color: #f6ffed !important;
-}
-::ng-deep .bg-cancelado, ::ng-deep tr.bg-cancelado td {
-  background-color: #fff1f0 !important;
-}
-::ng-deep .bg-cancelado, ::ng-deep tr.bg-cancelado1 td {
-  background-color: #f9f0ff !important;
-}
-::ng-deep .bg-en-ruta, ::ng-deep tr.bg-en-ruta td {
-  background-color: #0dcaf0 !important;
-}
+::ng-deep .bg-sin-programar, ::ng-deep tr.bg-sin-programar td { background-color: #e6f7ff !important; }
+::ng-deep .bg-programado, ::ng-deep tr.bg-programado td { background-color: #fffbe6 !important; }
+::ng-deep .bg-entregado, ::ng-deep tr.bg-entregado td { background-color: #f6ffed !important; }
+::ng-deep .bg-cancelado, ::ng-deep tr.bg-cancelado td { background-color: #fff1f0 !important; }
+::ng-deep .bg-cancelado, ::ng-deep tr.bg-cancelado1 td { background-color: #f9f0ff !important; }
+::ng-deep .bg-en-ruta, ::ng-deep tr.bg-en-ruta td { background-color: #0dcaf0 !important; }
 
-td {
-  vertical-align: middle;
-}
+td { vertical-align: middle; }
 
 .orders-list-container {
   .stats-header-card {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     
-    .card-body {
-      background: transparent;
-    }
+    .card-body { background: transparent; }
     
     .orders-icon {
       background: rgba(255, 255, 255, 0.2);
@@ -45,27 +28,20 @@ td {
       align-items: center;
       justify-content: center;
       
-      i {
-        color: white !important;
-      }
+      i { color: white !important; }
     }
     
-    h2 {
-      color: white !important;
-      font-weight: 700;
-    }
+    h2 { color: white !important; font-weight: 700; }
     
-    .action-buttons {
-      .btn {
-        border-radius: 8px;
-        font-weight: 600;
-        padding: 0.75rem 1.5rem;
-        transition: all 0.3s ease;
-        
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
+    .action-buttons .btn {
+      border-radius: 8px;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       }
     }
   }
@@ -84,10 +60,7 @@ td {
       border-bottom: 1px solid #dee2e6;
       background-color: #f8f9fa !important;
       
-      h5 {
-        font-weight: 600;
-        color: #495057;
-      }
+      h5 { font-weight: 600; color: #495057; }
     }
     
     .filters-form {
@@ -95,9 +68,7 @@ td {
         font-size: 0.875rem;
         margin-bottom: 0.5rem;
         
-        i {
-          font-size: 0.75rem;
-        }
+        i { font-size: 0.75rem; }
       }
       
       .form-control {
@@ -111,16 +82,12 @@ td {
         }
       }
       
-      .custom-select {
-        .ng-select-container {
-          border-radius: 8px;
-          border: 1px solid #dee2e6;
-          transition: all 0.3s ease;
-          
-          &:hover {
-            border-color: #0d6efd;
-          }
-        }
+      .custom-select .ng-select-container {
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+        
+        &:hover { border-color: #0d6efd; }
       }
       
       .btn {
@@ -160,109 +127,76 @@ td {
       }
     }
     
-    .status-summary {
-      .status-card {
-        border: none;
-        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border-radius: 12px;
+    .status-summary .status-card {
+      border: none;
+      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-radius: 12px;
+      
+      &:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      }
+      
+      .status-icon i { font-size: 1.5rem; opacity: 0.8; }
+      .status-name { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; }
+      .status-count { font-size: 1.5rem; font-weight: 700; margin: 0; }
+      
+      // Estados específicos
+      &.status-pending {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        color: #856404;
         
-        &:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
+        .status-icon i { color: #ffc107; }
+      }
+      
+      &.status-processing {
+        background: linear-gradient(135deg, #cce5ff 0%, #b3d9ff 100%);
+        color: #004085;
         
-        .status-icon {
-          i {
-            font-size: 1.5rem;
-            opacity: 0.8;
-          }
-        }
+        .status-icon i { color: #007bff; }
+      }
+      
+      &.status-shipped {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        color: #155724;
         
-        .status-name {
-          font-size: 0.875rem;
-          font-weight: 600;
-          margin-bottom: 0.5rem;
-        }
+        .status-icon i { color: #28a745; }
+      }
+      
+      &.status-delivered {
+        background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
+        color: #0c5460;
         
-        .status-count {
-          font-size: 1.5rem;
-          font-weight: 700;
-          margin: 0;
-        }
+        .status-icon i { color: #17a2b8; }
+      }
+      
+      &.status-cancelled {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        color: #721c24;
         
-        // Estados específicos
-        &.status-pending {
-          background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-          color: #856404;
-          
-          .status-icon i {
-            color: #ffc107;
-          }
-        }
+        .status-icon i { color: #dc3545; }
+      }
+      
+      &.status-default {
+        background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+        color: #495057;
         
-        &.status-processing {
-          background: linear-gradient(135deg, #cce5ff 0%, #b3d9ff 100%);
-          color: #004085;
-          
-          .status-icon i {
-            color: #007bff;
-          }
-        }
-        
-        &.status-shipped {
-          background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-          color: #155724;
-          
-          .status-icon i {
-            color: #28a745;
-          }
-        }
-        
-        &.status-delivered {
-          background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-          color: #0c5460;
-          
-          .status-icon i {
-            color: #17a2b8;
-          }
-        }
-        
-        &.status-cancelled {
-          background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-          color: #721c24;
-          
-          .status-icon i {
-            color: #dc3545;
-          }
-        }
-        
-        &.status-default {
-          background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
-          color: #495057;
-          
-          .status-icon i {
-            color: #6c757d;
-          }
-        }
+        .status-icon i { color: #6c757d; }
       }
     }
     
-    .orders-table-container {
-      .pagination-container {
-        display: flex;
-        justify-content: center;
-        padding: 1rem 0;
-      }
+    .orders-table-container .pagination-container {
+      display: flex;
+      justify-content: center;
+      padding: 1rem 0;
     }
   }
   
   // Responsive adjustments
   @media (max-width: 768px) {
     .stats-header-card {
-      .row {
-        text-align: center;
-      }
+      .row { text-align: center; }
       
       .col-md-4.text-end {
         text-align: center !important;
@@ -273,27 +207,12 @@ td {
         flex-direction: column;
         gap: 0.5rem;
         
-        .btn {
-          width: 100%;
-        }
+        .btn { width: 100%; }
       }
     }
     
-    .filters-form {
-      .row {
-        .col-md-2 {
-          margin-bottom: 1rem;
-        }
-      }
-    }
-    
-    .status-summary {
-      .row {
-        .col-md-2 {
-          margin-bottom: 1rem;
-        }
-      }
-    }
+    .filters-form .row .col-md-2 { margin-bottom: 1rem; }
+    .status-summary .row .col-md-2 { margin-bottom: 1rem; }
     
     .tab-button {
       padding: 0.5rem 1rem;
@@ -302,9 +221,7 @@ td {
   }
   
   // Animations
-  .fade-in {
-    animation: fadeIn 0.5s ease-in;
-  }
+  .fade-in { animation: fadeIn 0.5s ease-in; }
   
   @keyframes fadeIn {
     from {
