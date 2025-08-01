@@ -1,19 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import {
-  PageItemDirective,
-  PageLinkDirective,
-  PaginationComponent,
-} from '@coreui/angular';
+
 import { PaginationDto } from '../../../models/common/pagination.dto';
 
 @Component({
   selector: 'app-generic-pagination',
   imports: [
     CommonModule,
-    PaginationComponent,
-    PageLinkDirective,
-    PageItemDirective,
   ],
   standalone: true,
   templateUrl: './generic-pagination.component.html',

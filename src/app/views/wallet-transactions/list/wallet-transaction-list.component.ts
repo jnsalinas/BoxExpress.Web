@@ -5,13 +5,9 @@ import { WalletTransactionService } from '../../../services/wallet-transaction.s
 import { ReactiveFormsModule } from '@angular/forms';
 import { freeSet } from '@coreui/icons';
 import {
-  RowComponent,
-  ColComponent,
   CardComponent,
   CardHeaderComponent,
   CardBodyComponent,
-  TableDirective,
-  SpinnerComponent,
 } from '@coreui/angular';
 import { UtcDatePipe } from '../../../shared/pipes/utc-date.pipe'; // Adjust the path as needed
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -34,19 +30,15 @@ import { HasRoleDirective } from '../../../shared/directives/has-role.directive'
   selector: 'app-wallet-transaction-list',
   standalone: true,
   imports: [
-    RowComponent,
-    ColComponent,
     CardComponent,
     CardHeaderComponent,
     CardBodyComponent,
-    TableDirective,
     ReactiveFormsModule,
     CommonModule,
     UtcDatePipe,
     GenericPaginationComponent,
     LoadingOverlayComponent,
     NgSelectModule,
-    IconDirective,
     RouterLink,
     HasRoleDirective
   ],
@@ -76,6 +68,7 @@ export class WalletTransactionListComponent implements OnInit {
       endDate: [null],
       orderId: [this.orderId ?? null],
       storeId: [null],
+      transactionType: [null],
     });
     this.loadTransactions();
     this.loadStores();
@@ -158,5 +151,50 @@ export class WalletTransactionListComponent implements OnInit {
         a.click();
         this.isLoading = false;
       });
+  }
+
+  getTransactionTypeBadgeClass(type: string | undefined): string {
+    switch (type?.toUpperCase()) {
+      case 'DEPOSIT':
+        return 'bg-success';
+      case 'WITHDRAWAL':
+        return 'bg-danger';
+      case 'PURCHASE':
+        return 'bg-primary';
+      case 'REFUND':
+        return 'bg-warning';
+      case 'TRANSFER':
+        return 'bg-info';
+      default:
+        return 'bg-secondary';
+    }
+  }
+
+  getStatusBadgeClass(status: string | undefined): string {
+    switch (status?.toUpperCase()) {
+      case 'COMPLETED':
+      case 'APPROVED':
+        return 'bg-success';
+      case 'PENDING':
+        return 'bg-warning';
+      case 'REJECTED':
+      case 'CANCELLED':
+        return 'bg-danger';
+      case 'PROCESSING':
+        return 'bg-info';
+      default:
+        return 'bg-secondary';
+    }
+  }
+
+  getAmountBadgeClass(amount: number | undefined): string {
+    if (!amount) return 'bg-secondary';
+    if (amount > 0) {
+      return 'bg-success';
+    } else if (amount < 0) {
+      return 'bg-danger';
+    } else {
+      return 'bg-secondary';
+    }
   }
 }

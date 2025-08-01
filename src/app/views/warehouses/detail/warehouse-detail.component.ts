@@ -10,9 +10,6 @@ import {
   CardComponent,
   CardHeaderComponent,
   CardBodyComponent,
-  RowComponent,
-  ColComponent,
-  TableDirective,
 } from '@coreui/angular';
 import { WarehouseService } from '../../../services/warehouse.service';
 import {
@@ -49,15 +46,11 @@ import { AuthService } from '../../../services/auth.service';
     CardComponent,
     CardHeaderComponent,
     CardBodyComponent,
-    ColComponent,
-    RowComponent,
     FormsModule,
     WarehouseProductModalComponent,
     WarehouseTransferModalComponent,
-    TableDirective,
     GenericModalComponent,
     GenericPaginationComponent,
-    FormsModule,
     ReactiveFormsModule,
     RouterModule,
     RouterLink,

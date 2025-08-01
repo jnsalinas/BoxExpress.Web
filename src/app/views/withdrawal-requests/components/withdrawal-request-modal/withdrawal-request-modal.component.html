@@ -4,29 +4,38 @@
   backdrop="static"
   keyboard="false"
   scrollable
+  class="withdrawal-modal"
 >
-  <c-modal-header>
+  <c-modal-header class="modal-header-custom">
     <h5 class="modal-title">
-      <svg [cIcon]="icons.cilMoney" class="me-2"></svg>
-      <span *ngIf="(form.value.id ?? 0) === 0">Nuevo Retiro</span>
-      <span *ngIf="(form.value.id ?? 0) !== 0">Gestionar Retiro</span>
+      <div class="d-flex align-items-center">
+        <div class="modal-icon me-2">
+          <i class="fas fa-money-bill-wave text-primary"></i>
+        </div>
+        <div>
+          <span *ngIf="(form.value.id ?? 0) === 0" class="fw-bold">Nuevo Retiro</span>
+          <span *ngIf="(form.value.id ?? 0) !== 0" class="fw-bold">Gestionar Retiro</span>
+        </div>
+      </div>
     </h5>
   </c-modal-header>
 
-  <c-modal-body>
+  <c-modal-body class="modal-body-custom">
     <!-- Balance Info -->
-    <div *ngIf="store" class="alert alert-info d-flex align-items-center mb-4">
-      <svg [cIcon]="icons.cilWallet" class="me-2"></svg>
-      <strong>Balance disponible: </strong>
-      <span class="ms-1">{{ store.balance | currency }}</span>
+    <div *ngIf="store" class="balance-info mb-3">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-wallet text-success me-2"></i>
+        <strong>Balance disponible: </strong>
+        <span class="ms-1 text-success fw-bold">{{ store.balance | number:'1.0-0' }}</span>
+      </div>
     </div>
 
-    <form [formGroup]="form">
+    <form [formGroup]="form" class="withdrawal-form">
       <!-- Store Selection (Admin only) -->
-      <div class="row" *hasRole="['admin']">
-        <div class="col-12 mb-3">
+      <div class="row mb-3" *hasRole="['admin']">
+        <div class="col-12">
           <label class="form-label">
-            <svg [cIcon]="icons.cilHome" class="me-1"></svg>
+            <i class="fas fa-home me-1 text-muted"></i>
             Tienda
           </label>
           <ng-select
@@ -37,38 +46,41 @@
             [searchable]="true"
             placeholder="Seleccione una tienda"
             (change)="onStoreChange($event)"
+            class="custom-select"
           >
           </ng-select>
         </div>
       </div>
 
       <!-- Amount and Account Holder -->
-      <div class="row">
-        <div class="col-md-6 mb-3">
+      <div class="row mb-3">
+        <div class="col-md-6">
           <label class="form-label">
-            <svg [cIcon]="icons.cilDollar" class="me-1"></svg>
+            <i class="fas fa-coins me-1 text-muted"></i>
             Monto
           </label>
           <div class="input-group">
-            <span class="input-group-text">$</span>
+            <span class="input-group-text">
+              <i class="fas fa-dollar-sign"></i>
+            </span>
             <input
               type="number"
               class="form-control"
               formControlName="amount"
               [max]="store?.balance ?? 0"
-              placeholder="0.00"
+              placeholder="0"
               step="0.01"
             />
           </div>
-          <div *ngIf="form.get('amount')?.errors?.['max']" class="text-danger small mt-1">
-            <svg [cIcon]="icons.cilWarning" class="me-1"></svg>
-            El monto no puede ser mayor a {{ store?.balance ?? 0 | currency }}
+          <div *ngIf="form.get('amount')?.errors?.['max']" class="error-message">
+            <i class="fas fa-exclamation-triangle me-1"></i>
+            El monto no puede ser mayor a {{ store?.balance ?? 0 | number:'1.0-0' }}
           </div>
         </div>
 
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6">
           <label class="form-label">
-            <svg [cIcon]="icons.cilUser" class="me-1"></svg>
+            <i class="fas fa-user me-1 text-muted"></i>
             Titular de la cuenta
           </label>
           <input
@@ -81,10 +93,10 @@
       </div>
 
       <!-- Document Information -->
-      <div class="row">
-        <div class="col-md-6 mb-3">
+      <div class="row mb-3">
+        <div class="col-md-6">
           <label class="form-label">
-            <svg [cIcon]="icons.cilUser" class="me-1"></svg>
+            <i class="fas fa-file-alt me-1 text-muted"></i>
             Tipo de documento
           </label>
           <ng-select
@@ -93,14 +105,15 @@
             bindValue="id"
             formControlName="documentTypeId"
             [searchable]="false"
-            placeholder="Seleccione un tipo de documento"
+            placeholder="Seleccione un tipo"
+            class="custom-select"
           >
           </ng-select>
         </div>
 
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6">
           <label class="form-label">
-            <svg [cIcon]="icons.cilFile" class="me-1"></svg>
+            <i class="fas fa-hashtag me-1 text-muted"></i>
             Número de documento
           </label>
           <input 
@@ -113,10 +126,10 @@
       </div>
 
       <!-- Bank Information -->
-      <div class="row">
-        <div class="col-md-6 mb-3">
+      <div class="row mb-3">
+        <div class="col-md-6">
           <label class="form-label">
-            <svg [cIcon]="icons.cilBank" class="me-1"></svg>
+            <i class="fas fa-bank me-1 text-muted"></i>
             Banco
           </label>
           <input 
@@ -127,9 +140,9 @@
           />
         </div>
 
-        <div class="col-md-6 mb-3">
+        <div class="col-md-6">
           <label class="form-label">
-            <svg [cIcon]="icons.cilCreditCard" class="me-1"></svg>
+            <i class="fas fa-credit-card me-1 text-muted"></i>
             Número de cuenta
           </label>
           <input
@@ -142,71 +155,76 @@
       </div>
 
       <!-- Description -->
-      <div class="row">
-        <div class="col-12 mb-3">
+      <div class="row mb-3">
+        <div class="col-12">
           <label class="form-label">
-            <svg [cIcon]="icons.cilNotes" class="me-1"></svg>
+            <i class="fas fa-align-left me-1 text-muted"></i>
             Descripción
           </label>
           <textarea
             class="form-control"
             formControlName="description"
-            placeholder="Descripción del retiro"
-            rows="3"
+            placeholder="Describe el motivo del retiro..."
+            rows="2"
           ></textarea>
         </div>
       </div>
 
       <!-- Management (Admin only) -->
-      <div class="row" *hasRole="['admin']">
-        <div class="col-12 mb-3">
+      <div class="row mb-3" *hasRole="['admin']">
+        <div class="col-12">
           <label class="form-label">
-            <svg [cIcon]="icons.cilSettings" class="me-1"></svg>
-            Gestión
+            <i class="fas fa-comments me-1 text-muted"></i>
+            Comentarios de gestión
           </label>
           <textarea 
             class="form-control" 
             formControlName="reason"
-            placeholder="Comentarios de gestión"
-            rows="3"
+            placeholder="Comentarios internos para la gestión..."
+            rows="2"
           ></textarea>
         </div>
       </div>
     </form>
   </c-modal-body>
 
-  <c-modal-footer>
-    <button class="btn btn-secondary" type="button" (click)="close()">
-      <svg [cIcon]="icons.cilX" class="me-1"></svg>
-      Cancelar
-    </button>
-    <button
-      *ngIf="!isPending && (form.value.id ?? 0) === 0"
-      class="btn btn-primary"
-      type="button"
-      (click)="save()"
-      [disabled]="form.invalid"
-    >
-      <svg [cIcon]="icons.cilSave" class="me-1"></svg>
-      Guardar
-    </button>
-    <button
-      *ngIf="isPending"
-      type="button"
-      class="btn btn-success"
-      (click)="approve()"
-    >
-      <svg [cIcon]="icons.cilCheck" class="me-1"></svg>
-      Aprobar
-    </button>
-    <button
-      *ngIf="isPending"
-      type="button"
-      class="btn btn-danger"
-      (click)="reject()"
-    >
-      <svg [cIcon]="icons.cilXCircle" class="me-1"></svg>
-      Rechazar
-    </button>
+  <c-modal-footer class="modal-footer-custom">
+    <div class="d-flex gap-2 w-100">
+      <button class="btn btn-outline-secondary flex-fill" type="button" (click)="close()">
+        <i class="fas fa-times me-1"></i>
+        Cancelar
+      </button>
+      
+      <button
+        *ngIf="!isPending && (form.value.id ?? 0) === 0"
+        class="btn btn-primary flex-fill"
+        type="button"
+        (click)="save()"
+        [disabled]="form.invalid"
+      >
+        <i class="fas fa-save me-1"></i>
+        Guardar
+      </button>
+      
+      <button
+        *ngIf="isPending"
+        type="button"
+        class="btn btn-success flex-fill"
+        (click)="approve()"
+      >
+        <i class="fas fa-check me-1"></i>
+        Aprobar
+      </button>
+      
+      <button
+        *ngIf="isPending"
+        type="button"
+        class="btn btn-danger flex-fill"
+        (click)="reject()"
+      >
+        <i class="fas fa-times-circle me-1"></i>
+        Rechazar
+      </button>
+    </div>
   </c-modal-footer>
 </c-modal>

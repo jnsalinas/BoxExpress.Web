@@ -1,9 +1,114 @@
-.pagination-ellipsis {
-  padding: 0 8px;
-  color: #888;
-  pointer-events: none;
-}
-a.disabled {
-  pointer-events: none;
-  color: #ccc;
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+  
+  .pagination {
+    margin: 0;
+    gap: 0.25rem;
+    
+    .page-item {
+      .page-link {
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
+        color: #495057;
+        font-size: 0.75rem;
+        padding: 0.375rem 0.75rem;
+        transition: all 0.2s ease;
+        background-color: white;
+        min-width: 32px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &:hover {
+          background-color: #e9ecef;
+          border-color: #adb5bd;
+          color: #495057;
+          transform: translateY(-1px);
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        &:focus {
+          box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+          border-color: #0d6efd;
+        }
+        
+        &.active {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-color: #667eea;
+          color: white;
+          font-weight: 600;
+          
+          &:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+          }
+        }
+        
+        &.disabled {
+          color: #6c757d;
+          background-color: #f8f9fa;
+          border-color: #dee2e6;
+          cursor: not-allowed;
+          
+          &:hover {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+            color: #6c757d;
+            transform: none;
+            box-shadow: none;
+          }
+        }
+        
+        .pagination-ellipsis {
+          background-color: transparent;
+          border: none;
+          color: #6c757d;
+          cursor: default;
+          
+          &:hover {
+            background-color: transparent;
+            border: none;
+            color: #6c757d;
+            transform: none;
+            box-shadow: none;
+          }
+        }
+        
+        i {
+          font-size: 0.625rem;
+        }
+      }
+      
+      &.disabled .page-link {
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border-color: #dee2e6;
+        cursor: not-allowed;
+        
+        &:hover {
+          background-color: #f8f9fa;
+          border-color: #dee2e6;
+          color: #6c757d;
+          transform: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 576px) {
+    .pagination {
+      .page-item .page-link {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.7rem;
+        min-width: 28px;
+      }
+    }
+  }
 }

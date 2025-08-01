@@ -2,63 +2,115 @@
   *ngIf="isLoading"
   [loadingText]="'Cargando detalle...'"
 ></app-loading-overlay>
-<c-row>
-  <c-col xs="12">
-    <c-card class="mb-3">
-      <c-card-header>
-        <strong>Bodega:</strong> {{ warehouseDetail?.name }}
-        <div class="d-flex justify-content-end gap-2" *hasRole="['admin']">
-          <button class="btn btn-sm btn-primary" (click)="openInventoryModal()">
-            Agregar productos
-          </button>
-          <button class="btn btn-sm btn-primary" (click)="openTransferModal()">
-            Transferir productos
-          </button>
-        </div>
-      </c-card-header>
-      <c-card-body>
-        <div class="input-group mb-3 justify-content-end">
-          <form
-            [formGroup]="filtersForm"
-            (ngSubmit)="onFilter()"
-            class="d-flex w-100 align-items-center gap-2 mb-3"
-          >
-            <span class="input-group-text">🔍</span>
 
+<div class="warehouse-detail-container">
+  <!-- Header con estadísticas -->
+  <c-card class="mb-3 stats-header-card">
+    <c-card-body class="p-3">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center">
+            <div class="warehouse-icon me-3">
+              <i class="fas fa-warehouse text-primary fs-3"></i>
+            </div>
+            <div>
+              <h3 class="mb-1 text-primary">Bodega: {{ warehouseDetail?.name }}</h3>
+              <p class="text-muted mb-0 small">Gestión de inventario y productos de la bodega</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="action-buttons d-flex gap-2">
+            <button 
+              class="btn btn-primary btn-sm" 
+              (click)="openInventoryModal()"
+              title="Agregar productos"
+            >
+              <i class="fas fa-plus me-1"></i>
+              Agregar productos
+            </button>
+            <button 
+              class="btn btn-primary btn-sm" 
+              (click)="openTransferModal()"
+              title="Transferir productos"
+            >
+              <i class="fas fa-exchange-alt me-1"></i>
+              Transferir productos
+            </button>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+
+  <!-- Filtros mejorados -->
+  <c-card class="mb-3 filters-card">
+    <c-card-header class="bg-light py-2">
+      <h6 class="mb-0">
+        <i class="fas fa-filter me-2 text-info"></i>
+        Filtros de Búsqueda
+      </h6>
+    </c-card-header>
+    <c-card-body class="py-3">
+      <form [formGroup]="filtersForm" class="filters-form">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-8">
+            <label for="query" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-search me-1 text-muted"></i>
+              Buscar producto
+            </label>
             <input
               type="text"
-              class="form-control flex-grow-1"
-              placeholder="Buscar producto"
+              id="query"
               formControlName="query"
+              class="form-control form-control-sm"
+              placeholder="Nombre del producto o SKU"
             />
-
-            <button type="submit" class="btn btn-primary">Filtrar</button>
-
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="resetFilters()"
-            >
-              Limpiar
-            </button>
-          </form>
+          </div>
+          <div class="col-md-4">
+            <div class="d-flex gap-1 w-100">
+              <button type="submit" class="btn btn-primary btn-sm flex-fill">
+                <i class="fas fa-search me-1"></i>
+                Filtrar
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-sm flex-fill"
+                (click)="resetFilters()"
+              >
+                <i class="fas fa-times me-1"></i>
+                Limpiar
+              </button>
+            </div>
+          </div>
         </div>
+      </form>
+    </c-card-body>
+  </c-card>
 
+  <!-- Contenido principal -->
+  <c-card class="main-content-card">
+    <c-card-body class="p-0">
+      <div class="inventory-table-container p-4">
         <ng-template #actions let-variant>
-          <span>
+          <div class="d-flex gap-1">
             <a
               class="btn btn-sm btn-outline-primary"
               [routerLink]="['/warehouses', warehouseDetail?.id, 'inventory', variant.warehouseInventoryId]"
+              title="Ver historial"
             >
+              <i class="fas fa-history me-1"></i>
               Ver historial
             </a>
-          </span>
-          <a
-            *hasRole="['admin']"
-            class="btn btn-sm btn-outline-primary"
-            (click)="openInventoryItemModal(variant)"
-            >Editar</a
-          >
+            <a
+              *hasRole="['admin']"
+              class="btn btn-sm btn-outline-secondary"
+              (click)="openInventoryItemModal(variant)"
+              title="Editar"
+            >
+              <i class="fas fa-edit"></i>
+            </a>
+          </div>
         </ng-template>
 
         <app-inventory-table
@@ -72,10 +124,10 @@
           (addVariant)="onAddVariant($event)"
         >
         </app-inventory-table>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+      </div>
+    </c-card-body>
+  </c-card>
+</div>
 
 <app-warehouse-product-modal
   *ngIf="warehouseDetail"
@@ -96,6 +148,7 @@
   (onClose)="handleTransferClose($event)"
 >
 </app-warehouse-transfer-modal>
+
 <app-generic-modal></app-generic-modal>
 
 <app-warehouse-inventory-item-edit-modal
@@ -104,4 +157,3 @@
   (onSave)="handleInventoryItemSave($event)"
   (onClose)="handleInventoryItemClose()"
 ></app-warehouse-inventory-item-edit-modal>
-<!-- todo: mirar si este modal se puede poner en el router outlet en el template  -->

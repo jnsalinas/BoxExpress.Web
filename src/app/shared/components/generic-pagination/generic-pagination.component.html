@@ -1,23 +1,35 @@
-<c-pagination aria-label="Page navigation example">
-  <li cPageItem>
-    <a cPageLink (click)="onPageChange(currentPage - 1)" [class.disabled]="currentPage === 1">Anterior</a>
-  </li>
+<div class="pagination-container">
+  <nav aria-label="Navegación de páginas">
+    <ul class="pagination pagination-sm mb-0">
+      <li class="page-item" [class.disabled]="currentPage === 1">
+        <a class="page-link" (click)="onPageChange(currentPage - 1)" href="javascript:void(0)">
+          <i class="fas fa-chevron-left"></i>
+          <span class="d-none d-sm-inline ms-1">Anterior</span>
+        </a>
+      </li>
 
-  <li *ngFor="let page of paginationPages" cPageItem>
-    <ng-container *ngIf="page === '...'; else pageNumber">
-      <span class="pagination-ellipsis">…</span>
-    </ng-container>
-    <ng-template #pageNumber>
-      <a
-        cPageLink
-        (click)="onPageChange(page)"
-        [class.active]="page === currentPage"
-        >{{ page }}</a
-      >
-    </ng-template>
-  </li>
+      <li *ngFor="let page of paginationPages" class="page-item">
+        <ng-container *ngIf="page === '...'; else pageNumber">
+          <span class="page-link pagination-ellipsis">…</span>
+        </ng-container>
+        <ng-template #pageNumber>
+          <a
+            class="page-link"
+            (click)="onPageChange(page)"
+            [class.active]="page === currentPage"
+            href="javascript:void(0)"
+          >
+            {{ page }}
+          </a>
+        </ng-template>
+      </li>
 
-  <li cPageItem>
-    <a cPageLink (click)="onPageChange(currentPage + 1)" [class.disabled]="currentPage === totalPages">Siguiente</a>
-  </li>
-</c-pagination>
+      <li class="page-item" [class.disabled]="currentPage === totalPages">
+        <a class="page-link" (click)="onPageChange(currentPage + 1)" href="javascript:void(0)">
+          <span class="d-none d-sm-inline me-1">Siguiente</span>
+          <i class="fas fa-chevron-right"></i>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
