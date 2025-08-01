@@ -1,0 +1,218 @@
+.balance-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+  .balance-info {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    
+    .balance-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.5rem 1rem;
+      background: white;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e9ecef;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      }
+      
+      .balance-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        background: #f8f9fa;
+        border-radius: 50%;
+        color: #6c757d;
+        
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+      
+      .balance-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        
+        .balance-label {
+          font-size: 0.75rem;
+          color: #6c757d;
+          font-weight: 500;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+        
+        .balance-value {
+          font-size: 1rem;
+          color: #212529;
+          font-weight: 600;
+          margin: 0;
+        }
+      }
+    }
+    
+    .refresh-button {
+      .btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        padding: 0;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: rotate(180deg);
+          background: #0d6efd;
+          border-color: #0d6efd;
+          color: white;
+        }
+        
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+  
+  .logout-section {
+    .btn {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+}
+
+// Animación de rotación para el icono de carga
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Efecto de carga para los valores
+.loading {
+  opacity: 0.6;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .balance-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0.75rem;
+    
+    .balance-info {
+      gap: 1rem;
+      justify-content: center;
+      
+      .balance-item {
+        padding: 0.375rem 0.75rem;
+        
+        .balance-icon {
+          width: 28px;
+          height: 28px;
+          
+          svg {
+            width: 14px;
+            height: 14px;
+          }
+        }
+        
+        .balance-content {
+          .balance-label {
+            font-size: 0.7rem;
+          }
+          
+          .balance-value {
+            font-size: 0.875rem;
+          }
+        }
+      }
+      
+      .refresh-button .btn {
+        width: 36px;
+        height: 36px;
+        
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+    
+    .logout-section .btn {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+      
+      svg {
+        width: 12px;
+        height: 12px;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .balance-container {
+    .balance-info {
+      flex-direction: column;
+      align-items: stretch;
+      
+      .balance-item {
+        justify-content: space-between;
+      }
+    }
+  }
+}

@@ -57,27 +57,45 @@
       class="d-flex flex-wrap px-4 py-2" style="width: 100%;"
     >
       <div class="d-flex gap-4 text-nowrap">
-        <div *ngIf="store">
-          <span class="text-muted">Tienda:</span>
-          <strong class="ms-1">{{ store.name }}</strong>
-        </div>
-        <div *ngIf="store">
-          <span class="text-muted">Balance total:</span>
-          <strong class="ms-1">{{ store.balance | number:'1.0-2' }}</strong>
-        </div>
-        <div *ngIf="store">
-          <span class="text-muted">Disponible para retiro:</span>
-          <strong class="ms-1">{{
-            store.availableToWithdraw | number:'1.0-2'
-          }}</strong>
-        </div>
-        <div *ngIf="store">
-          <span class="text-muted">Pendiente por retiro:</span>
-          <strong class="ms-1">{{
-            store.pendingWithdrawals | number:'1.0-2'
-          }}</strong>
-        </div>
+                 <div *ngIf="store">
+           <span class="text-muted">Tienda:</span>
+           <strong class="ms-1">{{ store.name }}</strong>
+         </div>
+         <div *ngIf="store">
+           <span class="text-muted">Balance total:</span>
+           <strong class="ms-1" [class.loading]="isLoading">
+             {{ isLoading ? '...' : (store.balance | number:'1.0-2') }}
+           </strong>
+         </div>
+         <div *ngIf="store">
+           <span class="text-muted">Disponible para retiro:</span>
+           <strong class="ms-1" [class.loading]="isLoading">
+             {{ isLoading ? '...' : (store.availableToWithdraw | number:'1.0-2') }}
+           </strong>
+         </div>
+         <div *ngIf="store">
+           <span class="text-muted">Pendiente por retiro:</span>
+           <strong class="ms-1" [class.loading]="isLoading">
+             {{ isLoading ? '...' : (store.pendingWithdrawals | number:'1.0-2') }}
+           </strong>
+         </div>
+                 <div *ngIf="store">
+           <button 
+             class="btn btn-outline-primary btn-sm" 
+             (click)="refreshBalance()"
+             [disabled]="isLoading"
+             title="Actualizar balance"
+           >
+             <svg 
+               [cIcon]="icon.cilReload" 
+               class="me-2 text-muted"
+               [class.spin]="isLoading"
+             ></svg>
+             <span *ngIf="isLoading" class="ms-1">Cargando...</span>
+           </button>
+         </div>
       </div>
+      
 
       <!-- Botón más separado -->
       <div class="ms-auto ps-5">

@@ -12,14 +12,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
 import { StoreDto } from '../../../../models/store.dto';
 import { StoreService } from '../../../../services/store.service';
-import { WithdrawalRequestDto } from 'src/app/models/withdrawal-request.dto';
+import { WithdrawalRequestDto } from '../../../../models/withdrawal-request.dto';
 import { DocumentTypeService } from '../../../../services/document-type.service';
 import { DocumentTypeDto } from '../../../../models/document-type.dto';
-import { WithdrawalRequestStatus } from 'src/app/constants/withdrawal-request-status';
+import { WithdrawalRequestStatus } from '../../../../constants/withdrawal-request-status';
 import { AuthService } from '../../../../services/auth.service';
 import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 import { IconDirective } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
+
 
 @Component({
   selector: 'app-withdrawal-request-modal',

@@ -37,6 +37,7 @@ import { WalletService } from '../../../services/wallet.service';
 import { StoreDto } from '../../../models/store.dto';
 import { WarehouseInventoryTransferService } from '../../../services/warehouse-inventory-transfer.service';
 import { NavBadgeService } from '../../../services/nav-badge.service';
+import { freeSet } from '@coreui/icons';
 
 @Component({
   selector: 'app-default-header',
@@ -67,6 +68,7 @@ import { NavBadgeService } from '../../../services/nav-badge.service';
   ],
 })
 export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
+  icon = freeSet;
   readonly #colorModeService = inject(ColorModeService);
   readonly colorMode = this.#colorModeService.colorMode;
 
@@ -85,7 +87,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
   });
 
   store?: StoreDto;
-
+  isLoading = false;  
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -97,9 +99,18 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
     super();
   }
 
+  private refreshInterval: any;
+
   ngOnInit(): void {
     this.getBalanceInformation();
     this.getPendingTransfers();
+    this.startAutoRefresh();
+  }
+
+  ngOnDestroy(): void {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
   }
 
   getBalanceInformation() {
@@ -107,16 +118,31 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
       this.authService.hasAnyRole(['tienda', 'admin']) &&
       this.authService.getToken()
     ) {
+      this.isLoading = true;
       this.walletService.summary().subscribe({
         next: (res) => {
           console.log(res);
           this.store = res;
+          this.isLoading = false;
         },
         error: (err) => {
           console.error('Error cargando balances', err);
+          this.isLoading = false;
         },
       });
     }
+  }
+
+  startAutoRefresh(): void {
+    // Auto-refresh cada 30 segundos
+    this.refreshInterval = setInterval(() => {
+      this.getBalanceInformation();
+    }, 30000); // 30 segundos
+  }
+
+  // Método para refresh manual
+  refreshBalance(): void {
+    this.getBalanceInformation();
   }
   navItems = [...navItems];
 
