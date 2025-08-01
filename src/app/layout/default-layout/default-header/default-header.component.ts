@@ -104,7 +104,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
   ngOnInit(): void {
     this.getBalanceInformation();
     this.getPendingTransfers();
-    this.startAutoRefresh();
+    // this.startAutoRefresh(); //todo valiadr si es necesario
   }
 
   ngOnDestroy(): void {
@@ -136,6 +136,7 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
   startAutoRefresh(): void {
     // Auto-refresh cada 30 segundos
     this.refreshInterval = setInterval(() => {
+      console.log('refreshing balance');
       this.getBalanceInformation();
     }, 30000); // 30 segundos
   }
