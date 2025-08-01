@@ -200,14 +200,14 @@
           <td *ngIf="hasColumn('totalAmount')" class="amount-cell">
             <div class="amount-info">
               <span class="amount-value">
-                {{ order.totalAmount | currency : order.currencyCode : "symbol" : "1.0-0" }}
+                {{ order.totalAmount | number:'1.0-2' }}
               </span>
             </div>
           </td>
           
           <td *ngIf="hasColumn('deliveryFee')" class="fee-cell">
             <span class="fee-value">
-              {{ order.deliveryFee | currency : order.currencyCode : "symbol" : "1.0-0" }}
+                {{ order.deliveryFee | number:'1.0-2' }}
             </span>
           </td>
           

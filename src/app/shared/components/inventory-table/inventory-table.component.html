@@ -1,78 +1,130 @@
-<table class="table table-bordered">
-  <tbody>
-    <tr *ngFor="let product of products">
-      <td>
-        <!-- Producto Header -->
-        <div
-          class="d-flex justify-content-between align-items-center bg-light p-2"
-        >
-          <div>
-            <strong>📦 {{ product.name }}</strong>
-            <span class="badge bg-secondary ms-2">{{ product.totalQuantity }}</span>
-          </div>
-          <button
-            type="button"
-            *ngIf="actionsTemplate && isAdmin"
-            class="btn btn-sm btn-primary"
-            (click)="onAddVariant(product)"
-          >
-            <svg [cIcon]="icons.cilPlus"></svg>
-            Agregar variante
-          </button>
-          <!-- //(click)="onAddVariant(product)" -->
-        </div>
-
-        <!-- Tabla de variantes -->
-        <table class="table table-sm mt-2">
-          <thead class="table-light">
-            <tr>
-              <th>Variante</th>
-              <th *ngIf="showStore">Tienda</th>
-              <th *ngIf="showStore">Bodega</th>
-              <th>Disponible</th>
-              <th>Procesamiento</th>
-              <th>En devolución</th>
-              <th>Total</th>
-              <th>Shopify ID</th>
-              <th>SKU</th>
-              <th *ngIf="showActions">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let variant of product.variants">
-              <td>
-                <strong>{{ variant.name }}</strong>
-              </td>
-              <td *ngIf="showStore">{{ variant.store?.name }}</td>
-              <td *ngIf="showStore">{{ variant.warehouseName }}</td>
-              <td>{{ variant.availableQuantity }}</td>
-              <td>{{ variant.reservedQuantity }}</td>
-              <td>{{ variant.pendingReturnQuantity }}</td>
-              <td>{{ variant.quantity }}</td>
-              <td>{{ variant.shopifyVariantId || "-" }}</td>
-              <td>
-                <span *ngIf="variant.sku" class="badge bg-secondary">
-                  {{ variant.sku }}
-                </span>
-              </td>
-              <td *ngIf="showActions" style="display: flex; gap: 0.5rem">
-                <ng-container *ngIf="actionsTemplate">
-                  <ng-template
-                    [ngTemplateOutlet]="actionsTemplate"
-                    [ngTemplateOutletContext]="{ $implicit: variant }"
-                  ></ng-template>
-                </ng-container>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<app-generic-pagination
-  *ngIf="pagination"
-  [pagination]="pagination"
-  [currentPage]="currentPage"
-  (pageChange)="onPageChange($event)"
-></app-generic-pagination>
+<div class="inventory-table-container">
+  <div class="table-responsive">
+    <table class="table table-hover inventory-table">
+      <thead class="table-light">
+        <tr>
+          <th class="product-column">
+            <i class="fas fa-box me-1"></i>
+            Producto
+          </th>
+          <th class="variant-column">
+            <i class="fas fa-tag me-1"></i>
+            Variante
+          </th>
+          <th *ngIf="showStore" class="store-column">
+            <i class="fas fa-store me-1"></i>
+            Tienda
+          </th>
+          <th *ngIf="showStore" class="warehouse-column">
+            <i class="fas fa-warehouse me-1"></i>
+            Bodega
+          </th>
+          <th class="available-column">
+            <i class="fas fa-check-circle me-1"></i>
+            Disponible
+          </th>
+          <th class="processing-column">
+            <i class="fas fa-clock me-1"></i>
+            Procesamiento
+          </th>
+          <th class="delivered-column">
+            <i class="fas fa-truck me-1"></i>
+            Entregado
+          </th>
+          <th class="return-column">
+            <i class="fas fa-undo me-1"></i>
+            En devolución
+          </th>
+          <th class="total-column">
+            <i class="fas fa-calculator me-1"></i>
+            Total
+          </th>
+          <th class="sku-column">
+            <i class="fas fa-barcode me-1"></i>
+            SKU
+          </th>
+          <th *ngIf="showActions" class="actions-column">
+            <i class="fas fa-cogs me-1"></i>
+            Acciones
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let product of products">
+          <tr class="product-header-row">
+            <td colspan="10" class="product-header">
+              <div class="d-flex justify-content-between align-items-center">
+                <div class="product-info">
+                  <strong class="product-name">
+                    <i class="fas fa-box me-2"></i>
+                    {{ product.name }}
+                  </strong>
+                  <span class="badge bg-primary ms-2">{{ product.totalQuantity }}</span>
+                </div>
+                <button
+                  type="button"
+                  *ngIf="actionsTemplate && isAdmin"
+                  class="btn btn-sm btn-primary"
+                  (click)="onAddVariant(product)"
+                >
+                  <i class="fas fa-plus me-1"></i>
+                  Agregar variante
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngFor="let variant of product.variants" class="variant-row">
+            <td class="product-cell">
+              <span class="text-muted small">{{ product.name }}</span>
+            </td>
+            <td class="variant-cell">
+              <strong>{{ variant.name }}</strong>
+            </td>
+            <td *ngIf="showStore" class="store-cell">
+              {{ variant.store?.name || '-' }}
+            </td>
+            <td *ngIf="showStore" class="warehouse-cell">
+              {{ variant.warehouseName || '-' }}
+            </td>
+            <td class="available-cell">
+              <span class="badge bg-success">{{ variant.availableQuantity || 0 }}</span>
+            </td>
+            <td class="processing-cell">
+              <span class="badge bg-warning">{{ variant.reservedQuantity || 0 }}</span>
+            </td>
+            <td class="delivered-cell">
+              <span class="badge bg-info">{{ variant.quantityDelivered || 0 }}</span>
+            </td>
+            <td class="return-cell">
+              <span class="badge bg-danger">{{ variant.pendingReturnQuantity || 0 }}</span>
+            </td>
+            <td class="total-cell">
+              <strong>{{ variant.quantity || 0 }}</strong>
+            </td>
+            <td class="sku-cell">
+              <span *ngIf="variant.sku" class="badge bg-secondary small">
+                {{ variant.sku }}
+              </span>
+              <span *ngIf="!variant.sku" class="text-muted small">-</span>
+            </td>
+            <td *ngIf="showActions" class="actions-cell">
+              <ng-container *ngIf="actionsTemplate">
+                <ng-template
+                  [ngTemplateOutlet]="actionsTemplate"
+                  [ngTemplateOutletContext]="{ $implicit: variant }"
+                ></ng-template>
+              </ng-container>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  
+  <app-generic-pagination
+    *ngIf="pagination"
+    [pagination]="pagination"
+    [currentPage]="currentPage"
+    (pageChange)="onPageChange($event)"
+  ></app-generic-pagination>
+</div>

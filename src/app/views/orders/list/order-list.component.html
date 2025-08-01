@@ -5,41 +5,51 @@
 
 <div *ngIf="!isLoading" class="orders-list-container">
   <!-- Header con estadísticas -->
-  <c-card class="mb-4 stats-header-card">
-    <c-card-body class="p-4">
+  <c-card class="mb-3 stats-header-card">
+    <c-card-body class="p-3">
       <div class="row align-items-center">
         <div class="col-md-8">
-          <div class="d-flex align-items-center mb-3">
+          <div class="d-flex align-items-center">
             <div class="orders-icon me-3">
-              <i class="fas fa-shopping-cart text-primary fs-2"></i>
+              <i class="fas fa-shopping-cart text-primary fs-3"></i>
             </div>
             <div>
-              <h2 class="mb-1 text-primary">Gestión de Órdenes</h2>
-              <p class="text-muted mb-0">Administra y monitorea todas las órdenes del sistema</p>
+              <h3 class="mb-1 text-primary">Gestión de Órdenes</h3>
+              <p class="text-muted mb-0 small">Administra y monitorea todas las órdenes del sistema</p>
             </div>
           </div>
         </div>
         <div class="col-md-4 text-end">
-          <div class="action-buttons">
+          <div class="action-buttons d-flex gap-2">
             <button
               type="button"
-              class="btn btn-outline-primary me-2"
+              class="btn btn-primary btn-sm"
               (click)="downloadExcel()"
               title="Exportar a Excel"
             >
-              <i class="fas fa-download me-2"></i>
+              <i class="fas fa-download me-1"></i>
               Exportar
             </button>
             <button
               *hasRole="['admin', 'tienda']"
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary btn-sm"
               [routerLink]="['/orders/create']"
               title="Crear nueva orden"
             >
-              <i class="fas fa-plus me-2"></i>
+              <i class="fas fa-plus me-1"></i>
               Nueva Orden
             </button>
+            <button
+            *hasRole="['admin', 'tienda']"
+            type="button"
+            class="btn btn-primary btn-sm"
+            [routerLink]="['/orders/create']"
+            title="Crear nueva orden"
+          >
+            <i class="fas fa-upload me-1"></i>
+            Carga masiva
+          </button>
           </div>
         </div>
       </div>
@@ -47,37 +57,37 @@
   </c-card>
 
   <!-- Filtros mejorados -->
-  <c-card class="mb-4 filters-card">
-    <c-card-header class="bg-light">
-      <h5 class="mb-0">
+  <c-card class="mb-3 filters-card">
+    <c-card-header class="bg-light py-2">
+      <h6 class="mb-0">
         <i class="fas fa-filter me-2 text-info"></i>
         Filtros de Búsqueda
-      </h5>
+      </h6>
     </c-card-header>
-    <c-card-body>
+    <c-card-body class="py-3">
       <form
         [formGroup]="filtersForm"
         (ngSubmit)="onFilter()"
         class="filters-form"
       >
-        <div class="row g-3">
-          <div class="col-md-2">
-            <label cLabel for="orderId" class="form-label fw-semibold">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-1">
+            <label cLabel for="orderId" class="form-label small fw-semibold mb-1">
               <i class="fas fa-hashtag me-1 text-muted"></i>
-              ID Orden
+              ID
             </label>
             <input
               cFormControl
               type="number"
               id="orderId"
               formControlName="orderId"
-              class="form-control"
-              placeholder="Ej: 12345"
+              class="form-control form-control-sm"
+              placeholder="12345"
             />
           </div>
           
           <div class="col-md-2" *hasRole="['admin']">
-            <label for="store" class="form-label fw-semibold">
+            <label for="store" class="form-label small fw-semibold mb-1">
               <i class="fas fa-store me-1 text-muted"></i>
               Tienda
             </label>
@@ -95,33 +105,33 @@
           </div>
           
           <div class="col-md-2">
-            <label for="startDate" class="form-label fw-semibold">
+            <label for="startDate" class="form-label small fw-semibold mb-1">
               <i class="fas fa-calendar-alt me-1 text-muted"></i>
-              Fecha Inicio
+              Desde
             </label>
             <input
               type="date"
               id="startDate"
               formControlName="startDate"
-              class="form-control"
+              class="form-control form-control-sm"
             />
           </div>
 
           <div class="col-md-2">
-            <label for="endDate" class="form-label fw-semibold">
+            <label for="endDate" class="form-label small fw-semibold mb-1">
               <i class="fas fa-calendar-alt me-1 text-muted"></i>
-              Fecha Fin
+              Hasta
             </label>
             <input
               type="date"
               id="endDate"
               formControlName="endDate"
-              class="form-control"
+              class="form-control form-control-sm"
             />
           </div>
           
           <div class="col-md-2">
-            <label for="scheduledDate" class="form-label fw-semibold">
+            <label for="scheduledDate" class="form-label small fw-semibold mb-1">
               <i class="fas fa-clock me-1 text-muted"></i>
               Programación
             </label>
@@ -129,22 +139,22 @@
               type="date"
               id="scheduledDate"
               formControlName="scheduledDate"
-              class="form-control"
+              class="form-control form-control-sm"
             />
           </div>
 
-          <div class="col-md-2 d-flex align-items-end">
-            <div class="d-grid gap-2 w-100">
-              <button type="submit" class="btn btn-primary">
-                <i class="fas fa-search me-2"></i>
+          <div class="col-md-3">
+            <div class="d-flex gap-1 w-100">
+              <button type="submit" class="btn btn-primary btn-sm flex-fill">
+                <i class="fas fa-search me-1"></i>
                 Buscar
               </button>
               <button
                 type="button"
-                class="btn btn-outline-secondary"
+                class="btn btn-outline-secondary btn-sm flex-fill"
                 (click)="resetFilters()"
               >
-                <i class="fas fa-times me-2"></i>
+                <i class="fas fa-times me-1"></i>
                 Limpiar
               </button>
             </div>
@@ -161,17 +171,17 @@
         [activeItemKey]="activeTab"
         (activeItemKeyChange)="handleActiveItemChange($event)"
       >
-        <c-tabs-list variant="underline-border" class="px-4 pt-3">
+        <c-tabs-list variant="underline-border" class="px-4 pt-2">
           <button *hasRole="['admin', 'tienda']" cTab [itemKey]="0" class="tab-button">
-            <i class="fas fa-list me-2"></i>
+            <i class="fas fa-list me-1"></i>
             Todas las Órdenes
           </button>
           <button cTab [itemKey]="1" class="tab-button">
-            <i class="fas fa-bolt me-2"></i>
+            <i class="fas fa-bolt me-1"></i>
             Express
           </button>
           <button *hasRole="['admin', 'tienda']" cTab [itemKey]="2" class="tab-button">
-            <i class="fas fa-truck me-2"></i>
+            <i class="fas fa-truck me-1"></i>
             Tradicional
           </button>
         </c-tabs-list>
@@ -183,23 +193,23 @@
             class="p-4"
           >
             <!-- Resumen de estados -->
-            <div class="status-summary mb-4">
-              <h6 class="mb-3 text-muted">
+            <div class="status-summary mb-3">
+              <h6 class="mb-2 text-muted small">
                 <i class="fas fa-chart-bar me-2"></i>
                 Resumen por Estado
               </h6>
-              <div class="row g-3">
+              <div class="row g-2">
                 <div class="col-md-2 col-sm-4 col-6" *ngFor="let status of orderSummary">
                   <c-card
                     class="status-card text-center h-100"
                     [ngClass]="getStatusClass(status.statusName)"
                   >
-                    <c-card-body class="p-3">
-                      <div class="status-icon mb-2">
-                        <i class="fas fa-circle"></i>
+                    <c-card-body class="p-2">
+                      <div class="status-icon mb-1">
+                        <i class="fas fa-circle small"></i>
                       </div>
-                      <h6 class="mb-1 status-name">{{ status.statusName }}</h6>
-                      <p class="m-0 status-count">{{ status.count }}</p>
+                      <h6 class="mb-1 status-name small">{{ status.statusName }}</h6>
+                      <p class="m-0 status-count fw-bold">{{ status.count }}</p>
                     </c-card-body>
                   </c-card>
                 </div>

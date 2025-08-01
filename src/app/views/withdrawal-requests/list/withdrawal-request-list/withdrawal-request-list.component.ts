@@ -3,13 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { freeSet } from '@coreui/icons';
 import {
-  RowComponent,
-  ColComponent,
   CardComponent,
   CardHeaderComponent,
   CardBodyComponent,
-  TableDirective,
-  SpinnerComponent,
 } from '@coreui/angular';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UtcDatePipe } from '../../../../shared/pipes/utc-date.pipe';
@@ -36,22 +32,17 @@ import { HasRoleDirective } from '../../../../shared/directives/has-role.directi
 @Component({
   selector: 'app-withdrawal-request-list',
   imports: [
-    RowComponent,
-    ColComponent,
     CardComponent,
     CardHeaderComponent,
     CardBodyComponent,
-    TableDirective,
     ReactiveFormsModule,
     CommonModule,
     UtcDatePipe,
     GenericPaginationComponent,
     LoadingOverlayComponent,
     NgSelectModule,
-    IconDirective,
     WithdrawalRequestModalComponent,
     GenericModalComponent,
-    NgSelectModule,
     HasRoleDirective,
   ],
   templateUrl: './withdrawal-request-list.component.html',
@@ -68,16 +59,32 @@ export class WithdrawalRequestListComponent implements OnInit {
   icons = freeSet;
   withdrawalRequestSelected: WithdrawalRequestDto | null = null;
   storeId: number | null = 1;
+  stores: StoreDto[] = [];
+  statusOptions = [
+    { label: 'Pendiente', value: WithdrawalRequestStatus.Pending },
+    { label: 'Aceptada', value: WithdrawalRequestStatus.Accepted },
+    { label: 'Rechazada', value: WithdrawalRequestStatus.Rejected }
+  ];
 
   constructor(
     private fb: FormBuilder,
     private withdrawalRequestService: WithdrawalRequestService,
+    private storeService: StoreService,
     private toastr: ToastrService,
     private authService: AuthService
-  ) {}
+  ) {
+    this.filtersForm = this.fb.group({
+      orderId: [''],
+      storeId: [null],
+      startDate: [''],
+      endDate: [''],
+      status: [null]
+    });
+  }
 
   ngOnInit(): void {
     this.loadWithdrawalRequest();
+    this.loadStores();
     this.storeId = this.authService.hasRole('admin')
       ? 1
       : this.authService.getStoreId();
@@ -98,6 +105,17 @@ export class WithdrawalRequestListComponent implements OnInit {
     });
   }
 
+  loadStores() {
+    this.storeService.getAll().subscribe({
+      next: (response) => {
+        this.stores = response.data || [];
+      },
+      error: (error) => {
+        console.error('Error loading stores:', error);
+      },
+    });
+  }
+
   onPageChange(page: number): void {
     this.currentPage = page;
     this.loadWithdrawalRequest();
@@ -105,6 +123,30 @@ export class WithdrawalRequestListComponent implements OnInit {
 
   getStatusLabel(status?: WithdrawalRequestStatus): string {
     return WithdrawalRequestStatusText[status!] ?? 'Desconocido';
+  }
+
+  getStatusBadgeClass(status?: WithdrawalRequestStatus): string {
+    switch (status) {
+      case WithdrawalRequestStatus.Accepted:
+        return 'bg-success';
+      case WithdrawalRequestStatus.Rejected:
+        return 'bg-danger';
+      case WithdrawalRequestStatus.Pending:
+      default:
+        return 'bg-warning';
+    }
+  }
+
+  resetFilters(): void {
+    this.filtersForm.patchValue({
+      orderId: '',
+      storeId: null,
+      startDate: '',
+      endDate: '',
+      status: null
+    });
+    this.currentPage = 1;
+    this.loadWithdrawalRequest();
   }
 
   downloadExcel() {}

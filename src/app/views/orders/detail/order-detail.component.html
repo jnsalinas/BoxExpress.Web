@@ -33,7 +33,7 @@
               <div class="info-item">
                 <small class="text-muted d-block">Total</small>
                 <span class="fw-bold fs-5 text-success">{{
-                  order.totalAmount | currency : order.currencyCode
+                  order.totalAmount | number:'1.0-2'
                 }}</span>
               </div>
             </div>
@@ -105,7 +105,9 @@
                       </div>
                       <div class="detail-item mb-3">
                         <small class="text-muted d-block">Email</small>
-                        <span class="fw-semibold">{{ order.client?.email || "No especificado" }}</span>
+                        <span class="fw-semibold">{{
+                          order.client?.email || "No especificado"
+                        }}</span>
                       </div>
                       <div class="detail-item mb-3">
                         <small class="text-muted d-block">Ciudad</small>
@@ -142,16 +144,16 @@
                       <div class="detail-item mb-3">
                         <small class="text-muted d-block">Latitud</small>
                         <span class="fw-semibold">{{
-                          order.latitude
-                            ? order.latitude.toFixed(6)
+                          order.client?.addresses?.[0]?.latitude
+                            ? order.client?.addresses?.[0]?.latitude
                             : "No especificada"
                         }}</span>
                       </div>
                       <div class="detail-item mb-3">
                         <small class="text-muted d-block">Longitud</small>
                         <span class="fw-semibold">{{
-                          order.longitude
-                            ? order.longitude.toFixed(6)
+                          order.client?.addresses?.[0]?.longitude
+                            ? order.client?.addresses?.[0]?.longitude
                             : "No especificada"
                         }}</span>
                       </div>
@@ -161,7 +163,8 @@
                         >
                         <span class="fw-semibold">{{
                           order.scheduledDate
-                            | date : "EEEE, d 'de' MMMM 'de' yyyy"
+                            ? (order.scheduledDate | date : "EEEE, d 'de' MMMM 'de' yyyy")
+                            : "No definida"
                         }}</span>
                       </div>
                       <div class="detail-item mb-3">
@@ -195,13 +198,13 @@
                           >Total de la Orden</small
                         >
                         <span class="fw-bold fs-5 text-success">{{
-                          order.totalAmount | currency : order.currencyCode
+                          order.totalAmount | number:'1.0-2'
                         }}</span>
                       </div>
                       <div class="detail-item mb-3">
                         <small class="text-muted d-block">Costo de Envío</small>
                         <span class="fw-semibold">{{
-                          order.deliveryFee | currency : order.currencyCode
+                          order.deliveryFee | number:'1.0-2'
                         }}</span>
                       </div>
                       <div class="detail-item mb-3">

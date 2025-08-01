@@ -3,150 +3,270 @@
   [loadingText]="'Cargando retiros...'"
 ></app-loading-overlay>
 
-<c-row>
-  <c-col xs="12">
-    <c-card class="mb-4">
-      <c-card-header>
-        <strong>Retiros</strong>
-
-        <button
-          type="button"
-          class="float-end btn btn-primary ms-2"
-          (click)="downloadExcel()"
-        >
-          <svg [cIcon]="icons.cilCloudDownload"></svg>
-          Exportar
-        </button>
-
-        <button
-          type="button"
-          class="float-end btn btn-primary"
-          (click)="showModal()"
-        >
-          <svg [cIcon]="icons.cilPlus"></svg>
-          Crear retiro
-        </button>
-      </c-card-header>
-
-      <c-card-body>
-        <div>
-          <!-- <form
-            *ngIf="showFilters"
-            [formGroup]="filtersForm"
-            (ngSubmit)="onFilter()"
-            class="mb-4 row g-3 align-items-end"
-          >
-            <div class="col-md-2">
-              <label for="orderId" class="form-label">ID Orden</label>
-              <input
-                type="number"
-                id="orderId"
-                formControlName="orderId"
-                class="form-control"
-              />
+<div class="withdrawal-requests-container">
+  <!-- Header con estadísticas -->
+  <c-card class="mb-3 stats-header-card">
+    <c-card-body class="p-3">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center">
+            <div class="withdrawal-icon me-3">
+              <i class="fas fa-money-bill-wave text-primary fs-3"></i>
             </div>
-            <div class="col-md-2">
-              <label for="store" class="form-label">Tienda</label>
-              <ng-select
-                [items]="stores"
-                bindLabel="name"
-                bindValue="id"
-                formControlName="storeId"
-                [searchable]="true"
-                placeholder="Seleccione una tienda"
-              >
-              </ng-select>
+            <div>
+              <h3 class="mb-1 text-primary">Gestión de Retiros</h3>
+              <p class="text-muted mb-0 small">Administra y monitorea las solicitudes de retiro de fondos</p>
             </div>
-            <div class="col-md-3">
-              <label for="startDate" class="form-label">Fecha inicio</label>
-              <input
-                type="date"
-                id="startDate"
-                formControlName="startDate"
-                class="form-control"
-              />
-            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="action-buttons d-flex gap-2">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="downloadExcel()"
+              title="Exportar a Excel"
+            >
+              <i class="fas fa-download me-1"></i>
+              Exportar
+            </button>
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="showModal()"
+              title="Crear nuevo retiro"
+            >
+              <i class="fas fa-plus me-1"></i>
+              Crear retiro
+            </button>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
 
-            <div class="col-md-3">
-              <label for="endDate" class="form-label">Fecha fin</label>
-              <input
-                type="date"
-                id="endDate"
-                formControlName="endDate"
-                class="form-control"
-              />
-            </div>
-
-            <div class="col-md-1 d-grid">
-              <button type="submit" class="btn btn-primary">Filtrar</button>
-            </div>
-
-            <div class="col-md-1 d-grid">
+  <!-- Filtros mejorados -->
+  <c-card class="mb-3 filters-card">
+    <c-card-header class="bg-light py-2">
+      <h6 class="mb-0">
+        <i class="fas fa-filter me-2 text-info"></i>
+        Filtros de Búsqueda
+      </h6>
+    </c-card-header>
+    <c-card-body class="py-3">
+      <form [formGroup]="filtersForm" class="filters-form">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-2">
+            <label for="orderId" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-hashtag me-1 text-muted"></i>
+              ID Orden
+            </label>
+            <input
+              type="number"
+              id="orderId"
+              formControlName="orderId"
+              class="form-control form-control-sm"
+              placeholder="12345"
+            />
+          </div>
+          <div class="col-md-2">
+            <label for="store" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-store me-1 text-muted"></i>
+              Tienda
+            </label>
+            <ng-select
+              [items]="stores"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="storeId"
+              [searchable]="true"
+              placeholder="Seleccione tienda"
+              class="custom-select"
+            >
+            </ng-select>
+          </div>
+          <div class="col-md-2">
+            <label for="startDate" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-calendar-alt me-1 text-muted"></i>
+              Desde
+            </label>
+            <input
+              type="date"
+              id="startDate"
+              formControlName="startDate"
+              class="form-control form-control-sm"
+            />
+          </div>
+          <div class="col-md-2">
+            <label for="endDate" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-calendar-alt me-1 text-muted"></i>
+              Hasta
+            </label>
+            <input
+              type="date"
+              id="endDate"
+              formControlName="endDate"
+              class="form-control form-control-sm"
+            />
+          </div>
+          <div class="col-md-2">
+            <label for="status" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-tag me-1 text-muted"></i>
+              Estado
+            </label>
+            <ng-select
+              [items]="statusOptions"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="status"
+              placeholder="Todos los estados"
+              class="custom-select"
+            >
+            </ng-select>
+          </div>
+          <div class="col-md-2">
+            <div class="d-flex gap-1 w-100">
+              <button type="submit" class="btn btn-primary btn-sm flex-fill">
+                <i class="fas fa-search me-1"></i>
+                Buscar
+              </button>
               <button
                 type="button"
-                class="btn btn-outline-secondary"
+                class="btn btn-outline-secondary btn-sm flex-fill"
                 (click)="resetFilters()"
               >
+                <i class="fas fa-times me-1"></i>
                 Limpiar
               </button>
             </div>
-          </form> -->
+          </div>
         </div>
-        <table [hover]="true" [striped]="true" cTable>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Fecha de creacion</th>
-              <th scope="col">Tienda</th>
-              <th scope="col">Valor</th>
-              <th scope="col">Titular</th>
-              <th scope="col">Documento</th>
-              <th scope="col">Banco</th>
-              <th scope="col">Numero de cuenta</th>
-              <th scope="col">Descripcion</th>
-              <th scope="col">Estado</th>
-              <th scope="col">Fecha de aceptacion</th>
-              <th scope="col" *hasRole="['admin']"></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let tx of withdrawalRequests; let i = index">
-              <th scope="row">{{ tx.id || "-" }}</th>
-              <td>{{ tx.createdAt | utcDate }}</td>
-              <td>{{ tx.store || "-" }}</td>
-              <td>
-                {{ tx.amount | currency : "USD" : "symbol" : "1.0-0" }}
-              </td>
-              <td>{{ tx.accountHolder }}</td>
-              <td>{{ tx.document }}</td>
-              <td>{{ tx.bank }}</td>
-              <td>{{ tx.accountNumber }}</td>
-              <td>{{ tx.description }}</td>
-              <td>{{ getStatusLabel(tx.status) }}</td>
-              <td>{{ tx.processedAt | utcDate }}</td>
-              <td *hasRole="['admin']">
-                <div class="d-flex">
+      </form>
+    </c-card-body>
+  </c-card>
+
+  <!-- Contenido principal -->
+  <c-card class="main-content-card">
+    <c-card-body class="p-0">
+      <!-- Tabla de retiros -->
+      <div class="withdrawal-table-container p-4">
+        <div class="table-responsive">
+          <table class="table table-hover withdrawal-table">
+            <thead class="table-light">
+              <tr>
+                <th class="id-column">
+                  <i class="fas fa-hashtag me-1"></i>
+                  #
+                </th>
+                <th class="date-column">
+                  <i class="fas fa-calendar me-1"></i>
+                  Fecha Creación
+                </th>
+                <th class="store-column">
+                  <i class="fas fa-store me-1"></i>
+                  Tienda
+                </th>
+                <th class="amount-column">
+                  <i class="fas fa-dollar-sign me-1"></i>
+                  Valor
+                </th>
+                <th class="holder-column">
+                  <i class="fas fa-user me-1"></i>
+                  Titular
+                </th>
+                <th class="document-column">
+                  <i class="fas fa-id-card me-1"></i>
+                  Documento
+                </th>
+                <th class="bank-column">
+                  <i class="fas fa-university me-1"></i>
+                  Banco
+                </th>
+                <th class="account-column">
+                  <i class="fas fa-credit-card me-1"></i>
+                  N° Cuenta
+                </th>
+                <th class="description-column">
+                  <i class="fas fa-file-text me-1"></i>
+                  Descripción
+                </th>
+                <th class="status-column">
+                  <i class="fas fa-tag me-1"></i>
+                  Estado
+                </th>
+                <th class="processed-column">
+                  <i class="fas fa-check-circle me-1"></i>
+                  Fecha Aceptación
+                </th>
+                <th *hasRole="['admin']" class="actions-column">
+                  <i class="fas fa-cogs me-1"></i>
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tx of withdrawalRequests; let i = index" class="withdrawal-row">
+                <td class="id-cell">
+                  <strong>{{ tx.id || "-" }}</strong>
+                </td>
+                <td class="date-cell">
+                  {{ tx.createdAt | utcDate }}
+                </td>
+                <td class="store-cell">
+                  {{ tx.store || "-" }}
+                </td>
+                <td class="amount-cell">
+                  <span class="badge bg-success">
+                    {{ tx.amount | number:'1.0-0' }}
+                  </span>
+                </td>
+                <td class="holder-cell">
+                  {{ tx.accountHolder }}
+                </td>
+                <td class="document-cell">
+                  {{ tx.document }}
+                </td>
+                <td class="bank-cell">
+                  {{ tx.bank }}
+                </td>
+                <td class="account-cell">
+                  <span class="badge bg-secondary small">{{ tx.accountNumber }}</span>
+                </td>
+                <td class="description-cell">
+                  <span class="text-muted small">{{ tx.description }}</span>
+                </td>
+                <td class="status-cell">
+                  <span class="badge" [ngClass]="getStatusBadgeClass(tx.status)">
+                    {{ getStatusLabel(tx.status) }}
+                  </span>
+                </td>
+                <td class="processed-cell">
+                  {{ tx.processedAt | utcDate }}
+                </td>
+                <td *hasRole="['admin']" class="actions-cell">
                   <button
                     class="btn btn-sm btn-outline-primary"
                     (click)="showModal(tx)"
+                    title="Aprobar retiro"
                   >
-                    <svg cIcon name="cilCheck"></svg>
+                    <i class="fas fa-check"></i>
                   </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        
         <app-generic-pagination
           [pagination]="pagination"
           [currentPage]="currentPage"
           (pageChange)="onPageChange($event)"
         >
         </app-generic-pagination>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+      </div>
+    </c-card-body>
+  </c-card>
+</div>
 
 <app-withdrawal-request-modal
   [isVisible]="isModalVisible"

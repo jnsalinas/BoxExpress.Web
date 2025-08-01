@@ -5,6 +5,6 @@ export interface AddressDto extends BaseDto {
   complement?: string;
   postalCode?: string;
   cityId: number;
-  latitude: number;
-  longitude: number;
+  latitude?: number;
+  longitude?: number;
 }

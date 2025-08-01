@@ -116,6 +116,15 @@ export class WarehouseInventoriesComponent implements OnInit {
     this.loadData();
   }
 
+  resetFilters(): void {
+    this.filterForm.patchValue({
+      query: '',
+      storeId: this.authService.hasRole('tienda') ? this.authService.getStoreId() : null,
+    });
+    this.currentPage = 1;
+    this.loadData();
+  }
+
   getTotalQuantity(variants: any[]): number {
     return variants.reduce(
       (total, variant) => total + (variant.quantity || 0),

@@ -1,0 +1,175 @@
+.inventory-table-container {
+  .table-responsive {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  }
+  
+  .inventory-table {
+    margin-bottom: 0;
+    width: 100%;
+    
+    thead {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      
+      th {
+        border: none;
+        padding: 0.75rem 0.5rem;
+        font-weight: 600;
+        color: #495057;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #dee2e6;
+        white-space: nowrap;
+        min-width: 80px;
+        
+        i {
+          font-size: 0.625rem;
+          opacity: 0.7;
+        }
+        
+        // Anchos específicos para columnas
+        &.product-column { min-width: 150px; width: 150px; }
+        &.variant-column { min-width: 120px; width: 120px; }
+        &.store-column { min-width: 100px; width: 100px; }
+        &.warehouse-column { min-width: 120px; width: 120px; }
+        &.available-column { min-width: 100px; width: 100px; }
+        &.processing-column { min-width: 100px; width: 100px; }
+        &.delivered-column { min-width: 100px; width: 100px; }
+        &.return-column { min-width: 100px; width: 100px; }
+        &.total-column { min-width: 80px; width: 80px; }
+        &.sku-column { min-width: 120px; width: 120px; }
+        &.actions-column { min-width: 100px; width: 100px; }
+      }
+    }
+    
+    tbody {
+      tr {
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #f1f3f4;
+        
+        &:hover {
+          background-color: #f8f9fa;
+        }
+        
+        &.product-header-row {
+          background-color: #f8f9fa;
+          
+          .product-header {
+            padding: 0.75rem 1rem;
+            border: none;
+            
+            .product-info {
+              .product-name {
+                font-size: 0.875rem;
+                color: #495057;
+              }
+              
+              .badge {
+                font-size: 0.75rem;
+              }
+            }
+            
+            .btn {
+              font-size: 0.75rem;
+              padding: 0.25rem 0.5rem;
+            }
+          }
+        }
+        
+        &.variant-row {
+          td {
+            padding: 0.5rem;
+            vertical-align: middle;
+            border: none;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          
+          .product-cell {
+            color: #6c757d;
+            font-size: 0.7rem;
+          }
+          
+          .variant-cell {
+            font-weight: 600;
+            color: #212529;
+          }
+          
+          .store-cell, .warehouse-cell {
+            color: #495057;
+          }
+          
+          .available-cell .badge {
+            font-size: 0.7rem;
+          }
+          
+          .processing-cell .badge {
+            font-size: 0.7rem;
+          }
+          
+          .delivered-cell .badge {
+            font-size: 0.7rem;
+          }
+          
+          .return-cell .badge {
+            font-size: 0.7rem;
+          }
+          
+          .total-cell {
+            font-weight: 700;
+            color: #0d6efd;
+          }
+          
+          .sku-cell {
+            .badge {
+              font-size: 0.65rem;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Scrollbar personalizado
+  .table-responsive::-webkit-scrollbar {
+    height: 8px;
+  }
+  
+  .table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  
+  .table-responsive::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+    
+    &:hover {
+      background: #a8a8a8;
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .inventory-table {
+      thead th {
+        font-size: 0.7rem;
+        padding: 0.5rem 0.25rem;
+        
+        i { display: none; }
+      }
+      
+      tbody tr.variant-row td {
+        padding: 0.25rem;
+        font-size: 0.7rem;
+      }
+    }
+  }
+}

@@ -1,55 +1,110 @@
-<c-row>
-  <c-col>
-    <c-card class="mb-4">
-      <c-card-header class="d-flex justify-content-between align-items-center">
-        <div>
-          <strong>Inventario</strong>
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando inventario...'"
+></app-loading-overlay>
+
+<div *ngIf="!isLoading" class="inventory-list-container">
+  <!-- Header con estadísticas -->
+  <c-card class="mb-3 stats-header-card">
+    <c-card-body class="p-3">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center">
+            <div class="inventory-icon me-3">
+              <i class="fas fa-boxes text-primary fs-3"></i>
+            </div>
+            <div>
+              <h3 class="mb-1 text-primary">Gestión de Inventario</h3>
+              <p class="text-muted mb-0 small">Administra y monitorea el inventario de productos</p>
+            </div>
+          </div>
         </div>
-        <button
-          *hasRole="['tienda']"
-          type="button"
-          class="btn btn-primary btn-sm"
-          (click)="downloadSku()"
-        >
-          <svg [cIcon]="icons.cilCloudDownload" size="sm"></svg>
-          Descargar SKU
-        </button>
-      </c-card-header>
-      <c-card-body>
-        <!-- Filtros -->
-        <form [formGroup]="filterForm" class="mb-4">
-          <c-row>
-            <c-col md="6">
-              <label cLabel for="query">Buscar producto</label>
-              <input
-                cFormControl
-                id="query"
-                formControlName="query"
-                type="text"
-                class="form-control"
-                placeholder="Nombre del producto o SKU"
-                (input)="onFilterChange()"
-              />
-            </c-col>
-            <c-col md="6" *ngIf="authService.hasRole('admin')">
-              <label cLabel for="storeId">Filtrar por tienda</label>
-              <ng-select
-                [items]="[]"
-                bindLabel="name"
-                bindValue="id"
-                formControlName="storeId"
-                placeholder="Todas las tiendas"
-                [clearable]="true"
-                [searchable]="false"
-                (change)="onFilterChange()"
+        <div class="col-md-4 text-end">
+          <div class="action-buttons d-flex gap-2">
+            <button
+              *hasRole="['tienda']"
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="downloadSku()"
+              title="Descargar SKU"
+            >
+              <i class="fas fa-download me-1"></i>
+              Descargar SKU
+            </button>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+
+  <!-- Filtros mejorados -->
+  <c-card class="mb-3 filters-card">
+    <c-card-header class="bg-light py-2">
+      <h6 class="mb-0">
+        <i class="fas fa-filter me-2 text-info"></i>
+        Filtros de Búsqueda
+      </h6>
+    </c-card-header>
+    <c-card-body class="py-3">
+      <form [formGroup]="filterForm" class="filters-form">
+        <div class="row g-2 align-items-end">
+          <div class="col-md-6">
+            <label cLabel for="query" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-search me-1 text-muted"></i>
+              Buscar producto
+            </label>
+            <input
+              cFormControl
+              id="query"
+              formControlName="query"
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Nombre del producto o SKU"
+            />
+          </div>
+          <div class="col-md-4" *ngIf="authService.hasRole('admin')">
+            <label cLabel for="storeId" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-store me-1 text-muted"></i>
+              Filtrar por tienda
+            </label>
+            <ng-select
+              [items]="[]"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="storeId"
+              placeholder="Todas las tiendas"
+              [clearable]="true"
+              [searchable]="false"
+              class="custom-select"
+            >
+            </ng-select>
+          </div>
+          <div class="col-md-2">
+            <div class="d-flex gap-1 w-100">
+              <button type="button" class="btn btn-primary btn-sm flex-fill" (click)="onFilterChange()">
+                <i class="fas fa-search me-1"></i>
+                Buscar
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary btn-sm flex-fill"
+                (click)="resetFilters()"
               >
-              </ng-select>
-            </c-col>
-          </c-row>
-        </form>
+                <i class="fas fa-times me-1"></i>
+                Limpiar
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </c-card-body>
+  </c-card>
 
-        <app-loading-overlay *ngIf="isLoading"></app-loading-overlay>
-
+  <!-- Contenido principal -->
+  <c-card class="main-content-card">
+    <c-card-body class="p-0">
+      <!-- Tabla de inventario -->
+      <div class="inventory-table-container p-4">
         <app-inventory-table
           [products]="filteredProducts || []"
           [showActions]="false"
@@ -59,7 +114,7 @@
           (pageChange)="onPageChange($event)"
         >
         </app-inventory-table>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
+      </div>
+    </c-card-body>
+  </c-card>
+</div>

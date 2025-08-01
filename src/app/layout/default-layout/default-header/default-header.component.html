@@ -63,18 +63,18 @@
         </div>
         <div *ngIf="store">
           <span class="text-muted">Balance total:</span>
-          <strong class="ms-1">{{ store.balance | currency }}</strong>
+          <strong class="ms-1">{{ store.balance | number:'1.0-2' }}</strong>
         </div>
         <div *ngIf="store">
           <span class="text-muted">Disponible para retiro:</span>
           <strong class="ms-1">{{
-            store.availableToWithdraw | currency
+            store.availableToWithdraw | number:'1.0-2'
           }}</strong>
         </div>
         <div *ngIf="store">
           <span class="text-muted">Pendiente por retiro:</span>
           <strong class="ms-1">{{
-            store.pendingWithdrawals | currency
+            store.pendingWithdrawals | number:'1.0-2'
           }}</strong>
         </div>
       </div>
