@@ -1,27 +1,45 @@
 <c-modal
-  class="confirm-modal"
+  class="confirm-modal modern-modal"
   [visible]="isVisible"
   (visibleChange)="onVisibleChange($event)"
 >
-  <c-modal-header>
-    <h5 cModalTitle>{{ title }}</h5>
-    <button (click)="onClose()" cButtonClose></button>
+  <c-modal-header class="modal-header-custom">
+    <h5 cModalTitle class="modal-title">
+      <div class="d-flex align-items-center">
+        <div class="modal-icon me-2">
+          <i class="fas fa-question-circle text-primary"></i>
+        </div>
+        <div>
+          <span class="fw-bold">{{ title }}</span>
+        </div>
+      </div>
+    </h5>
+    <button (click)="onClose()" cButtonClose class="btn-close"></button>
   </c-modal-header>
-  <c-modal-body>
+  
+  <c-modal-body class="modal-body-custom">
     <ng-content select="[custom-body]"></ng-content>
-    {{ body }}</c-modal-body
-  >
-  <c-modal-footer>
-    <button *ngIf="showCancelButton" (click)="onClose()" cButton color="secondary">
-      {{ cancelText }}
-    </button>
-    <button
-      cButton
-      color="primary"
-      (click)="onOk()"
-      [disabled]="isConfirmDisabled"
-    >
-      {{okText}}
-    </button>
+    <div *ngIf="body" class="text-muted">
+      {{ body }}
+    </div>
+  </c-modal-body>
+  
+  <c-modal-footer class="modal-footer-custom">
+    <div class="d-flex gap-2 w-100">
+      <button *ngIf="showCancelButton" (click)="onClose()" cButton color="secondary" class="btn btn-outline-secondary flex-fill">
+        <i class="fas fa-times me-1"></i>
+        {{ cancelText }}
+      </button>
+      <button
+        cButton
+        color="primary"
+        (click)="onOk()"
+        [disabled]="isConfirmDisabled"
+        class="btn btn-primary flex-fill"
+      >
+        <i class="fas fa-check me-1"></i>
+        {{okText}}
+      </button>
+    </div>
   </c-modal-footer>
 </c-modal>

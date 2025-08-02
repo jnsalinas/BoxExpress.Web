@@ -1,182 +1,274 @@
 <app-loading-overlay
   *ngIf="isLoading"
-  [loadingText]="'Cargando transacciones...'"
+  [loadingText]="'Cargando transferencias...'"
 ></app-loading-overlay>
 
-<c-row>
-  <c-col xs="12">
-    <c-card class="mb-4">
-      <c-card-header>
-        <strong>Transferencias</strong>
-        <button
-          type="button"
-          class="float-end btn btn-primary"
-          (click)="downloadExcel()"
-        >
-          <svg [cIcon]="icons.cilCloudDownload"></svg>
-          Exportar
-        </button>
-      </c-card-header>
-      <c-card-body>
-        <div>
-          <form
-            [formGroup]="filtersForm"
-            (ngSubmit)="onFilter()"
-            class="mb-4 row g-3 align-items-end"
-          >
-            <div class="col-md-2">
-              <label for="orderId" class="form-label">Origen</label>
-              <ng-select
-                [searchable]="false"
-                [items]="warehouseOptions"
-                bindLabel="name"
-                bindValue="id"
-                formControlName="fromWarehouseId"
-                placeholder="Seleccione..."
-              >
-              </ng-select>
+<div *ngIf="!isLoading" class="warehouse-transfers-container">
+  <!-- Header con estadísticas estilo gestión de órdenes -->
+  <c-card class="mb-3 stats-header-card">
+    <c-card-body class="p-3">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center">
+            <div class="header-icon me-3">
+              <i class="fas fa-exchange-alt text-primary fs-3"></i>
             </div>
-            <div class="col-md-2">
-              <label for="orderId" class="form-label">Destino</label>
-              <ng-select
-                [searchable]="false"
-                [items]="warehouseOptions"
-                bindLabel="name"
-                bindValue="id"
-                formControlName="toWarehouseId"
-                placeholder="Seleccione..."
-              >
-              </ng-select>
+            <div>
+              <h3 class="mb-1 text-primary">Gestión de Transferencias</h3>
+              <p class="text-muted mb-0 small">Administra y monitorea todas las transferencias entre bodegas</p>
             </div>
-            <div class="col-md-2">
-              <label for="statusId" class="form-label">Estado</label>
-              <ng-select
-                [searchable]="false"
-                [items]="statusOptions"
-                bindLabel="label"
-                bindValue="value"
-                formControlName="statusId"
-                placeholder="Seleccione..."
-              >
-              </ng-select>
-            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="action-buttons d-flex gap-2">
+            <button
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="downloadExcel()"
+              title="Exportar a Excel"
+            >
+              <i class="fas fa-download me-1"></i>
+              Exportar
+            </button>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
 
-            <div class="col-md-2">
-              <label for="startDate" class="form-label">Fecha inicio</label>
-              <input
-                type="date"
-                id="startDate"
-                formControlName="startDate"
-                class="form-control"
-              />
-            </div>
-
-            <div class="col-md-2">
-              <label for="endDate" class="form-label">Fecha fin</label>
-              <input
-                type="date"
-                id="endDate"
-                formControlName="endDate"
-                class="form-control"
-              />
-            </div>
-
-            <div class="col-md-1 d-grid">
-              <button type="submit" class="btn btn-primary">Filtrar</button>
-            </div>
-
-            <div class="col-md-1 d-grid">
+  <!-- Filtros mejorados -->
+  <c-card class="mb-3 filters-card">
+    <c-card-header class="bg-light py-2">
+      <h6 class="mb-0">
+        <i class="fas fa-filter me-2 text-info"></i>
+        Filtros de Búsqueda
+      </h6>
+    </c-card-header>
+    <c-card-body class="py-3">
+      <form
+        [formGroup]="filtersForm"
+        (ngSubmit)="onFilter()"
+        class="filters-form"
+      >
+        <div class="row g-3 align-items-end">
+          <div class="col-md-2">
+            <label for="fromWarehouseId" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-warehouse me-1 text-muted"></i>
+              Origen
+            </label>
+            <ng-select
+              [searchable]="false"
+              [items]="warehouseOptions"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="fromWarehouseId"
+              placeholder="Seleccione..."
+              class="form-control-sm"
+            >
+            </ng-select>
+          </div>
+          <div class="col-md-2">
+            <label for="toWarehouseId" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-warehouse me-1 text-muted"></i>
+              Destino
+            </label>
+            <ng-select
+              [searchable]="false"
+              [items]="warehouseOptions"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="toWarehouseId"
+              placeholder="Seleccione..."
+              class="form-control-sm"
+            >
+            </ng-select>
+          </div>
+          <div class="col-md-2">
+            <label for="statusId" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-tasks me-1 text-muted"></i>
+              Estado
+            </label>
+            <ng-select
+              [searchable]="false"
+              [items]="statusOptions"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="statusId"
+              placeholder="Seleccione..."
+              class="form-control-sm"
+            >
+            </ng-select>
+          </div>
+          <div class="col-md-2">
+            <label for="startDate" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-calendar me-1 text-muted"></i>
+              Fecha inicio
+            </label>
+            <input
+              type="date"
+              id="startDate"
+              formControlName="startDate"
+              class="form-control form-control-sm"
+            />
+          </div>
+          <div class="col-md-2">
+            <label for="endDate" class="form-label small fw-semibold mb-1">
+              <i class="fas fa-calendar me-1 text-muted"></i>
+              Fecha fin
+            </label>
+            <input
+              type="date"
+              id="endDate"
+              formControlName="endDate"
+              class="form-control form-control-sm"
+            />
+          </div>
+          <div class="col-md-2">
+            <div class="d-flex gap-1 w-100">
+              <button type="submit" class="btn btn-primary btn-sm flex-fill">
+                <i class="fas fa-search me-1"></i>
+                Filtrar
+              </button>
               <button
                 type="button"
-                class="btn btn-outline-secondary"
+                class="btn btn-outline-secondary btn-sm flex-fill"
                 (click)="resetFilters()"
               >
+                <i class="fas fa-times me-1"></i>
                 Limpiar
               </button>
             </div>
-          </form>
+          </div>
         </div>
-        <table cTable striped responsive hover>
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Bodegas</th>
-              <th scope="col">Fecha</th>
-              <th scope="col">Estado</th>
-              <th scope="col">Creador</th>
-              <th scope="col">Aceptado por</th>
-              <th scope="col">Rechazado</th>
-              <th scope="col">Contiene</th>
-              <th scope="col">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let tx of warehouseInventoryTransfers; let i = index">
-              <th scope="row">{{ tx.id }}</th>
-              <td>
-                <span class="fw-bold">{{ tx.fromWarehouse }}</span>
-                <span class="mx-1 text-muted">→</span>
-                <span class="fw-bold">{{ tx.toWarehouse }}</span>
-              </td>
-              <td>{{ tx.createdAt | utcDate }}</td>
-              <td>
-                <c-badge
-                  [color]="
-                    getStatusLabel(tx.status) === 'Aprobado' ? 'success' :
-                    getStatusLabel(tx.status) === 'Pendiente' ? 'warning' :
-                    getStatusLabel(tx.status) === 'Rechazada' ? 'danger' : 'secondary'
-                  "
-                  class="rounded-pill px-3 py-1"
-                >
-                  {{ getStatusLabel(tx.status) }}
-                </c-badge>
-              </td>
-              <td>{{ tx.creator }}</td>
-              <td>{{ tx.acceptedBy }}</td>
-              <td>
-                <span *ngIf="tx.rejectionReason; else noRechazo" class="text-danger">
-                  {{ tx.rejectionReason }}
-                </span>
-                <ng-template #noRechazo>
-                  <span class="text-muted">-</span>
-                </ng-template>
-              </td>
-              <td>
-                <div *ngFor="let item of tx.transferDetails; let last = last">
-                  <span class="fw-semibold">{{ item.product }}</span>
-                  <span class="text-muted">{{ item.productVariant }}</span>
-                  <span class="badge bg-secondary ms-1">{{ item.quantity }}</span>
-                  <hr *ngIf="!last" class="my-1" />
-                </div>
-              </td>
-              <td>
-                <button
-                  class="btn btn-sm btn-outline-primary me-2"
-                  (click)="showDetail(tx)"
-                  title="Ver detalle"
-                >
-                  <svg [cIcon]="icons.cilPencil"></svg>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      </form>
+    </c-card-body>
+  </c-card>
+
+  <!-- Contenido principal -->
+  <c-card class="main-content-card">
+    <c-card-body class="p-0">
+      <div class="modern-table-container">
+        <div class="table-responsive">
+          <table class="table table-hover modern-table">
+            <thead class="table-light">
+              <tr>
+                <th class="id-column">
+                  <i class="fas fa-hashtag me-1"></i>
+                  ID
+                </th>
+                <th class="warehouses-column">
+                  <i class="fas fa-exchange-alt me-1"></i>
+                  Bodegas
+                </th>
+                <th class="date-column">
+                  <i class="fas fa-calendar me-1"></i>
+                  Fecha
+                </th>
+                <th class="status-column">
+                  <i class="fas fa-tasks me-1"></i>
+                  Estado
+                </th>
+                <th class="creator-column">
+                  <i class="fas fa-user me-1"></i>
+                  Creador
+                </th>
+                <th class="accepted-by-column">
+                  <i class="fas fa-user-check me-1"></i>
+                  Aceptado por
+                </th>
+                <th class="rejection-column">
+                  <i class="fas fa-times-circle me-1"></i>
+                  Rechazado
+                </th>
+                <th class="contains-column">
+                  <i class="fas fa-box me-1"></i>
+                  Contiene
+                </th>
+                <th class="actions-column">
+                  <i class="fas fa-cogs me-1"></i>
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let tx of warehouseInventoryTransfers; let i = index" class="data-row">
+                <td class="id-cell">
+                  <span class="badge bg-secondary">{{ tx.id }}</span>
+                </td>
+                <td class="warehouses-cell">
+                  <div class="d-flex align-items-center">
+                    <span class="fw-bold">{{ tx.fromWarehouse }}</span>
+                    <i class="fas fa-arrow-right mx-2 text-muted"></i>
+                    <span class="fw-bold">{{ tx.toWarehouse }}</span>
+                  </div>
+                </td>
+                <td class="date-cell">
+                  {{ tx.createdAt | utcDate }}
+                </td>
+                <td class="status-cell">
+                  <span
+                    class="badge"
+                    [ngClass]="{
+                      'bg-success': getStatusLabel(tx.status) === 'Aprobado',
+                      'bg-warning': getStatusLabel(tx.status) === 'Pendiente',
+                      'bg-danger': getStatusLabel(tx.status) === 'Rechazada',
+                      'bg-secondary': getStatusLabel(tx.status) !== 'Aprobado' && getStatusLabel(tx.status) !== 'Pendiente' && getStatusLabel(tx.status) !== 'Rechazada'
+                    }"
+                  >
+                    {{ getStatusLabel(tx.status) }}
+                  </span>
+                </td>
+                <td class="creator-cell">
+                  {{ tx.creator }}
+                </td>
+                <td class="accepted-by-cell">
+                  {{ tx.acceptedBy || '-' }}
+                </td>
+                <td class="rejection-cell">
+                  <span *ngIf="tx.rejectionReason; else noRechazo" class="text-danger small">
+                    {{ tx.rejectionReason }}
+                  </span>
+                  <ng-template #noRechazo>
+                    <span class="text-muted small">-</span>
+                  </ng-template>
+                </td>
+                <td class="contains-cell">
+                  <div *ngFor="let item of tx.transferDetails; let last = last">
+                    <div class="d-flex align-items-center">
+                      <span class="fw-semibold small">{{ item.product }}</span>
+                      <span class="text-muted small ms-1">{{ item.productVariant }}</span>
+                      <span class="badge bg-secondary ms-1 small">{{ item.quantity }}</span>
+                    </div>
+                    <hr *ngIf="!last" class="my-1" />
+                  </div>
+                </td>
+                <td class="actions-cell">
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="showDetail(tx)"
+                    title="Ver detalle"
+                  >
+                    <i class="fas fa-eye me-1"></i>
+                    Ver detalle
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <div class="p-3">
         <app-generic-pagination
           [pagination]="pagination"
           [currentPage]="currentPage"
           (pageChange)="onPageChange($event)"
         >
         </app-generic-pagination>
-      </c-card-body>
-    </c-card>
-  </c-col>
-</c-row>
-
-<app-loading-overlay
-  *ngIf="isLoading"
-  [loadingText]="'Cargando transferencias...'"
->
-</app-loading-overlay>
+      </div>
+    </c-card-body>
+  </c-card>
+</div>
 
 <app-warehouse-transfer-modal-detail
   *ngIf="warehouseInventoryTransfer"
@@ -188,7 +280,6 @@
 </app-warehouse-transfer-modal-detail>
 
 <app-generic-modal> </app-generic-modal>
-
 
 <!-- todo mejor pasar a un componente dentro de components -->
 <app-generic-modal

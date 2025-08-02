@@ -28,3 +28,6 @@
 // @import "@ng-select/ng-select/themes/material.theme.css";
 
 @import 'node_modules/ngx-toastr/toastr.css';
+
+// Import shared UI styles
+@import '../app/shared/styles/common-ui.scss';

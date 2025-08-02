@@ -1,36 +1,52 @@
-<c-modal [visible]="isVisible" size="lg" backdrop="static" keyboard="false" scrollable>
-  <c-modal-header>
-    <h5 class="modal-title" *ngIf="productToEdit == null" >Agregar producto a {{ warehouseName }}</h5>
-    <h5 class="modal-title" *ngIf="productToEdit">Editar producto a {{ warehouseName }}</h5>
+<c-modal [visible]="isVisible" size="lg" backdrop="static" keyboard="false" scrollable class="modern-modal">
+  <c-modal-header class="modal-header-custom">
+    <h5 class="modal-title">
+      <div class="d-flex align-items-center">
+        <div class="modal-icon me-2">
+          <i class="fas fa-box text-primary"></i>
+        </div>
+        <div>
+          <span class="fw-bold" *ngIf="productToEdit == null">Agregar producto a {{ warehouseName }}</span>
+          <span class="fw-bold" *ngIf="productToEdit">Editar producto a {{ warehouseName }}</span>
+        </div>
+      </div>
+    </h5>
   </c-modal-header>
 
-  <c-modal-body>
+  <c-modal-body class="modal-body-custom">
     <form [formGroup]="productForm">
       <div *ngIf="productForm && products" formArrayName="products" class="d-flex flex-column gap-3">
         <div
           *ngFor="let product of products?.controls; let i = index"
           [formGroupName]="i"
-          class="border rounded p-2 shadow-sm bg-light"
+          class="product-card border rounded p-3 shadow-sm bg-light"
         >
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h6 class="fw-bold mb-0">Producto {{ i + 1 }}</h6>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0 text-primary">
+              <i class="fas fa-box me-2"></i>
+              Producto {{ i + 1 }}
+            </h6>
             <button
               *ngIf="productToEdit == null"
               type="button"
-              class="btn btn-sm btn-outline-danger px-2 py-1"
+              class="btn btn-sm btn-outline-danger"
               (click)="removeProduct(i)"
               title="Eliminar Producto"
             >
-              <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+              <i class="fas fa-trash me-1"></i>
+              Eliminar
             </button>
           </div>
 
-          <div class="row g-2 mb-2 align-items-center">
+          <div class="row g-3 mb-3 align-items-center">
             <div class="col-12">
-              <label class="form-label mb-1">Nombre</label>
+              <label class="form-label">
+                <i class="fas fa-tag me-1 text-muted"></i>
+                Nombre del producto
+              </label>
               <input
                 type="text"
-                class="form-control form-control-sm"
+                class="form-control"
                 formControlName="name"
                 placeholder="Nombre del producto"
                 autocomplete="off"
@@ -38,62 +54,78 @@
             </div>
           </div>
 
-          <div formArrayName="variants" class="mt-2">
-            <div class="d-flex justify-content-between align-items-center mb-2">
+          <div formArrayName="variants" class="mt-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
               <div>
                 <label class="form-label fw-semibold mb-0 text-primary">
-                  <svg [cIcon]="icons.cilList" class="me-2"></svg>
+                  <i class="fas fa-list me-2"></i>
                   Variantes
                 </label>
               </div>
               <button
                 type="button"
-                class="btn btn-primary btn-sm px-2 py-1"
+                class="btn btn-primary btn-sm"
                 (click)="addVariant(i)"
                 title="Agregar Variante"
               >
-                <svg [cIcon]="icons.cilPlus" class="me-1"></svg>
-                Agregar
+                <i class="fas fa-plus me-1"></i>
+                Agregar Variante
               </button>
             </div>
 
             <div
               *ngFor="let variant of getVariants(i)?.controls; let j = index"
               [formGroupName]="j"
-              class="variant-card border rounded p-2 mb-2 shadow-sm bg-white"
+              class="variant-card border rounded p-3 mb-3 shadow-sm bg-white"
             >
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <span class="fw-bold text-primary">Variante {{ j + 1 }}</span>
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fw-bold text-primary">
+                  <i class="fas fa-cube me-2"></i>
+                  Variante {{ j + 1 }}
+                </span>
                 <button
                   type="button"
-                  class="btn btn-outline-danger btn-sm px-2 py-1"
+                  class="btn btn-outline-danger btn-sm"
                   (click)="removeVariant(i, j)"
                   title="Eliminar variante"
                 >
-                  <svg [cIcon]="icons.cilTrash" size="sm"></svg>
+                  <i class="fas fa-trash me-1"></i>
+                  Eliminar
                 </button>
               </div>
 
-              <div class="row g-2 mb-1 align-items-center">
+              <div class="row g-3 mb-3 align-items-center">
                 <div class="col-md-4 col-12">
+                  <label class="form-label small">
+                    <i class="fas fa-tag me-1 text-muted"></i>
+                    Nombre de la variante
+                  </label>
                   <input
-                    class="form-control form-control-sm"
+                    class="form-control"
                     formControlName="name"
                     placeholder="Nombre de la variante"
                     autocomplete="off"
                   />
                 </div>
                 <div class="col-md-4 col-6">
+                  <label class="form-label small">
+                    <i class="fas fa-barcode me-1 text-muted"></i>
+                    SKU
+                  </label>
                   <input
-                    class="form-control form-control-sm"
+                    class="form-control"
                     formControlName="sku"
                     placeholder="SKU"
                     autocomplete="off"
                   />
                 </div>
                 <div class="col-md-4 col-6">
+                  <label class="form-label small">
+                    <i class="fas fa-hashtag me-1 text-muted"></i>
+                    Shopify ID
+                  </label>
                   <input
-                    class="form-control form-control-sm"
+                    class="form-control"
                     formControlName="shopifyId"
                     placeholder="Shopify ID"
                     autocomplete="off"
@@ -101,41 +133,53 @@
                 </div>
               </div>
 
-              <div class="row g-2 mb-1 align-items-center">
+              <div class="row g-3 mb-3 align-items-center">
                 <div class="col-md-6 col-12">
+                  <label class="form-label small">
+                    <i class="fas fa-store me-1 text-muted"></i>
+                    Tienda
+                  </label>
                   <ng-select
                     [items]="stores"
                     bindLabel="name"
                     bindValue="id"
                     formControlName="storeId"
-                    placeholder="Tienda..."
+                    placeholder="Seleccione tienda..."
                     [searchable]="true"
                     [clearable]="false"
-                    class="ng-select-custom"
+                    class="custom-select"
                   >
                     <ng-template ng-option-tmp let-item="item">
                       <div class="d-flex align-items-center">
-                        <svg [cIcon]="icons.cilHome" class="me-2 text-primary"></svg>
+                        <i class="fas fa-home me-2 text-primary"></i>
                         <span>{{ item.name }}</span>
                       </div>
                     </ng-template>
                   </ng-select>
                 </div>
                 <div class="col-md-3 col-6">
+                  <label class="form-label small">
+                    <i class="fas fa-calculator me-1 text-muted"></i>
+                    Cantidad
+                  </label>
                   <input
                     type="number"
-                    class="form-control form-control-sm"
+                    class="form-control"
                     formControlName="quantity"
                     placeholder="Cantidad"
                     min="0"
                   />
                 </div>
                 <div class="col-md-3 col-6">
-                  <div class="input-group input-group-sm">
+                  <label class="form-label small">
+                    <i class="fas fa-dollar-sign me-1 text-muted"></i>
+                    Precio
+                  </label>
+                  <div class="input-group">
                     <span class="input-group-text">$</span>
                     <input
                       type="number"
-                      class="form-control form-control-sm"
+                      class="form-control"
                       formControlName="price"
                       placeholder="Precio"
                       min="0"
@@ -155,23 +199,28 @@
         class="btn btn-outline-success mt-3 w-100"
         (click)="addProduct()"
       >
-        <svg [cIcon]="icons.cilPlus" class="me-1"></svg> Agregar otro producto
+        <i class="fas fa-plus me-1"></i>
+        Agregar otro producto
       </button>
     </form>
   </c-modal-body>
 
-  <c-modal-footer>
-    <button class="btn btn-secondary" type="button" (click)="close()">
-      Cancelar
-    </button>
-    <button
-      class="btn btn-primary"
-      type="submit"
-      (click)="save()"
-      [disabled]="productForm.invalid || isSaving"
-    >
-      <svg [cIcon]="icons.cilCheck" class="me-1" *ngIf="!isSaving"></svg>
-      {{ isSaving ? 'Guardando...' : 'Guardar' }}
-    </button>
+  <c-modal-footer class="modal-footer-custom">
+    <div class="d-flex gap-2 w-100">
+      <button class="btn btn-outline-secondary flex-fill" type="button" (click)="close()">
+        <i class="fas fa-times me-1"></i>
+        Cancelar
+      </button>
+      <button
+        class="btn btn-primary flex-fill"
+        type="submit"
+        (click)="save()"
+        [disabled]="productForm.invalid || isSaving"
+      >
+        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+        <i class="fas fa-save me-1" *ngIf="!isSaving"></i>
+        {{ isSaving ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
   </c-modal-footer>
 </c-modal>

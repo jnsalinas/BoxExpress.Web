@@ -1,23 +1,34 @@
-<c-modal [visible]="isVisible" size="lg" backdrop="static">
-  <c-modal-header>
-    <h5 class="modal-title">Transferencia entre Bodegas</h5>
+<c-modal [visible]="isVisible" size="lg" backdrop="static" class="modern-modal">
+  <c-modal-header class="modal-header-custom">
+    <h5 class="modal-title">
+      <div class="d-flex align-items-center">
+        <div class="modal-icon me-2">
+          <i class="fas fa-exchange-alt text-primary"></i>
+        </div>
+        <div>
+          <span class="fw-bold">Transferencia entre Bodegas</span>
+        </div>
+      </div>
+    </h5>
   </c-modal-header>
 
-  <c-modal-body>
+  <c-modal-body class="modal-body-custom">
     <form [formGroup]="form">
-      <div class="mb-3">
-        <label for="toWarehouseId" class="form-label"
-          >Bodega destino</label
-        >
+      <div class="mb-4">
+        <label for="toWarehouseId" class="form-label">
+          <i class="fas fa-warehouse me-1 text-muted"></i>
+          Bodega destino <span class="text-danger">*</span>
+        </label>
         <ng-select
           id="toWarehouseId"
-          placeholder="Selecciona la bodega"
+          placeholder="Selecciona la bodega destino"
           searchable="false"
           formControlName="toWarehouseId"
           [items]="warehouses"
           bindValue="id"
           bindLabel="name"
           (change)="onWarehouseChange($event)"
+          class="custom-select"
         >
         </ng-select>
       </div>
@@ -26,15 +37,16 @@
         <div
           *ngFor="let variant of transferDetails.controls; let i = index"
           [formGroupName]="i"
-          class="border rounded p-3 mb-3 bg-light"
+          class="transfer-item-card border rounded p-3 mb-3 bg-light"
         >
-          <div class="row g-2 align-items-end">
+          <div class="row g-3 align-items-end">
             <div class="col-md-7">
-              <label class="form-label fw-bold">
+              <label class="form-label">
+                <i class="fas fa-box me-1 text-muted"></i>
                 Variante <span class="text-danger">*</span>
               </label>
               <ng-select
-                class="form-control"
+                class="custom-select"
                 [items]="getVariantOptions(i)"
                 bindLabel="displayName"
                 bindValue="id"
@@ -48,7 +60,8 @@
               ></ng-select>
             </div>
             <div class="col-md-3">
-              <label class="form-label fw-bold">
+              <label class="form-label">
+                <i class="fas fa-calculator me-1 text-muted"></i>
                 Cantidad <span class="text-danger">*</span>
               </label>
               <input
@@ -57,20 +70,23 @@
                 formControlName="quantity"
                 [attr.min]="1"
                 [attr.max]="variant.get('max')?.value"
+                placeholder="Cantidad"
               />
-              <!-- <small class="text-muted" *ngIf="variant.get('max')?.value !== null">
+              <small class="text-muted" *ngIf="variant.get('max')?.value !== null">
+                <i class="fas fa-info-circle me-1"></i>
                 Disponible: {{ variant.get('max')?.value }}
-              </small> -->
+              </small>
             </div>
             <div class="col-md-2 text-end">
               <button
                 type="button"
-                class="btn btn-danger"
+                class="btn btn-outline-danger"
                 (click)="removeProductVariant(i)"
                 *ngIf="transferDetails.length > 1"
                 title="Eliminar variante"
               >
-                <svg [cIcon]="icons.cilXCircle"></svg>
+                <i class="fas fa-trash me-1"></i>
+                Eliminar
               </button>
             </div>
           </div>
@@ -82,45 +98,64 @@
         class="btn btn-outline-primary w-100 mb-4"
         (click)="addProductVariant()"
       >
-        <svg [cIcon]="icons.cilPlus"></svg>
+        <i class="fas fa-plus me-1"></i>
         Agregar Variante
       </button>
 
       <div *ngIf="transferDetails.length === 0" class="alert alert-warning mt-3">
+        <i class="fas fa-exclamation-triangle me-2"></i>
         Debes agregar al menos un producto/variante para transferir.
       </div>
 
       <div class="mt-4">
-        <c-card>
-          <c-card-body>
-            <h5 class="mb-3">Resumen de la Transferencia</h5>
-
+        <c-card class="summary-card">
+          <c-card-header class="bg-light py-2">
+            <h6 class="mb-0">
+              <i class="fas fa-clipboard-list me-2 text-info"></i>
+              Resumen de la Transferencia
+            </h6>
+          </c-card-header>
+          <c-card-body class="py-3">
             <div class="mb-3">
-              <strong>Bodega destino:</strong>
-              <span>
-                {{ selectedWarehouseName }}
-              </span>
+              <div class="d-flex align-items-center">
+                <i class="fas fa-warehouse text-primary me-2"></i>
+                <strong>Bodega destino:</strong>
+                <span class="ms-2">{{ selectedWarehouseName }}</span>
+              </div>
             </div>
 
-            <table class="table table-hover align-middle">
-              <thead class="table-light">
-                <tr>
-                  <th>Variante</th>
-                  <th style="width: 150px">Cantidad</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of summaryList">
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.quantity }}</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="modern-table-container">
+              <div class="table-responsive">
+                <table class="table table-hover modern-table">
+                  <thead class="table-light">
+                    <tr>
+                      <th class="variant-column">
+                        <i class="fas fa-box me-1"></i>
+                        Variante
+                      </th>
+                      <th class="quantity-column" style="width: 150px">
+                        <i class="fas fa-calculator me-1"></i>
+                        Cantidad
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of summaryList" class="data-row">
+                      <td class="variant-cell">{{ item.name }}</td>
+                      <td class="quantity-cell">
+                        <span class="badge bg-primary">{{ item.quantity }}</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
             <div
               *ngIf="summaryList.length === 0"
               class="text-center text-muted mt-3"
             >
+              <i class="fas fa-inbox me-2"></i>
               No hay variantes agregadas aún.
             </div>
           </c-card-body>
@@ -129,17 +164,21 @@
     </form>
   </c-modal-body>
 
-  <c-modal-footer>
-    <button type="button" class="btn btn-secondary" (click)="close()">
-      Cancelar
-    </button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="save()"
-      [disabled]="transferDetails.length === 0 || form.invalid"
-    >
-      Transferir
-    </button>
+  <c-modal-footer class="modal-footer-custom">
+    <div class="d-flex gap-2 w-100">
+      <button type="button" class="btn btn-outline-secondary flex-fill" (click)="close()">
+        <i class="fas fa-times me-1"></i>
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary flex-fill"
+        (click)="save()"
+        [disabled]="transferDetails.length === 0 || form.invalid"
+      >
+        <i class="fas fa-exchange-alt me-1"></i>
+        Transferir
+      </button>
+    </div>
   </c-modal-footer>
 </c-modal>

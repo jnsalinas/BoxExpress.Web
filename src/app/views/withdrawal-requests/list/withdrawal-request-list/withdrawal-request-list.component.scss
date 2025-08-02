@@ -1,324 +1,132 @@
 .withdrawal-requests-container {
-  .stats-header-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    
-    .card-body { background: transparent; }
-    
-    .withdrawal-icon {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      
-      i { color: white !important; }
-    }
-    
-    h3 { color: white !important; font-weight: 700; }
-    
-    .action-buttons .btn {
-      border-radius: 6px;
-      font-weight: 600;
-      padding: 0.5rem 1rem;
-      transition: all 0.3s ease;
-      font-size: 0.75rem;
-      height: 31px;
-      
-      &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-      }
-      
-      &.btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border: none;
-        
-        &:hover {
-          background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-        }
-      }
-    }
-  }
+  // Usar los estilos compartidos del archivo common-ui.scss
   
-  .filters-card {
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    
-    .card-header {
-      border-bottom: 1px solid #dee2e6;
-      background-color: #f8f9fa !important;
-      
-      h6 { font-weight: 600; color: #495057; }
-    }
-    
-    .filters-form {
-      .form-label {
-        font-size: 0.75rem;
-        margin-bottom: 0.25rem;
-        
-        i { font-size: 0.625rem; }
+  // Estilos específicos para las columnas de la tabla
+  .modern-table-container {
+    .modern-table {
+      // Anchos específicos para columnas
+      th {
+        &.id-column { min-width: 80px; width: 80px; }
+        &.date-column { min-width: 120px; width: 120px; }
+        &.store-column { min-width: 100px; width: 100px; }
+        &.amount-column { min-width: 100px; width: 100px; }
+        &.holder-column { min-width: 120px; width: 120px; }
+        &.document-column { min-width: 100px; width: 100px; }
+        &.bank-column { min-width: 100px; width: 100px; }
+        &.account-column { min-width: 120px; width: 120px; }
+        &.description-column { min-width: 150px; width: 150px; }
+        &.status-column { min-width: 100px; width: 100px; }
+        &.processed-column { min-width: 120px; width: 120px; }
+        &.actions-column { min-width: 80px; width: 80px; }
       }
       
-      .form-control {
-        border-radius: 6px;
-        border: 1px solid #dee2e6;
-        transition: all 0.3s ease;
-        height: 31px;
-        
-        &:focus {
-          border-color: #0d6efd;
-          box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+      // Estilos específicos para las celdas
+      .id-cell {
+        .badge {
+          font-size: 0.7rem;
+          padding: 0.375rem 0.5rem;
+          border-radius: 4px;
         }
       }
       
-      .custom-select .ng-select-container {
-        border-radius: 6px;
-        border: 1px solid #dee2e6;
-        transition: all 0.3s ease;
-        height: 31px;
-        min-height: 31px;
-        
-        &:hover { border-color: #0d6efd; }
-        
-        .ng-value-container {
-          padding: 0.25rem 0.5rem;
-          height: 31px;
-          display: flex;
-          align-items: center;
+      .amount-cell {
+        .badge {
+          font-size: 0.7rem;
+          padding: 0.375rem 0.5rem;
+          border-radius: 4px;
         }
-        
-        .ng-placeholder {
+      }
+      
+      .account-cell {
+        .badge {
+          font-size: 0.65rem;
+          padding: 0.25rem 0.375rem;
+          border-radius: 4px;
+        }
+      }
+      
+      .status-cell {
+        .badge {
+          font-size: 0.7rem;
+          padding: 0.375rem 0.5rem;
+          border-radius: 4px;
+        }
+      }
+      
+      .description-cell {
+        .text-muted {
           font-size: 0.75rem;
-          color: #6c757d;
-        }
-        
-        .ng-arrow-wrapper {
-          height: 31px;
-          display: flex;
-          align-items: center;
         }
       }
       
-      .btn {
-        border-radius: 6px;
-        font-weight: 600;
-        padding: 0.375rem 0.75rem;
-        transition: all 0.3s ease;
-        font-size: 0.75rem;
-        height: 31px;
-        
-        &:hover {
-          transform: translateY(-1px);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-        
-        &.btn-primary {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border: none;
+      .actions-cell {
+        .btn {
+          font-size: 0.75rem;
+          padding: 0.375rem 0.5rem;
+          border-radius: 4px;
+          transition: all 0.2s ease;
           
           &:hover {
-            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
           }
-        }
-        
-        &.btn-outline-secondary {
-          border-color: #dee2e6;
-          color: #6c757d;
           
-          &:hover {
-            background-color: #f8f9fa;
-            border-color: #adb5bd;
-            color: #495057;
+          &.btn-outline-primary {
+            border-color: #0d6efd;
+            color: #0d6efd;
+            
+            &:hover {
+              background-color: #0d6efd;
+              border-color: #0d6efd;
+              color: white;
+            }
           }
         }
       }
     }
   }
-  
-  .main-content-card {
-    border: none;
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  }
-  
-  .withdrawal-table-container {
-    .table-responsive {
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    }
-    
-    .withdrawal-table {
-      margin-bottom: 0;
-      width: 100%;
-      
-      thead {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        position: sticky;
-        top: 0;
-        z-index: 10;
+}
+
+// Responsive adjustments específicos
+@media (max-width: 768px) {
+  .withdrawal-requests-container {
+    .modern-table-container {
+      .modern-table {
+        min-width: 1200px; // Más ancho para esta tabla específica
         
         th {
-          border: none;
-          padding: 0.75rem 0.5rem;
-          font-weight: 600;
-          color: #495057;
+          font-size: 0.7rem;
+          padding: 0.5rem 0.25rem;
+          
+          i { display: none; }
+        }
+        
+        td {
+          padding: 0.5rem 0.25rem;
           font-size: 0.75rem;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-          border-bottom: 2px solid #dee2e6;
-          white-space: nowrap;
-          min-width: 80px;
-          
-          i {
-            font-size: 0.625rem;
-            opacity: 0.7;
-          }
-          
-          // Anchos específicos para columnas
-          &.id-column { min-width: 80px; width: 80px; }
-          &.date-column { min-width: 120px; width: 120px; }
-          &.store-column { min-width: 100px; width: 100px; }
-          &.amount-column { min-width: 100px; width: 100px; }
-          &.holder-column { min-width: 120px; width: 120px; }
-          &.document-column { min-width: 100px; width: 100px; }
-          &.bank-column { min-width: 100px; width: 100px; }
-          &.account-column { min-width: 120px; width: 120px; }
-          &.description-column { min-width: 150px; width: 150px; }
-          &.status-column { min-width: 100px; width: 100px; }
-          &.processed-column { min-width: 120px; width: 120px; }
-          &.actions-column { min-width: 80px; width: 80px; }
         }
-      }
-      
-      tbody {
-        tr {
-          transition: all 0.2s ease;
-          border-bottom: 1px solid #f1f3f4;
-          
-          &:hover {
-            background-color: #f8f9fa;
-          }
-          
-          &.withdrawal-row {
-            td {
-              padding: 0.5rem;
-              vertical-align: middle;
-              border: none;
-              font-size: 0.75rem;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-            
-            .id-cell {
-              font-weight: 700;
-              color: #0d6efd;
-            }
-            
-            .date-cell {
-              color: #495057;
-            }
-            
-            .store-cell {
-              color: #495057;
-            }
-            
-            .amount-cell .badge {
-              font-size: 0.7rem;
-            }
-            
-            .holder-cell {
-              font-weight: 600;
-              color: #212529;
-            }
-            
-            .document-cell {
-              color: #495057;
-            }
-            
-            .bank-cell {
-              color: #495057;
-            }
-            
-            .account-cell .badge {
-              font-size: 0.65rem;
-            }
-            
-            .description-cell {
-              color: #6c757d;
-            }
-            
-            .status-cell .badge {
-              font-size: 0.7rem;
-            }
-            
-            .processed-cell {
-              color: #495057;
-            }
-            
-            .actions-cell .btn {
-              font-size: 0.7rem;
-              padding: 0.25rem 0.5rem;
-            }
+        
+        .amount-cell,
+        .status-cell {
+          .badge {
+            font-size: 0.65rem;
+            padding: 0.25rem 0.375rem;
           }
         }
-      }
-    }
-    
-    // Scrollbar personalizado
-    .table-responsive::-webkit-scrollbar {
-      height: 8px;
-    }
-    
-    .table-responsive::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: 4px;
-    }
-    
-    .table-responsive::-webkit-scrollbar-thumb {
-      background: #c1c1c1;
-      border-radius: 4px;
-      
-      &:hover {
-        background: #a8a8a8;
-      }
-    }
-  }
-  
-  // Responsive adjustments
-  @media (max-width: 768px) {
-    .stats-header-card {
-      .row { text-align: center; }
-      
-      .col-md-4.text-end {
-        text-align: center !important;
-        margin-top: 1rem;
-      }
-      
-      .action-buttons {
-        flex-direction: column;
-        gap: 0.5rem;
         
-        .btn { width: 100%; }
-      }
-    }
-    
-    .filters-form .row .col-md-2 { margin-bottom: 1rem; }
-    
-    .withdrawal-table {
-      thead th {
-        font-size: 0.7rem;
-        padding: 0.5rem 0.25rem;
+        .account-cell {
+          .badge {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.3rem;
+          }
+        }
         
-        i { display: none; }
-      }
-      
-      tbody tr.withdrawal-row td {
-        padding: 0.25rem;
-        font-size: 0.7rem;
+        .actions-cell {
+          .btn {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.375rem;
+          }
+        }
       }
     }
   }

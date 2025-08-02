@@ -3,15 +3,22 @@
   size="lg"
   backdrop="static"
   keyboard="false"
+  class="modern-modal"
 >
-  <c-modal-header>
+  <c-modal-header class="modal-header-custom">
     <h5 class="modal-title">
-      <svg [cIcon]="icons.cilPencil" class="me-2"></svg>
-      Editar Variante de Inventario
+      <div class="d-flex align-items-center">
+        <div class="modal-icon me-2">
+          <i class="fas fa-edit text-primary"></i>
+        </div>
+        <div>
+          <span class="fw-bold">Editar Variante de Inventario</span>
+        </div>
+      </div>
     </h5>
   </c-modal-header>
 
-  <c-modal-body>
+  <c-modal-body class="modal-body-custom">
     <div *ngIf="!warehouseInventoryItem" class="text-center py-4">
       <div class="spinner-border text-primary" role="status">
         <span class="visually-hidden">Cargando...</span>
@@ -20,110 +27,119 @@
     </div>
 
     <form [formGroup]="warehouseInventoryForm" *ngIf="warehouseInventoryItem">
-      <c-row>
-        <c-col col="12">
-          <div class="form-group mb-3">
-            <label for="variantName" class="form-label">Nombre de la Variante</label>
-            <input
-              type="text"
-              id="variantName"
-              class="form-control"
-              formControlName="variantName"
-              placeholder="Nombre de la variante"
-            />
-          </div>
-        </c-col>
-      </c-row>
-      <c-row>
-        <c-col col="12">
-          <div class="form-group mb-3">
-            <label for="variantSku" class="form-label">SKU de la Variante</label>
-            <input
-              type="text"
-              id="variantSku"
-              class="form-control"
-              formControlName="variantSku"
-              placeholder="SKU de la variante"
-            />
-          </div>
-        </c-col>
-      </c-row>
-      <c-row>
-        <c-col col="6">
-          <div class="form-group mb-3">
-            <label for="price" class="form-label">Precio</label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input
-                type="number"
-                id="price"
-                class="form-control"
-                formControlName="price"
-                placeholder="0.00"
-                min="0"
-                step="0.01"
-              />
-            </div>
-          </div>
-        </c-col>
-        <c-col col="6">
-          <div class="form-group mb-3">
-            <label for="quantity" class="form-label">Cantidad</label>
+      <div class="row g-3">
+        <div class="col-12">
+          <label for="variantName" class="form-label">
+            <i class="fas fa-tag me-1 text-muted"></i>
+            Nombre de la Variante
+          </label>
+          <input
+            type="text"
+            id="variantName"
+            class="form-control"
+            formControlName="variantName"
+            placeholder="Nombre de la variante"
+          />
+        </div>
+        
+        <div class="col-12">
+          <label for="variantSku" class="form-label">
+            <i class="fas fa-barcode me-1 text-muted"></i>
+            SKU de la Variante
+          </label>
+          <input
+            type="text"
+            id="variantSku"
+            class="form-control"
+            formControlName="variantSku"
+            placeholder="SKU de la variante"
+          />
+        </div>
+        
+        <div class="col-md-6">
+          <label for="price" class="form-label">
+            <i class="fas fa-dollar-sign me-1 text-muted"></i>
+            Precio
+          </label>
+          <div class="input-group">
+            <span class="input-group-text">$</span>
             <input
               type="number"
-              id="quantity"
+              id="price"
               class="form-control"
-              formControlName="quantity"
-              placeholder="0"
+              formControlName="price"
+              placeholder="0.00"
               min="0"
+              step="0.01"
             />
           </div>
-        </c-col>
-      </c-row>
-      <c-row>
-        <c-col col="6">
-          <div class="form-group mb-3">
-            <label for="storeId" class="form-label">Tienda</label>
-            <ng-select
-              id="storeId"
-              [items]="stores"
-              [clearable]="false"
-              bindLabel="name"
-              bindValue="id"
-              placeholder="Selecciona una tienda..."
-              formControlName="storeId"
-            ></ng-select>
-          </div>
-        </c-col>
-        <c-col col="6">
-          <div class="form-group mb-3">
-            <label for="shopifyVariantId" class="form-label">Shopify Variant ID</label>
-            <input
-              type="text"
-              id="shopifyVariantId"
-              class="form-control"
-              formControlName="shopifyVariantId"
-              placeholder="ID de la variante en Shopify"
-            />
-          </div>
-        </c-col>
-      </c-row>
+        </div>
+        
+        <div class="col-md-6">
+          <label for="quantity" class="form-label">
+            <i class="fas fa-calculator me-1 text-muted"></i>
+            Cantidad
+          </label>
+          <input
+            type="number"
+            id="quantity"
+            class="form-control"
+            formControlName="quantity"
+            placeholder="0"
+            min="0"
+          />
+        </div>
+        
+        <div class="col-md-6">
+          <label for="storeId" class="form-label">
+            <i class="fas fa-store me-1 text-muted"></i>
+            Tienda
+          </label>
+          <ng-select
+            id="storeId"
+            [items]="stores"
+            [clearable]="false"
+            bindLabel="name"
+            bindValue="id"
+            placeholder="Selecciona una tienda..."
+            formControlName="storeId"
+            class="custom-select"
+          ></ng-select>
+        </div>
+        
+        <div class="col-md-6">
+          <label for="shopifyVariantId" class="form-label">
+            <i class="fas fa-hashtag me-1 text-muted"></i>
+            Shopify Variant ID
+          </label>
+          <input
+            type="text"
+            id="shopifyVariantId"
+            class="form-control"
+            formControlName="shopifyVariantId"
+            placeholder="ID de la variante en Shopify"
+          />
+        </div>
+      </div>
     </form>
   </c-modal-body>
 
-  <c-modal-footer>
-    <button type="button" class="btn btn-secondary" (click)="close()">
-      <svg [cIcon]="icons.cilX" class="me-1"></svg>
-      Cancelar
-    </button>
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="save()"
-      [disabled]="!warehouseInventoryForm.valid || isSaving"
-    >
-      <svg [cIcon]="icons.cilCheck" class="me-1"></svg>
-      {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
-    </button>
+  <c-modal-footer class="modal-footer-custom">
+    <div class="d-flex gap-2 w-100">
+      <button type="button" class="btn btn-outline-secondary flex-fill" (click)="close()">
+        <i class="fas fa-times me-1"></i>
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary flex-fill"
+        (click)="save()"
+        [disabled]="!warehouseInventoryForm.valid || isSaving"
+      >
+        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+        <i class="fas fa-save me-1" *ngIf="!isSaving"></i>
+        {{ isSaving ? 'Guardando...' : 'Guardar Cambios' }}
+      </button>
+    </div>
   </c-modal-footer>
 </c-modal>

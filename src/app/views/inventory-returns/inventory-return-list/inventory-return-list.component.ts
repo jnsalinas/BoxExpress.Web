@@ -44,6 +44,7 @@ export class InventoryReturnListComponent implements OnInit {
   isLoading = false;
 
   constructor(private inventoryHoldService: InventoryHoldService) {}
+  
   ngOnInit(): void {
     this.loadPendingReturns();
   }
@@ -61,6 +62,12 @@ export class InventoryReturnListComponent implements OnInit {
           this.isLoading = false;
         },
       });
+  }
+
+  downloadExcel(): void {
+    // Implementar exportación a Excel
+    console.log('Exportando devoluciones a Excel...');
+    // TODO: Implementar lógica de exportación
   }
 
   getTitleModal(): string {

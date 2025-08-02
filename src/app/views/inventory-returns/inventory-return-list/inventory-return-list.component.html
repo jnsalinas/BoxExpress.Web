@@ -2,70 +2,145 @@
   *ngIf="isLoading"
   [loadingText]="'Cargando devoluciones...'"
 ></app-loading-overlay>
-<c-card>
-  <c-card-header>
-    <strong>Devoluciones</strong>
-  </c-card-header>
-  <c-card-body>
-    <table cTable striped responsive hover>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Producto</th>
-          <th>Bodega</th>
-          <th>Cliente</th>
-          <th>Bodega</th>
-          <th>Orden</th>
-          <th>Cantidad</th>
-          <th>Fecha</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let hold of pendingReturns; let i = index">
-          <td>{{ hold.id }}</td>
-          <td>
-            {{ hold.warehouseInventory?.productVariant?.product?.name }}
-            {{ hold.warehouseInventory?.productVariant?.name }}
-          </td>
-          <td>{{ hold.warehouseName }}</td>
-          <td>{{ hold.clientFullName }}</td>
-          <td>{{ hold.warehouseInventory?.warehouse?.name }}</td>
-          <td>
-            <a
-              *ngIf="hold.orderItem?.orderId"
-              [routerLink]="['/orders', hold.orderItem?.orderId]"
-            >
-              #{{ hold.orderItem?.orderId }}{{ hold.itemIndex ? '-' + hold.itemIndex : '' }}
-            </a>
-          </td>
 
-          <td>{{ hold.quantity }}</td>
-          <td>{{ hold.createdAt | date : "short" }}</td>
-          <td>
+<div *ngIf="!isLoading" class="inventory-returns-container">
+  <!-- Header con estadísticas estilo gestión de órdenes -->
+  <c-card class="mb-3 stats-header-card">
+    <c-card-body class="p-3">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center">
+            <div class="header-icon me-3">
+              <i class="fas fa-undo text-primary fs-3"></i>
+            </div>
+            <div>
+              <h3 class="mb-1 text-primary">Gestión de Devoluciones</h3>
+              <p class="text-muted mb-0 small">Administra y procesa las devoluciones de productos</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="action-buttons d-flex gap-2">
             <button
-              cButton
-              color="success"
-              size="sm"
-              (click)="openSolveModal(hold, true)"
+              type="button"
+              class="btn btn-primary btn-sm"
+              (click)="downloadExcel()"
+              title="Exportar a Excel"
             >
-              Aceptar
+              <i class="fas fa-download me-1"></i>
+              Exportar
             </button>
-            <button
-              cButton
-              color="danger"
-              size="sm"
-              class="ms-2"
-              (click)="openSolveModal(hold, false)"
-            >
-              Rechazar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </c-card-body>
-</c-card>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+
+  <!-- Contenido principal -->
+  <c-card class="main-content-card">
+    <c-card-body class="p-0">
+      <div class="modern-table-container">
+        <div class="table-responsive">
+          <table class="table table-hover modern-table">
+            <thead class="table-light">
+              <tr>
+                <th class="id-column">
+                  <i class="fas fa-hashtag me-1"></i>
+                  ID
+                </th>
+                <th class="product-column">
+                  <i class="fas fa-box me-1"></i>
+                  Producto
+                </th>
+                <th class="warehouse-column">
+                  <i class="fas fa-warehouse me-1"></i>
+                  Bodega
+                </th>
+                <th class="client-column">
+                  <i class="fas fa-user me-1"></i>
+                  Cliente
+                </th>
+                <th class="order-column">
+                  <i class="fas fa-shopping-cart me-1"></i>
+                  Orden
+                </th>
+                <th class="quantity-column">
+                  <i class="fas fa-calculator me-1"></i>
+                  Cantidad
+                </th>
+                <th class="date-column">
+                  <i class="fas fa-calendar me-1"></i>
+                  Fecha
+                </th>
+                <th class="actions-column">
+                  <i class="fas fa-cogs me-1"></i>
+                  Acciones
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let hold of pendingReturns; let i = index" class="data-row">
+                <td class="id-cell">
+                  <span class="badge bg-secondary">{{ hold.id }}</span>
+                </td>
+                <td class="product-cell">
+                  <div class="d-flex flex-column">
+                    <strong class="small">{{ hold.warehouseInventory?.productVariant?.product?.name }}</strong>
+                    <span class="text-muted small">{{ hold.warehouseInventory?.productVariant?.name }}</span>
+                  </div>
+                </td>
+                <td class="warehouse-cell">
+                  {{ hold.warehouseName }}
+                </td>
+                <td class="client-cell">
+                  {{ hold.clientFullName }}
+                </td>
+                <td class="order-cell">
+                  <a
+                    *ngIf="hold.orderItem?.orderId"
+                    [routerLink]="['/orders', hold.orderItem?.orderId]"
+                    class="btn btn-sm btn-outline-primary"
+                    title="Ver orden"
+                  >
+                    <i class="fas fa-external-link-alt me-1"></i>
+                    #{{ hold.orderItem?.orderId }}{{ hold.itemIndex ? '-' + hold.itemIndex : '' }}
+                  </a>
+                  <span *ngIf="!hold.orderItem?.orderId" class="text-muted small">-</span>
+                </td>
+                <td class="quantity-cell">
+                  <span class="badge bg-info">{{ hold.quantity }}</span>
+                </td>
+                <td class="date-cell">
+                  {{ hold.createdAt | date : "short" }}
+                </td>
+                <td class="actions-cell">
+                  <div class="d-flex gap-1">
+                    <button
+                      class="btn btn-sm btn-outline-success"
+                      (click)="openSolveModal(hold, true)"
+                      title="Aceptar devolución"
+                    >
+                      <i class="fas fa-check me-1"></i>
+                      Aceptar
+                    </button>
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="openSolveModal(hold, false)"
+                      title="Rechazar devolución"
+                    >
+                      <i class="fas fa-times me-1"></i>
+                      Rechazar
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+</div>
 
 <app-inventory-return-solve-modal
   [isVisible]="inventoryHoldResolution != null"
@@ -75,4 +150,5 @@
   (close)="cancelReturn()"
 >
 </app-inventory-return-solve-modal>
+
 <app-generic-modal></app-generic-modal>

@@ -149,9 +149,9 @@
   <c-card class="main-content-card">
     <c-card-body class="p-0">
       <!-- Tabla de retiros -->
-      <div class="withdrawal-table-container p-4">
+      <div class="modern-table-container">
         <div class="table-responsive">
-          <table class="table table-hover withdrawal-table">
+          <table class="table table-hover modern-table">
             <thead class="table-light">
               <tr>
                 <th class="id-column">
@@ -205,9 +205,9 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let tx of withdrawalRequests; let i = index" class="withdrawal-row">
+              <tr *ngFor="let tx of withdrawalRequests; let i = index" class="data-row">
                 <td class="id-cell">
-                  <strong>{{ tx.id || "-" }}</strong>
+                  <span class="badge bg-secondary">{{ tx.id || "-" }}</span>
                 </td>
                 <td class="date-cell">
                   {{ tx.createdAt | utcDate }}
@@ -257,12 +257,14 @@
           </table>
         </div>
         
-        <app-generic-pagination
-          [pagination]="pagination"
-          [currentPage]="currentPage"
-          (pageChange)="onPageChange($event)"
-        >
-        </app-generic-pagination>
+        <div class="p-3">
+          <app-generic-pagination
+            [pagination]="pagination"
+            [currentPage]="currentPage"
+            (pageChange)="onPageChange($event)"
+          >
+          </app-generic-pagination>
+        </div>
       </div>
     </c-card-body>
   </c-card>

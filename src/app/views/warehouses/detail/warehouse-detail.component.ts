@@ -61,6 +61,7 @@ import { AuthService } from '../../../services/auth.service';
     InventoryTableComponent,
   ],
   templateUrl: './warehouse-detail.component.html',
+  styleUrls: ['./warehouse-detail.component.scss'],
 })
 export class WarehouseDetailComponent implements OnInit {
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;

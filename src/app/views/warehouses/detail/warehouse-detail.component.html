@@ -3,8 +3,8 @@
   [loadingText]="'Cargando detalle...'"
 ></app-loading-overlay>
 
-<div class="warehouse-detail-container">
-  <!-- Header con estadísticas -->
+<div *ngIf="!isLoading" class="warehouse-detail-container">
+  <!-- Header con estadísticas estilo gestión de órdenes -->
   <c-card class="mb-3 stats-header-card">
     <c-card-body class="p-3">
       <div class="row align-items-center">
@@ -103,13 +103,14 @@
               Ver historial
             </a>
             <a
-              *hasRole="['admin']"
-              class="btn btn-sm btn-outline-secondary"
-              (click)="openInventoryItemModal(variant)"
-              title="Editar"
-            >
-              <i class="fas fa-edit"></i>
-            </a>
+            *hasRole="['admin']"
+            class="btn btn-sm btn-outline-primary"
+            (click)="openInventoryItemModal(variant)"
+            title="Ver historial"
+          >
+            <i class="fas fa-edit me-1"></i>
+            Editar
+          </a>
           </div>
         </ng-template>
 
