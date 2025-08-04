@@ -36,6 +36,12 @@ export const navItems: CustomNavData[] = [
     iconComponent: { name: 'cil-task' },
     roles: ['administrador', 'admin', 'bodega', 'tienda'],
   },
+  {
+    name: 'Gestión Tradicional',
+    url: '/product-loans',
+    iconComponent: { name: 'cil-basket' },
+    roles: ['admin'],
+  },
 
   {
     name: 'Wallet',

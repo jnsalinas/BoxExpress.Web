@@ -15,7 +15,7 @@ export class WithdrawalRequestService extends BaseApiService<
   WithdrawalRequestFilter
 > {
   constructor(http: HttpClient) {
-    super(http, 'withdrawalrequest');
+    super(http, 'withdrawalrequests');
   }
 
   approve(

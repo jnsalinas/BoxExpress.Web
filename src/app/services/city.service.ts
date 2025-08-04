@@ -11,6 +11,6 @@ import { BaseApiService } from './base-api.service';
 })
 export class CityService extends BaseApiService<CityDto, any> {
   constructor(http: HttpClient) {
-    super(http, 'City');
+    super(http, 'cities');
   }
 }

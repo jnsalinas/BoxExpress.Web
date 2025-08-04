@@ -10,12 +10,12 @@ import { Observable } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class WalletService extends BaseApiService<StoreDto, StoreFilter> {
   constructor(http: HttpClient) {
-    super(http, 'wallet');
+    super(http, 'wallets');
   }
 
   summary(): Observable<StoreDto> {
     return this.http
-      .get<ApiResponse<StoreDto>>(`${environment.apiUrl}/Wallet/Summary`)
+      .get<ApiResponse<StoreDto>>(`${environment.apiUrl}/wallets/summary`)
       .pipe(this.handleResponse());
   }
 }

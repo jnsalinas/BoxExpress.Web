@@ -11,6 +11,6 @@ import { BaseApiService } from './base-api.service';
 })
 export class CurrencyService extends BaseApiService<CurrencyDto, any> {
   constructor(http: HttpClient) {
-    super(http, 'Currency');
+    super(http, 'currencies');
   }
 }
