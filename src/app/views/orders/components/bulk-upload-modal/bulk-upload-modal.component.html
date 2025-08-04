@@ -1,0 +1,80 @@
+<c-modal [visible]="true" size="lg" backdrop="static" class="modern-modal">
+  <c-modal-header class="modal-header-custom">
+    <h5 class="modal-title">
+      <div class="d-flex align-items-center">
+        <div class="modal-icon me-2">
+          <i class="fas fa-warehouse text-primary"></i>
+        </div>
+        <div>
+          <span class="fw-bold">Carga Masiva de Órdenes</span>
+        </div>
+      </div>
+    </h5>
+  </c-modal-header>
+
+  <c-modal-body class="modal-body-custom">
+    <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+      <div class="row g-3">
+        <div class="col-md-6" *hasRole="['admin']">
+          <label for="storeId" class="form-label">
+            <i class="fas fa-building me-1 text-muted"></i>
+            Tienda <span class="text-danger">*</span>
+          </label>
+          <ng-select
+            [items]="stores"
+            bindValue="id"
+            bindLabel="name"
+            formControlName="storeId"
+            placeholder="Seleccione una tienda"
+            [loading]="isLoading"
+            [disabled]="isLoading"
+            [clearable]="false"
+            [searchable]="true"
+            [closeOnSelect]="true"
+          ></ng-select>
+        </div>
+        <div class="col-md-6">
+            <label for="file" class="form-label">
+              <i class="fas fa-file-excel me-1 text-muted"></i>
+              Archivo Excel <span class="text-danger">*</span>
+            </label>
+            <input 
+              type="file" 
+              class="form-control" 
+              (change)="onFileSelected($event)" 
+              accept=".xlsx,.xls" 
+              id="file"
+            />
+            <small class="text-muted">Solo archivos Excel (.xlsx, .xls)</small>
+         </div>
+      </div>
+    </form>
+  </c-modal-body>
+
+  <c-modal-footer class="modal-footer-custom">
+    <div class="d-flex gap-2 w-100">
+      <button
+        type="button"
+        class="btn btn-outline-secondary flex-fill"
+        (click)="close()"
+        [disabled]="isLoading"
+      >
+        <i class="fas fa-times me-1"></i>
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary flex-fill"
+        (click)="save()"
+        [disabled]="form.invalid || !selectedFile || isLoading"
+      >
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm me-2"
+        ></span>
+        <i class="fas fa-upload me-1" *ngIf="!isLoading"></i>
+        {{ isLoading ? "Cargando..." : "Cargar órdenes" }}
+      </button>
+    </div>
+  </c-modal-footer>
+</c-modal>

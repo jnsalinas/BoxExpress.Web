@@ -12,6 +12,8 @@ import { OrderScheduleUpdateDto } from '../models/order-schedule-update.dto';
 import { OrderItemDto } from '../models/order-item.dto';
 import { OrderSummaryDto } from '../models/order-summary.dto';
 import { CreateOrderDto } from '../models/create-order.dto';
+import { UploadOrdersDto } from '../models/upload-orders.dto';
+import { BulkUploadResponse } from '../models/bulk-upload-response.dto';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
@@ -99,6 +101,22 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
   updateOrder(orderId: number, payload: CreateOrderDto): Observable<OrderDto> {
     return this.http
       .put<ApiResponse<OrderDto>>(`${environment.apiUrl}/orders/${orderId}`, payload)
+      .pipe(this.handleResponse());
+  }
+
+  bulkUpload(payload: UploadOrdersDto): Observable<BulkUploadResponse> {
+    // Crear FormData para enviar el archivo correctamente
+    const formData = new FormData();
+    formData.append('file', payload.file);
+    formData.append('storeId', payload.storeId.toString());
+
+    return this.http
+      .post<ApiResponse<BulkUploadResponse>>(`${environment.apiUrl}/orders/bulk-upload`, formData, {
+        // No establecer Content-Type para que el navegador lo establezca automáticamente con el boundary
+        headers: {
+          // Remover cualquier Content-Type que pueda estar establecido
+        }
+      })
       .pipe(this.handleResponse());
   }
 }

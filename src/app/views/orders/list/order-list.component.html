@@ -44,8 +44,8 @@
             *hasRole="['admin', 'tienda']"
             type="button"
             class="btn btn-primary btn-sm"
-            [routerLink]="['/orders/create']"
-            title="Crear nueva orden"
+            (click)="showModalBulkUpload()"
+            title="Carga masiva"
           >
             <i class="fas fa-upload me-1"></i>
             Carga masiva
@@ -257,3 +257,9 @@
   (onSave)="onModalScheduleSave($event)"
   (onClose)="onModalScheduleClose($event)"
 ></app-order-edit-modal>
+
+<app-bulk-upload-modal
+  *ngIf="showBulkUploadModal"
+  (onSave)="onBulkUploadSave($event)"
+  (onClose)="onBulkUploadClose($event)"
+></app-bulk-upload-modal>

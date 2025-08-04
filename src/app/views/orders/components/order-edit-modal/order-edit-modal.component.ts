@@ -16,6 +16,8 @@ import {
   ModalHeaderComponent,
   ModalModule,
 } from '@coreui/angular';
+import { IconDirective } from '@coreui/icons-angular';
+import { freeSet } from '@coreui/icons';
 import { TimeSlotService } from '../../../../services/time-slot.service';
 import { TimeSlotDto } from '../../../../models/time-slot.dto';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -32,12 +34,13 @@ import { OrderStatusDto } from '../../../../models/order-status.dto';
     ModalFooterComponent,
     NgSelectModule,
     ReactiveFormsModule,
-    // FormControlDirective
+    IconDirective,
   ],
   templateUrl: './order-edit-modal.component.html',
   styleUrl: './order-edit-modal.component.scss',
 })
 export class OrderEditModalComponent implements OnInit {
+  icons = freeSet;
   isLoading = false;
   @Input() isVisible = false;
   @Input() order!: OrderDto;

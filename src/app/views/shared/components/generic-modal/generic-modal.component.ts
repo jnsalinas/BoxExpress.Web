@@ -9,6 +9,8 @@ import {
   ButtonDirective,
   ButtonCloseDirective,
 } from '@coreui/angular';
+import { IconDirective } from '@coreui/icons-angular';
+import { freeSet } from '@coreui/icons';
 
 @Component({
   standalone: true,
@@ -22,11 +24,13 @@ import {
     ModalFooterComponent,
     ButtonDirective,
     ButtonCloseDirective,
+    IconDirective,
   ],
   templateUrl: './generic-modal.component.html',
   styleUrls: ['./generic-modal.component.scss'],
 })
 export class GenericModalComponent {
+  icons = freeSet;
   @Input() isVisible: boolean = false;
   @Input() title: string = ''; // Título del modal
   @Input() body: string = ''; // Contenido del modal

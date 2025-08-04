@@ -7,14 +7,16 @@
     <h5 cModalTitle class="modal-title">
       <div class="d-flex align-items-center">
         <div class="modal-icon me-2">
-          <i class="fas fa-question-circle text-primary"></i>
+          <svg [cIcon]="icons.cilInfo" size="lg" class="text-primary"></svg>
         </div>
         <div>
           <span class="fw-bold">{{ title }}</span>
         </div>
       </div>
     </h5>
-    <button (click)="onClose()" cButtonClose class="btn-close"></button>
+    <button (click)="onClose()" cButtonClose class="btn-close">
+      <svg [cIcon]="icons.cilX" size="sm"></svg>
+    </button>
   </c-modal-header>
   
   <c-modal-body class="modal-body-custom">
@@ -27,7 +29,7 @@
   <c-modal-footer class="modal-footer-custom">
     <div class="d-flex gap-2 w-100">
       <button *ngIf="showCancelButton" (click)="onClose()" cButton color="secondary" class="btn btn-outline-secondary flex-fill">
-        <i class="fas fa-times me-1"></i>
+        <svg [cIcon]="icons.cilX" size="sm" class="me-1"></svg>
         {{ cancelText }}
       </button>
       <button
@@ -37,7 +39,7 @@
         [disabled]="isConfirmDisabled"
         class="btn btn-primary flex-fill"
       >
-        <i class="fas fa-check me-1"></i>
+        <svg [cIcon]="icons.cilCheck" size="sm" class="me-1"></svg>
         {{okText}}
       </button>
     </div>

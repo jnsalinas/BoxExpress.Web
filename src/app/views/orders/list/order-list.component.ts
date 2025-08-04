@@ -42,12 +42,15 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { OrderEditModalComponent } from '../components/order-edit-modal/order-edit-modal.component';
 import { IconDirective } from '@coreui/icons-angular';
-import { PaginationDto } from '../../../models/common/pagination.dto';
 import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
-import { OrderSummaryDto } from '../../../models/order-summary.dto';
 import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
-import { AuthService } from '../../../../../src/app/services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { WarehouseInventoryService } from '../../../services/warehouse-inventory.service';
+import { PaginationDto } from '../../../models/common/pagination.dto';
+import { OrderSummaryDto } from '../../../models/order-summary.dto';
+import { BulkUploadModalComponent } from '../components/bulk-upload-modal/bulk-upload-modal.component';
+import { UploadOrdersDto } from '../../../models/upload-orders.dto';
+import { MessageService } from '../../../services/message.service';
 
 @Component({
   standalone: true,
@@ -79,6 +82,7 @@ import { WarehouseInventoryService } from '../../../services/warehouse-inventory
     GenericPaginationComponent,
     HasRoleDirective,
     RouterLink,
+    BulkUploadModalComponent
   ],
 })
 export class OrderListComponent implements OnInit {
@@ -105,7 +109,8 @@ export class OrderListComponent implements OnInit {
   orderSelected: OrderDto | null = null;
   pagination: PaginationDto = {};
   currentPage: number = 1;
-
+  showBulkUploadModal: boolean = false;
+  
   constructor(
     private orderService: OrderService,
     private warehouseService: WarehouseService,
@@ -114,7 +119,8 @@ export class OrderListComponent implements OnInit {
     private storeService: StoreService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private warehouseInventoryService: WarehouseInventoryService
+    private warehouseInventoryService: WarehouseInventoryService,
+    private messageService: MessageService
   ) {
     this.activeTab = this.authService.hasAnyRole(['admin', 'tienda']) ? 0 : 1;
     this.filtersForm = this.fb.group({
@@ -427,5 +433,55 @@ export class OrderListComponent implements OnInit {
     } else {
       return 'status-default';
     }
+  }
+
+  showModalBulkUpload() {
+    this.showBulkUploadModal = true;
+  }
+
+  onBulkUploadSave(event: any) {
+    this.modal.show({ 
+      title: 'Carga masiva',
+      body: '¿Estás seguro de que desea cargar las órdenes?',
+      ok: () => {
+        this.orderService.bulkUpload({
+          file: event.file,
+          storeId: event.storeId,
+        } as UploadOrdersDto).subscribe({
+          next: (result) => {
+            console.log('Resultado de carga masiva:', result);
+            
+            // Mostrar resultados de la carga
+            if (result.data && result.data.length > 0) {
+              const successCount = result.data.filter(item => item.isLoaded).length;
+              const errorCount = result.data.filter(item => !item.isLoaded).length;
+              
+              if (errorCount > 0) {
+                this.messageService.showWarning(`Carga completada con errores. ${successCount} exitosos, ${errorCount} con errores.`);
+              } else {
+                this.messageService.showSuccess(`Carga exitosa. ${successCount} órdenes cargadas correctamente.`);
+              }
+            } else {
+              this.messageService.showSuccess('Órdenes cargadas correctamente');
+            }
+            
+            this.loadOrders();
+            this.showBulkUploadModal = false;
+          },
+          error: (error) => {
+            console.error('Error al cargar las órdenes', error);
+            this.messageService.showError('Error al cargar las órdenes');
+          },
+        });
+        this.showBulkUploadModal = false;
+      },
+      close: () => {
+        this.showBulkUploadModal = false;
+      },
+    });
+  }
+
+  onBulkUploadClose(event: any) { 
+    this.showBulkUploadModal = false;
   }
 }

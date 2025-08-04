@@ -4,75 +4,97 @@
   backdrop="static"
   keyboard="false"
   scrollable
+  class="modern-modal order-edit-modal"
 >
   <c-modal-header>
-    <strong>Asignar entrega {{ order.id }}</strong>
+    <div class="modal-title">
+      <div class="modal-icon">
+        <svg [cIcon]="icons.cilTruck" size="lg"></svg>
+      </div>
+      <div>
+        <span class="fw-bold">Asignar Entrega</span>
+        <small class="text-muted d-block">Orden #{{ order.id }}</small>
+      </div>
+    </div>
+    <button type="button" class="btn-close" (click)="close()">
+      <svg [cIcon]="icons.cilX" size="sm"></svg>
+    </button>
   </c-modal-header>
 
   <c-modal-body>
-    <form [formGroup]="form">
-      <div class="row">
-        <!-- Estado -->
-        <!-- <div class="col-md-4 mb-3">
-          <label cLabel for="statusId" class="form-label">Estado</label>
-          <ng-select
-            [searchable]="false"
-            [appendTo]="'body'"
-            [items]="statusOptions"
-            bindLabel="name"
-            bindValue="id"
-            formControlName="statusId"
-            placeholder="Seleccione..."
-          >
-          </ng-select>
-        </div> -->
-
+    <form [formGroup]="form" class="modern-form">
+      <div class="row g-3">
         <!-- Fecha Programada -->
-        <div class="col-md-4 mb-3">
-          <label cLabel for="scheduledDate" class="form-label"
-            >Fecha Programada</label
-          >
-          <input
-            cFormControl
-            type="date"
-            id="scheduledDate"
-            formControlName="scheduledDate"
-            class="form-control"
-            [min]="today"
-          />
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="scheduledDate" class="form-label">
+              <svg [cIcon]="icons.cilCalendar" size="sm" class="me-2 text-primary"></svg>
+              Fecha Programada
+            </label>
+            <input
+              type="date"
+              id="scheduledDate"
+              formControlName="scheduledDate"
+              class="form-control modern-input"
+              [min]="today"
+              placeholder="Seleccione fecha"
+            />
+          </div>
         </div>
 
         <!-- Franja Horaria -->
-        <div class="col-md-4 mb-3">
-          <label cLabel for="timeSlotId" class="form-label"
-            >Franja Horaria</label
-          >
-          <ng-select
-            [appendTo]="'body'"
-            [items]="timeSlotOptions"
-            bindLabel="label"
-            bindValue="id"
-            formControlName="timeSlotId"
-            placeholder="Seleccione..."
-          >
-            <ng-template ng-label-tmp let-item="item">
-              {{ item.startTime }} - {{ item.endTime }}
-            </ng-template>
-            <ng-template ng-option-tmp let-item="item">
-              {{ item.startTime }} - {{ item.endTime }}
-            </ng-template>
-          </ng-select>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="timeSlotId" class="form-label">
+              <svg [cIcon]="icons.cilClock" size="sm" class="me-2 text-primary"></svg>
+              Franja Horaria
+            </label>
+            <ng-select
+              [appendTo]="'body'"
+              [items]="timeSlotOptions"
+              bindLabel="label"
+              bindValue="id"
+              formControlName="timeSlotId"
+              placeholder="Seleccione franja horaria"
+              class="modern-select"
+            >
+              <ng-template ng-label-tmp let-item="item">
+                <div class="d-flex align-items-center">
+                  <svg [cIcon]="icons.cilClock" size="sm" class="me-2 text-muted"></svg>
+                  {{ item.startTime }} - {{ item.endTime }}
+                </div>
+              </ng-template>
+              <ng-template ng-option-tmp let-item="item">
+                <div class="d-flex align-items-center">
+                  <svg [cIcon]="icons.cilClock" size="sm" class="me-2 text-muted"></svg>
+                  {{ item.startTime }} - {{ item.endTime }}
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
         </div>
       </div>
     </form>
   </c-modal-body>
 
   <c-modal-footer>
-    <button class="btn btn-secondary" type="button" (click)="close()">
-      Cancelar
-    </button>
-    <button class="btn btn-primary" type="submit" (click)="save()">
-      Guardar
-    </button>
+    <div class="modal-actions">
+      <button 
+        type="button" 
+        class="btn btn-outline-secondary btn-modern" 
+        (click)="close()"
+      >
+        <svg [cIcon]="icons.cilX" size="sm" class="me-2"></svg>
+        Cancelar
+      </button>
+      <button 
+        type="submit" 
+        class="btn btn-primary btn-modern" 
+        (click)="save()"
+      >
+        <svg [cIcon]="icons.cilSave" size="sm" class="me-2"></svg>
+        Guardar
+      </button>
+    </div>
   </c-modal-footer>
 </c-modal>

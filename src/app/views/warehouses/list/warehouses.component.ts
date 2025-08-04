@@ -58,7 +58,6 @@ export class WarehousesComponent implements OnInit {
   loadWarehouses(): void {
     this.isLoading = true;
     const filter: WarehouseFilter = {
-      // Aquí pones filtros si los necesitas
     };
     this.warehouseService.getAll(filter).subscribe({
       next: (result) => {
@@ -73,60 +72,25 @@ export class WarehousesComponent implements OnInit {
   }
 
   openCreateModal() {
-    console.log('Abriendo modal de crear bodega...');
     this.showCreateModal = true;
-    console.log('showCreateModal:', this.showCreateModal);
   }
 
   onModalClose() {
     this.showCreateModal = false;
-    console.log('Modal cerrado');
   }
 
   onModalSave(warehouseData: CreateWarehouseDto) {
-    console.log('Datos de bodega recibidos:', warehouseData);
-
     this.warehouseService.createWarehouse(warehouseData).subscribe({
       next: (response) => {
-        console.log('Bodega creada exitosamente:', response);
         this.showCreateModal = false;
-        // Recargar la lista de bodegas
         this.loadWarehouses();
       },
       error: (error) => {
         console.error('Error al crear bodega:', error);
-        // Resetear el loading del modal en caso de error
         if (this.createModal) {
           this.createModal.resetLoading();
         }
-        // Aquí podrías mostrar un mensaje de error al usuario
       },
     });
   }
-
-  // openModal(warehouse: WarehouseDto) {
-  //   this.selectedWarehouseId = warehouse.id;
-  //   this.selectedWarehouseName = warehouse.name;
-  // }
-
-  // handleClose(data: any) {
-  //   this.selectedWarehouseId = undefined;
-  // }
-
-  // handleSave(data: any) {
-  //   this.warehouseService
-  //     .addInventory(this.selectedWarehouseId!, data.products)
-  //     .subscribe({
-  //       next: (data) => {
-  //         console.log('Warehouse created:', data);
-  //         this.isLoading = false;
-  //       },
-  //       error: (err) => {
-  //         console.error('Error isLoading warehouses', err);
-  //         this.isLoading = false;
-  //       },
-  //     });
-
-  //   this.selectedWarehouseId = undefined;
-  // }
 }
