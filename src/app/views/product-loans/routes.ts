@@ -11,4 +11,14 @@ export const routes: Routes = [
       title: 'Gestión Tradicional',
     },
   },
+  {
+    path: 'create',
+    loadComponent: () =>
+      import('./create/product-loan-create/product-loan-create.component').then(
+        (m) => m.ProductLoanCreateComponent
+      ),
+    data: {
+      title: 'Crear Préstamo',
+    },
+  },
 ]; 

@@ -30,9 +30,8 @@ import { WarehouseInventoryService } from '../../../services/warehouse-inventory
 import { PaginationDto } from '../../../models/common/pagination.dto';
 import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
 import { WarehouseInventoryFilter } from '../../../models/warehouse-inventory-filter.model';
-import { LoadingOverlayComponent } from 'src/app/shared/components/loading-overlay/loading-overlay.component';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { WarehouseInventoryItemEditModalComponent } from '../../warehouse-transfers/components/warehouse-inventory-item-edit-modal/warehouse-inventory-item-edit-modal.component';
-import { WarehouseInventoryDto } from '../../../models/warehouse-inventory.dto';
 import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
 import { MessageService } from '../../../services/message.service';
 import { InventoryTableComponent } from '../../../shared/components/inventory-table/inventory-table.component';

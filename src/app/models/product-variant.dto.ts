@@ -21,4 +21,5 @@ export interface ProductVariantDto extends BaseDto {
   totalQuantity?: number;
   warehouseName?: string;
   quantityDelivered?: number;
+  displayName?: string;
 }

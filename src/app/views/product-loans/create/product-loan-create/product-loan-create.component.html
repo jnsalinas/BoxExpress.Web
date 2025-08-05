@@ -1,0 +1,266 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando opciones...'"
+></app-loading-overlay>
+
+<div class="product-loan-create-container">
+  <!-- Header con navegación -->
+  <c-card class="mb-3 header-card">
+    <c-card-body class="p-3">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center">
+            <div class="create-icon me-3">
+              <i class="fas fa-plus-circle text-primary fs-3"></i>
+            </div>
+            <div>
+              <h3 class="mb-1">Crear Préstamo de Productos</h3>
+              <p class="mb-0 small">Registra un nuevo préstamo de productos del sistema</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="action-buttons d-flex gap-2">
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-sm"
+              [routerLink]="['/product-loans']"
+              title="Volver a la lista"
+            >
+              <i class="fas fa-arrow-left me-1"></i>
+              Volver
+            </button>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+
+  <!-- Formulario principal -->
+  <c-card class="main-form-card">
+    <c-card-body class="p-4">
+      <form [formGroup]="productLoanForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Información básica del préstamo -->
+        <c-card class="mb-4 shadow-sm border-0">
+          <c-card-header class="bg-light">
+            <strong>
+              <i class="fas fa-info-circle me-2 text-primary"></i>
+              Información del Préstamo
+            </strong>
+          </c-card-header>
+          <c-card-body>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label for="warehouseId" class="form-label">
+                  <i class="fas fa-warehouse me-1 text-muted"></i>
+                  Bodega <span class="text-danger">*</span>
+                </label>
+                <ng-select
+                  id="warehouseId"
+                  [items]="warehouseOptions"
+                  bindLabel="name"
+                  bindValue="id"
+                  formControlName="warehouseId"
+                  (change)="onWarehouseChange($event)"
+                  [searchable]="true"
+                  placeholder="Seleccione una bodega"
+                  [class.is-invalid]="isFieldInvalid('warehouseId')"
+                >
+                </ng-select>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('warehouseId')">
+                  {{ getFieldError('warehouseId') }}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="loanDate" class="form-label">
+                  <i class="fas fa-calendar me-1 text-muted"></i>
+                  Fecha del Préstamo <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="loanDate"
+                  class="form-control"
+                  formControlName="loanDate"
+                  [class.is-invalid]="isFieldInvalid('loanDate')"
+                />
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('loanDate')">
+                  {{ getFieldError('loanDate') }}
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="responsibleName" class="form-label">
+                  <i class="fas fa-user me-1 text-muted"></i>
+                  Responsable <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="responsibleName"
+                  class="form-control"
+                  formControlName="responsibleName"
+                  placeholder="Nombre del responsable"
+                  [class.is-invalid]="isFieldInvalid('responsibleName')"
+                />
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('responsibleName')">
+                  {{ getFieldError('responsibleName') }}
+                </div>
+              </div>
+
+              <div class="col-12">
+                <label for="notes" class="form-label">
+                  <i class="fas fa-sticky-note me-1 text-muted"></i>
+                  Notas <span class="text-danger">*</span>
+                </label>
+                <textarea
+                  id="notes"
+                  class="form-control"
+                  formControlName="notes"
+                  rows="3"
+                  placeholder="Descripción del préstamo y observaciones importantes"
+                  [class.is-invalid]="isFieldInvalid('notes')"
+                ></textarea>
+                <div class="invalid-feedback" *ngIf="isFieldInvalid('notes')">
+                  {{ getFieldError('notes') }}
+                </div>
+              </div>
+            </div>
+          </c-card-body>
+        </c-card>
+
+        <!-- Productos del préstamo -->
+        <c-card class="mb-4 shadow-sm border-0">
+          <c-card-header class="bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+              <strong>
+                <i class="fas fa-boxes me-2 text-primary"></i>
+                Productos del Préstamo
+              </strong>
+              <button
+                type="button"
+                class="btn btn-primary btn-sm"
+                (click)="addProductItem()"
+                [disabled]="!productLoanForm.get('warehouseId')?.value"
+              >
+                <i class="fas fa-plus me-1"></i>
+                Agregar Producto
+              </button>
+            </div>
+          </c-card-header>
+          <c-card-body>
+            
+            <!-- Mensaje cuando no hay bodega seleccionada -->
+            <div *ngIf="!productLoanForm.get('warehouseId')?.value" class="text-center py-4">
+              <i class="fas fa-warehouse text-muted fs-1 mb-3"></i>
+              <h5 class="text-muted">Selecciona una bodega primero</h5>
+              <p class="text-muted small">Debes seleccionar una bodega para poder agregar productos</p>
+            </div>
+
+            <!-- Lista de productos -->
+            <div *ngIf="productLoanForm.get('warehouseId')?.value">
+              
+              <!-- Mensaje cuando no hay productos -->
+              <div *ngIf="productLoanItems.length === 0" class="text-center py-4">
+                <i class="fas fa-boxes text-muted fs-1 mb-3"></i>
+                <h5 class="text-muted">No hay productos agregados</h5>
+                <p class="text-muted small">Agrega productos al préstamo usando el botón de arriba</p>
+              </div>
+
+              <!-- Productos agregados -->
+              <div *ngFor="let item of productLoanItems.controls; let i = index" class="product-item-card mb-3">
+                <c-card class="border-primary">
+                  <c-card-header class="bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <strong>Producto {{ i + 1 }}</strong>
+                      <button
+                        type="button"
+                        class="btn btn-outline-danger btn-sm"
+                        (click)="removeProductItem(i)"
+                        title="Eliminar producto"
+                      >
+                        <i class="fas fa-trash"></i>
+                      </button>
+                    </div>
+                  </c-card-header>
+                  <c-card-body>
+                    <div class="row g-3">
+                      <div class="col-md-6">
+                        <label [for]="'productVariantId_' + i" class="form-label">
+                          <i class="fas fa-tag me-1 text-muted"></i>
+                          Producto <span class="text-danger">*</span>
+                        </label>
+                        <ng-select
+                          [id]="'productVariantId_' + i"
+                          [items]="productVariantOptions"
+                          bindLabel="displayName"
+                          bindValue="id"
+                          [formControl]="getProductVariantControl(i)"
+                          (change)="onProductVariantSelected($event, i)"
+                          [searchable]="true"
+                          placeholder="Seleccione un producto"
+                          [class.is-invalid]="isProductFieldInvalid(i, 'productVariantId')"
+                        >
+                        </ng-select>
+                        <div class="invalid-feedback" *ngIf="isProductFieldInvalid(i, 'productVariantId')">
+                          {{ getProductFieldError(i, 'productVariantId') }}
+                        </div>
+                      </div>
+
+                      <div class="col-md-6">
+                        <label [for]="'requestedQuantity_' + i" class="form-label">
+                          <i class="fas fa-calculator me-1 text-muted"></i>
+                          Cantidad Solicitada <span class="text-danger">*</span>
+                        </label>
+                        <input
+                          type="number"
+                          [id]="'requestedQuantity_' + i"
+                          class="form-control"
+                          [formControl]="getRequestedQuantityControl(i)"
+                          placeholder="0"
+                          min="1"
+                          [attr.max]="getMaxControl(i).value"
+                          [class.is-invalid]="isProductFieldInvalid(i, 'requestedQuantity')"
+                        />
+                        <small class="text-muted" *ngIf="getMaxControl(i).value !== null">
+                          <i class="fas fa-info-circle me-1"></i>
+                          Disponible: {{ getMaxControl(i).value }}
+                        </small>
+                        <div class="invalid-feedback" *ngIf="isProductFieldInvalid(i, 'requestedQuantity')">
+                          {{ getProductFieldError(i, 'requestedQuantity') }}
+                        </div>
+                      </div>
+                    </div>
+                  </c-card-body>
+                </c-card>
+              </div>
+            </div>
+          </c-card-body>
+        </c-card>
+
+        <!-- Botones de acción -->
+        <div class="d-flex justify-content-end gap-2">
+          <button
+            type="button"
+            class="btn btn-outline-secondary"
+            [routerLink]="['/product-loans']"
+          >
+            <i class="fas fa-times me-1"></i>
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="isLoading || productLoanForm.invalid || productLoanItems.length === 0"
+          >
+            <i class="fas fa-save me-1"></i>
+            {{ isLoading ? 'Guardando...' : 'Crear Préstamo' }}
+          </button>
+        </div>
+      </form>
+    </c-card-body>
+  </c-card>
+</div>
+
+<!-- Modales -->
+<app-generic-modal></app-generic-modal>
