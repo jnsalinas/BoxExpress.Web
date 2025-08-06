@@ -11,7 +11,7 @@
         <div class="col-md-8">
           <div class="d-flex align-items-center">
             <div class="product-loans-icon me-3">
-              <i class="fas fa-handshake text-primary fs-3"></i>
+                      <svg [cIcon]="icons.cilPeople" size="sm" class="text-primary"></svg>
             </div>
             <div>
               <h3 class="mb-1 text-primary">Gestión Tradicional</h3>
@@ -27,7 +27,7 @@
               (click)="downloadExcel()"
               title="Exportar a Excel"
             >
-              <i class="fas fa-download me-1"></i>
+              <svg [cIcon]="icons.cilCloudDownload" size="sm" class="me-1"></svg>
               Exportar
             </button>
             <button
@@ -37,7 +37,7 @@
               [routerLink]="['/product-loans/create']"
               title="Crear nuevo préstamo"
             >
-              <i class="fas fa-plus me-1"></i>
+              <svg [cIcon]="icons.cilPlus" size="sm" class="me-1"></svg>
               Nuevo Préstamo
             </button>
           </div>
@@ -50,7 +50,7 @@
   <c-card class="mb-3 filters-card">
     <c-card-header class="bg-light py-2">
       <h6 class="mb-0">
-        <i class="fas fa-filter me-2 text-info"></i>
+        <svg [cIcon]="icons.cilFilter" size="sm" class="me-2 text-info"></svg>
         Filtros de Búsqueda
       </h6>
     </c-card-header>
@@ -63,7 +63,7 @@
         <div class="row g-2 align-items-end">
           <div class="col-md-2">
             <label for="warehouse" class="form-label small fw-semibold mb-1">
-              <i class="fas fa-warehouse me-1 text-muted"></i>
+              <svg [cIcon]="icons.cilHome" size="sm" class="me-1 text-muted"></svg>
               Bodega
             </label>
             <ng-select
@@ -80,7 +80,7 @@
           
           <div class="col-md-2">
             <label for="startDate" class="form-label small fw-semibold mb-1">
-              <i class="fas fa-calendar-alt me-1 text-muted"></i>
+              <svg [cIcon]="icons.cilCalendar" size="sm" class="me-1 text-muted"></svg>
               Desde
             </label>
             <input
@@ -93,7 +93,7 @@
 
           <div class="col-md-2">
             <label for="endDate" class="form-label small fw-semibold mb-1">
-              <i class="fas fa-calendar-alt me-1 text-muted"></i>
+              <svg [cIcon]="icons.cilCalendar" size="sm" class="me-1 text-muted"></svg>
               Hasta
             </label>
             <input
@@ -106,7 +106,7 @@
           
           <div class="col-md-2">
             <label for="status" class="form-label small fw-semibold mb-1">
-              <i class="fas fa-tasks me-1 text-muted"></i>
+              <svg [cIcon]="icons.cilTask" size="sm" class="me-1 text-muted"></svg>
               Estado
             </label>
             <ng-select
@@ -124,7 +124,7 @@
           <div class="col-md-4">
             <div class="d-flex gap-1 w-100">
               <button type="submit" class="btn btn-primary btn-sm flex-fill">
-                <i class="fas fa-search me-1"></i>
+                <svg [cIcon]="icons.cilSearch" size="sm" class="me-1"></svg>
                 Buscar
               </button>
               <button
@@ -132,7 +132,7 @@
                 class="btn btn-outline-secondary btn-sm flex-fill"
                 (click)="resetFilters()"
               >
-                <i class="fas fa-times me-1"></i>
+                <svg [cIcon]="icons.cilX" size="sm" class="me-1"></svg>
                 Limpiar
               </button>
             </div>
@@ -148,7 +148,7 @@
       <!-- Resumen de estados -->
       <div class="status-summary p-4">
         <h6 class="mb-2 text-muted small">
-          <i class="fas fa-chart-bar me-2"></i>
+          <svg [cIcon]="icons.cilChart" size="sm" class="me-2"></svg>
           Resumen por Estado
         </h6>
         <div class="row g-2">
@@ -159,7 +159,7 @@
             >
               <c-card-body class="p-2">
                 <div class="status-icon mb-1">
-                  <i class="fas fa-circle small"></i>
+                  <svg [cIcon]="icons.cilCircle" size="sm" class="small"></svg>
                 </div>
                 <h6 class="mb-1 status-name small">{{ status.statusName }}</h6>
                 <p class="m-0 status-count fw-bold">{{ status.count }}</p>
@@ -176,27 +176,27 @@
             <thead class="table-light">
               <tr>
                 <th scope="col" class="text-center">
-                  <i class="fas fa-hashtag text-muted"></i>
+                    <svg [cIcon]="icons.cilListNumbered" size="sm" class="text-muted"></svg>
                   ID
                 </th>
                 <th scope="col">
-                  <i class="fas fa-warehouse text-muted me-1"></i>
+                  <svg [cIcon]="icons.cilHome" size="sm" class="text-muted me-1"></svg>
                   Bodega
                 </th>
                 <th scope="col">
-                  <i class="fas fa-calendar text-muted me-1"></i>
+                  <svg [cIcon]="icons.cilCalendar" size="sm" class="text-muted me-1"></svg>
                   Fecha
                 </th>
                 <th scope="col">
-                  <i class="fas fa-sticky-note text-muted me-1"></i>
+                  <svg [cIcon]="icons.cilNotes" size="sm" class="text-muted me-1"></svg>
                   Notas
                 </th>
                 <th scope="col">
-                  <i class="fas fa-tasks text-muted me-1"></i>
+                  <svg [cIcon]="icons.cilTask" size="sm" class="text-muted me-1"></svg>
                   Estado
                 </th>
                 <th scope="col" class="text-center">
-                  <i class="fas fa-cogs text-muted"></i>
+                  <svg [cIcon]="icons.cilCog" size="sm" class="text-muted"></svg>
                   Acciones
                 </th>
               </tr>
@@ -208,13 +208,13 @@
                 </td>
                 <td>
                   <div class="d-flex align-items-center">
-                    <i class="fas fa-warehouse text-primary me-2"></i>
+                    <svg [cIcon]="icons.cilHome" size="sm" class="text-primary me-2"></svg>
                     <span class="fw-medium">{{ loan.warehouseName }}</span>
                   </div>
                 </td>
                 <td>
                   <div class="d-flex align-items-center">
-                    <i class="fas fa-calendar text-info me-2"></i>
+                    <svg [cIcon]="icons.cilCalendar" size="sm" class="text-info me-2"></svg>
                     <span>{{ loan.loanDate | date:'dd/MM/yyyy' }}</span>
                   </div>
                 </td>
@@ -239,7 +239,23 @@
                       (click)="viewDetail(loan)"
                       title="Ver detalle"
                     >
-                      <i class="fas fa-eye"></i>
+                      <svg [cIcon]="icons.cilMagnifyingGlass" size="sm"></svg>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-success btn-sm"
+                      [routerLink]="['/product-loans', loan.id, 'detail']"
+                      title="Gestionar préstamo"
+                    >
+                      <svg [cIcon]="icons.cilSettings" size="sm"></svg>
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-outline-warning btn-sm"
+                      [routerLink]="['/product-loans', loan.id, 'edit']"
+                      title="Editar préstamo"
+                    >
+                      <svg [cIcon]="icons.cilPencil" size="sm"></svg>
                     </button>
                   </div>
                 </td>
@@ -250,7 +266,7 @@
         
         <!-- Mensaje cuando no hay datos -->
         <div *ngIf="productLoans.length === 0" class="text-center py-5">
-          <i class="fas fa-inbox text-muted fs-1 mb-3"></i>
+            <svg [cIcon]="icons.cilInbox" size="sm" class="text-muted fs-1 mb-3"></svg>
           <h5 class="text-muted">No se encontraron préstamos</h5>
           <p class="text-muted small">No hay préstamos que coincidan con los filtros aplicados</p>
         </div>

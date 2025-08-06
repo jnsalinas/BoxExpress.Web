@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import {
@@ -21,6 +21,8 @@ import { WarehouseDto } from '../../../../models/warehouse.dto';
 import { PaginationDto } from '../../../../models/common/pagination.dto';
 import { ProductLoanStatus } from '../../../../models/enums/product-loan-status.enum';
 import { MessageService } from '../../../../services/message.service';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
+import { freeSet } from '@coreui/icons';
 
 interface ProductLoanSummaryDto {
   statusName: string;
@@ -42,13 +44,15 @@ interface ProductLoanSummaryDto {
     GenericPaginationComponent,
     HasRoleDirective,
     RouterLink,
+    IconModule,
+    IconDirective,
   ],
   templateUrl: './product-loans-list.component.html',
   styleUrl: './product-loans-list.component.scss'
 })
 export class ProductLoansListComponent implements OnInit {
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
-  
+  icons = freeSet;
   isLoading: boolean = false;
   productLoans: ProductLoansDto[] = [];
   warehouseOptions: WarehouseDto[] = [];
@@ -62,7 +66,8 @@ export class ProductLoansListComponent implements OnInit {
     private productLoansService: ProductLoansService,
     private warehouseService: WarehouseService,
     private fb: FormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {
     this.initializeForm();
     this.initializeStatusOptions();
@@ -165,9 +170,8 @@ export class ProductLoansListComponent implements OnInit {
   }
 
   viewDetail(loan: ProductLoansDto): void {
-    // Navegar al detalle del préstamo
-    // this.router.navigate(['/product-loans', loan.id]);
-    this.messageService.showInfo('Funcionalidad de detalle en desarrollo');
+    // Navegar al detalle/gestión del préstamo
+    this.router.navigate(['/product-loans', loan.id, 'detail']);
   }
 
   downloadExcel(): void {

@@ -1,0 +1,294 @@
+<app-loading-overlay
+  *ngIf="isLoading"
+  [loadingText]="'Cargando detalle del préstamo...'"
+></app-loading-overlay>
+
+<div *ngIf="!isLoading && loan" class="product-loan-detail-container">
+  <!-- Header con información del préstamo -->
+  <c-card class="mb-3 header-card">
+    <c-card-body class="p-3">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="d-flex align-items-center">
+            <div class="loan-icon me-3">
+              <svg [cIcon]="icons.cilPeople" size="sm" class="text-primary"></svg>
+            </div>
+            <div>
+              <h3 class="mb-1 text-primary">
+                Préstamo #{{ loan.id }}
+              </h3>
+              <p class="text-muted mb-0 small">
+                {{ loan.warehouseName }} - {{ loan.companyName }}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="action-buttons d-flex gap-2">
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-sm"
+              (click)="goBack()"
+              title="Volver"
+            >
+              <svg [cIcon]="icons.cilArrowLeft" size="sm" class="me-1"></svg>
+              Volver
+            </button>
+            <button
+              *hasRole="['admin']"
+              type="button"
+              class="btn btn-success btn-sm"
+              (click)="completeLoan()"
+              [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
+              title="Finalizar préstamo"
+            >
+              <svg [cIcon]="icons.cilCheck" size="sm" class="me-1"></svg>
+              Finalizar
+            </button>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+
+  <!-- Información general del préstamo -->
+  <c-card class="mb-3 info-card">
+    <c-card-header class="bg-light py-2">
+      <h6 class="mb-0">
+        <svg [cIcon]="icons.cilInfo" size="sm" class="me-2 text-info"></svg>
+        Información General
+      </h6>
+    </c-card-header>
+    <c-card-body class="py-3">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="info-item">
+            <label class="form-label small fw-semibold mb-1">Estado Actual</label>
+            <div>
+              <span class="badge" [ngClass]="getStatusBadgeClass(loan.status)">
+                {{ getStatusDisplayName(loan.status) }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="info-item">
+            <label class="form-label small fw-semibold mb-1">Fecha de Préstamo</label>
+            <div class="text-muted">{{ loan.loanDate | date:'dd/MM/yyyy' }}</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="info-item">
+            <label class="form-label small fw-semibold mb-1">Responsable</label>
+            <div class="text-muted">{{ loan.responsibleName || 'No especificado' }}</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="info-item">
+            <label class="form-label small fw-semibold mb-1">Creado por</label>
+            <div class="text-muted">{{ loan.createdByName || 'No especificado' }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row g-3 mt-2" *ngIf="loan.notes">
+        <div class="col-12">
+          <div class="info-item">
+            <label class="form-label small fw-semibold mb-1">Notas</label>
+            <div class="text-muted">{{ loan.notes }}</div>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+
+  <!-- Gestión de Estado -->
+  <c-card class="mb-3 status-card">
+    <c-card-header class="bg-light py-2">
+      <h6 class="mb-0">
+        <svg [cIcon]="icons.cilSettings" size="sm" class="me-2 text-warning"></svg>
+        Gestión de Estado
+      </h6>
+    </c-card-header>
+    <c-card-body class="py-3">
+      <form [formGroup]="statusForm" class="status-form">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-4">
+            <label for="status" class="form-label small fw-semibold mb-1">
+              <svg [cIcon]="icons.cilTask" size="sm" class="me-1 text-muted"></svg>
+              Cambiar Estado
+            </label>
+            <select
+              id="status"
+              formControlName="status"
+              class="form-select form-select-sm"
+            >
+              <option value="">Seleccione estado</option>
+              <option *ngFor="let option of statusOptions" [value]="option.value">
+                {{ option.label }}
+              </option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <button
+              type="button"
+              class="btn btn-warning btn-sm"
+              (click)="updateStatus()"
+              [disabled]="!statusForm.valid || isLoading"
+            >
+              <svg [cIcon]="icons.cilSave" size="sm" class="me-1"></svg>
+              Actualizar Estado
+            </button>
+          </div>
+        </div>
+      </form>
+    </c-card-body>
+  </c-card>
+
+  <!-- Resumen de Cantidades -->
+  <c-card class="mb-3 summary-card">
+    <c-card-header class="bg-light py-2">
+      <h6 class="mb-0">
+        <svg [cIcon]="icons.cilChart" size="sm" class="me-2 text-success"></svg>
+        Resumen de Cantidades
+      </h6>
+    </c-card-header>
+    <c-card-body class="py-3">
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="summary-item text-center">
+            <div class="summary-value text-primary">{{ loan.totalRequestedQuantity || 0 }}</div>
+            <div class="summary-label small text-muted">Solicitado</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="summary-item text-center">
+            <div class="summary-value text-info">{{ loan.totalDeliveredQuantity || 0 }}</div>
+            <div class="summary-label small text-muted">Entregado</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="summary-item text-center">
+            <div class="summary-value text-success">{{ loan.totalReturnedQuantity || 0 }}</div>
+            <div class="summary-label small text-muted">Devuelto</div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="summary-item text-center">
+            <div class="summary-value text-warning">{{ loan.totalPendingReturnQuantity || 0 }}</div>
+            <div class="summary-label small text-muted">Pendiente</div>
+          </div>
+        </div>
+      </div>
+    </c-card-body>
+  </c-card>
+
+  <!-- Detalles de Productos -->
+  <c-card class="details-card">
+    <c-card-header class="bg-light py-2">
+      <h6 class="mb-0">
+        <svg [cIcon]="icons.cilList" size="sm" class="me-2 text-primary"></svg>
+        Detalles de Productos
+      </h6>
+    </c-card-header>
+    <c-card-body class="p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">Producto</th>
+              <th scope="col" class="text-center">Solicitado</th>
+              <th scope="col" class="text-center">Entregado</th>
+              <th scope="col" class="text-center">Devuelto</th>
+              <th scope="col" class="text-center">Pendiente</th>
+              <th scope="col" class="text-center">Perdido</th>
+              <th scope="col" class="text-center">Cantidad Entregada</th>
+              <th scope="col" class="text-center">Cantidad Devuelta</th>
+              <th scope="col" class="text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let detail of loan.details; let i = index" class="align-middle">
+              <td>
+                <div>
+                  <div class="fw-medium">{{ detail.productName }}</div>
+                  <div class="small text-muted">{{ detail.productVariantName }}</div>
+                </div>
+              </td>
+              <td class="text-center">
+                <span class="badge bg-secondary">{{ detail.requestedQuantity || 0 }}</span>
+              </td>
+              <td class="text-center">
+                <span class="badge bg-info">{{ detail.deliveredQuantity || 0 }}</span>
+              </td>
+              <td class="text-center">
+                <span class="badge bg-success">{{ detail.returnedQuantity || 0 }}</span>
+              </td>
+              <td class="text-center">
+                <span class="badge bg-warning">{{ calculatePendingReturn(detail) }}</span>
+              </td>
+              <td class="text-center">
+                <span class="badge bg-danger">{{ calculateLost(detail) }}</span>
+              </td>
+              <td class="text-center">
+                <input
+                  type="number"
+                  class="form-control form-control-sm text-center"
+                  style="width: 80px;"
+                  [(ngModel)]="detail.deliveredQuantity"
+                  [min]="0"
+                  [max]="detail.requestedQuantity || 0"
+                  (change)="updateDetailQuantities(detail, i)"
+                  [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
+                />
+              </td>
+              <td class="text-center">
+                <input
+                  type="number"
+                  class="form-control form-control-sm text-center"
+                  style="width: 80px;"
+                  [(ngModel)]="detail.returnedQuantity"
+                  [min]="0"
+                  [max]="detail.deliveredQuantity || 0"
+                  (change)="updateDetailQuantities(detail, i)"
+                  [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
+                />
+              </td>
+              <td class="text-center">
+                <div class="btn-group" role="group">
+                  <button
+                    type="button"
+                    class="btn btn-outline-success btn-sm"
+                    (click)="acceptProduct(detail, i)"
+                    [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
+                    title="Aceptar producto"
+                  >
+                    <svg [cIcon]="icons.cilCheck" size="sm"></svg>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger btn-sm"
+                    (click)="rejectProduct(detail, i)"
+                    [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
+                    title="Rechazar producto"
+                  >
+                    <svg [cIcon]="icons.cilX" size="sm"></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Mensaje cuando no hay detalles -->
+      <div *ngIf="!loan.details || loan.details.length === 0" class="text-center py-5">
+        <svg [cIcon]="icons.cilInbox" size="sm" class="text-muted fs-1 mb-3"></svg>
+        <h5 class="text-muted">No hay productos en este préstamo</h5>
+        <p class="text-muted small">No se encontraron detalles de productos</p>
+      </div>
+    </c-card-body>
+  </c-card>
+</div>
+
+ 

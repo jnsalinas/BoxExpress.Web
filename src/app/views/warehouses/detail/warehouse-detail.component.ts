@@ -22,7 +22,7 @@ import { WarehouseDetailDto } from '../../../models/warehouse-detail.dto';
 import { WarehouseProductModalComponent } from '../components/warehouse-product-modal/warehouse-product-modal.component';
 import { ProductDto } from '../../../models/product.dto';
 import { ProductVariantDto } from '../../../models/product-variant.dto';
-import { IconDirective } from '@coreui/icons-angular';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
 import { WarehouseTransferModalComponent } from '../components/warehouse-transfer-modal/warehouse-transfer-modal.component';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
@@ -58,6 +58,8 @@ import { AuthService } from '../../../services/auth.service';
     WarehouseInventoryItemEditModalComponent,
     HasRoleDirective,
     InventoryTableComponent,
+    IconDirective,
+    IconModule,
   ],
   templateUrl: './warehouse-detail.component.html',
   styleUrls: ['./warehouse-detail.component.scss'],

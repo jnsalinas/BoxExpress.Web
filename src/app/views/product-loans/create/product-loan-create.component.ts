@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import {
   FormBuilder,
   FormGroup,
@@ -15,18 +15,20 @@ import {
   CardBodyComponent,
 } from '@coreui/angular';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { LoadingOverlayComponent } from '../../../../shared/components/loading-overlay/loading-overlay.component';
-import { GenericModalComponent } from '../../../shared/components/generic-modal/generic-modal.component';
-import { ProductLoansService } from '../../../../services/product-loans.service';
-import { WarehouseService } from '../../../../services/warehouse.service';
-import { ProductVariantService } from '../../../../services/product-variant.service';
-import { ProductLoansDto } from '../../../../models/product-loan.dto';
-import { ProductLoanDetailDto } from '../../../../models/product-loan-detail.dto';
-import { WarehouseDto } from '../../../../models/warehouse.dto';
-import { ProductVariantDto } from '../../../../models/product-variant.dto';
-import { MessageService } from '../../../../services/message.service';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
+import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
+import { ProductLoansService } from '../../../services/product-loans.service';
+import { WarehouseService } from '../../../services/warehouse.service';
+import { ProductVariantService } from '../../../services/product-variant.service';
+import { ProductLoansDto } from '../../../models/product-loan.dto';
+import { ProductLoanDetailDto } from '../../../models/product-loan-detail.dto';
+import { WarehouseDto } from '../../../models/warehouse.dto';
+import { ProductVariantDto } from '../../../models/product-variant.dto';
+import { MessageService } from '../../../services/message.service';
 import { Router } from '@angular/router';
-import { WarehouseInventoryService } from '../../../../services/warehouse-inventory.service';
+import { WarehouseInventoryService } from '../../../services/warehouse-inventory.service';
+import { freeSet } from '@coreui/icons';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
 
 @Component({
   selector: 'app-product-loan-create',
@@ -41,29 +43,45 @@ import { WarehouseInventoryService } from '../../../../services/warehouse-invent
     LoadingOverlayComponent,
     GenericModalComponent,
     RouterLink,
+    IconModule,
+    IconDirective,
   ],
   templateUrl: './product-loan-create.component.html',
   styleUrl: './product-loan-create.component.scss',
 })
 export class ProductLoanCreateComponent implements OnInit {
   isLoading: boolean = false;
+  isEditMode: boolean = false;
+  loanId: number = 0;
   productLoanForm: FormGroup = new FormGroup({});
   warehouseOptions: WarehouseDto[] = [];
   productVariantOptions: ProductVariantDto[] = [];
-
+  icons = freeSet;
   constructor(
     private fb: FormBuilder,
     private productLoansService: ProductLoansService,
     private warehouseService: WarehouseService,
     private warehouseinventories: WarehouseInventoryService,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.initializeForm();
   }
 
   ngOnInit(): void {
     this.loadWarehouses();
+    
+    // Verificar si estamos en modo edición
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.isEditMode = true;
+      this.loanId = Number(id);
+      this.loadProductVariants();
+      setTimeout(() => {
+        this.loadLoanForEdit();
+      }, 1000);
+    }
   }
 
   private initializeForm(): void {
@@ -71,7 +89,7 @@ export class ProductLoanCreateComponent implements OnInit {
       warehouseId: [null, [Validators.required]],
       loanDate: [new Date().toISOString().split('T')[0], [Validators.required]],
       responsibleName: ['', [Validators.required, Validators.minLength(2)]],
-      notes: ['', [Validators.required, Validators.minLength(10)]],
+      notes: ['', [Validators.required, Validators.minLength(5)]],
       productLoanItems: this.fb.array([]),
     });
   }
@@ -88,6 +106,40 @@ export class ProductLoanCreateComponent implements OnInit {
     });
   }
 
+  private loadLoanForEdit(): void {
+    this.isLoading = true;
+    this.productLoansService.getById(this.loanId).subscribe({
+      next: (loan) => {
+        // Cargar datos del préstamo en el formulario
+        this.productLoanForm.patchValue({
+          warehouseId: loan.warehouseId,
+          loanDate: loan.loanDate ? new Date(loan.loanDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+          responsibleName: loan.responsibleName,
+          notes: loan.notes,
+        });
+
+        // Cargar detalles de productos
+        if (loan.details && loan.details.length > 0) {
+          loan.details.forEach(detail => {
+            this.addProductItem();
+            const lastIndex = this.productLoanItems.length - 1;
+            this.productLoanItems.at(lastIndex).patchValue({
+              productVariantId: detail.productVariantId,
+              requestedQuantity: detail.requestedQuantity,
+            });
+          });
+        }
+
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error cargando préstamo para editar:', error);
+        this.messageService.showError('Error al cargar el préstamo');
+        this.isLoading = false;
+      }
+    });
+  }
+
   private loadProductVariants(): void {
     this.warehouseinventories
       .getWarehouseInventories({ warehouseId: this.productLoanForm.value.warehouseId })
@@ -100,7 +152,7 @@ export class ProductLoanCreateComponent implements OnInit {
           });
        
           console.log(this.productVariantOptions);
-          this.addProductItem();
+          // this.addProductItem();
         },
         error: (error) => {
           console.error('Error cargando variantes de productos:', error);
@@ -190,28 +242,48 @@ export class ProductLoanCreateComponent implements OnInit {
     this.isLoading = true;
     const formValue = this.productLoanForm.value;
 
-    const productLoanData = {
+    const productLoanData: ProductLoansDto = {
+      id: this.isEditMode ? this.loanId : 0,
+      name: 'Préstamo de productos',
       warehouseId: formValue.warehouseId,
       loanDate: new Date(formValue.loanDate),
       responsibleName: formValue.responsibleName,
       notes: formValue.notes,
-      productLoanItems: formValue.productLoanItems.map((item: any) => ({
+      details: formValue.productLoanItems.map((item: ProductLoanDetailDto) => ({
         productVariantId: item.productVariantId,
         requestedQuantity: item.requestedQuantity,
       })),
-    };
+    };  
 
-    this.productLoansService.create(productLoanData as any).subscribe({
-      next: (response) => {
-        this.messageService.showSuccess('Préstamo creado exitosamente');
-        this.router.navigate(['/product-loans']);
-      },
-      error: (error) => {
-        console.error('Error creando préstamo:', error);
-        this.messageService.showError('Error al crear el préstamo');
-        this.isLoading = false;
-      },
-    });
+    console.log('productLoanData', productLoanData);
+    
+    if (this.isEditMode) {
+      // Modo edición
+      this.productLoansService.update(this.loanId, productLoanData).subscribe({
+        next: (response) => {
+          this.messageService.showSuccess('Préstamo actualizado exitosamente');
+          this.router.navigate(['/product-loans']);
+        },
+        error: (error) => {
+          console.error('Error actualizando préstamo:', error);
+          this.messageService.showError('Error al actualizar el préstamo');
+          this.isLoading = false;
+        },
+      });
+    } else {
+      // Modo creación
+      this.productLoansService.create(productLoanData).subscribe({
+        next: (response) => {
+          this.messageService.showSuccess('Préstamo creado exitosamente');
+          this.router.navigate(['/product-loans']);
+        },
+        error: (error) => {
+          console.error('Error creando préstamo:', error);
+          this.messageService.showError('Error al crear el préstamo');
+          this.isLoading = false;
+        },
+      });
+    }
   }
 
   private markFormGroupTouched(): void {
@@ -234,6 +306,9 @@ export class ProductLoanCreateComponent implements OnInit {
     console.log('onWarehouseChange triggered:', event);
     this.productLoanItems.clear();
     this.loadProductVariants();
+    setTimeout(() => {
+      this.addProductItem();
+    }, 500);
   }
 
   onProductVariantSelected(variant: ProductVariantDto, index: number): void {

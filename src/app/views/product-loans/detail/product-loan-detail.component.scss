@@ -1,0 +1,123 @@
+.product-loan-detail-container {
+  .header-card {
+    .loan-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(var(--cui-primary-rgb), 0.1);
+    }
+  }
+
+  .info-card {
+    .info-item {
+      .form-label {
+        color: var(--cui-body-color);
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  .status-card {
+    .status-form {
+      .form-select {
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  .summary-card {
+    .summary-item {
+      .summary-value {
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1;
+      }
+      
+      .summary-label {
+        margin-top: 0.25rem;
+      }
+    }
+  }
+
+  .details-card {
+    .table {
+      th {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--cui-body-color);
+        border-bottom: 2px solid var(--cui-border-color);
+      }
+      
+      td {
+        font-size: 0.875rem;
+        vertical-align: middle;
+      }
+      
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.375rem 0.5rem;
+      }
+    }
+  }
+
+  .quantity-modal-content {
+    .form-control {
+      font-size: 0.875rem;
+    }
+    
+    .form-text {
+      font-size: 0.75rem;
+    }
+    
+    .alert {
+      font-size: 0.875rem;
+    }
+  }
+
+  // Estados específicos
+  .status-pending {
+    background-color: rgba(var(--cui-warning-rgb), 0.1);
+    border-left: 4px solid var(--cui-warning);
+  }
+
+  .status-in-process {
+    background-color: rgba(var(--cui-info-rgb), 0.1);
+    border-left: 4px solid var(--cui-info);
+  }
+
+  .status-completed-with-issue {
+    background-color: rgba(var(--cui-danger-rgb), 0.1);
+    border-left: 4px solid var(--cui-danger);
+  }
+
+  .status-completed-ok {
+    background-color: rgba(var(--cui-success-rgb), 0.1);
+    border-left: 4px solid var(--cui-success);
+  }
+
+  .status-default {
+    background-color: rgba(var(--cui-secondary-rgb), 0.1);
+    border-left: 4px solid var(--cui-secondary);
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    .summary-item {
+      .summary-value {
+        font-size: 1.25rem;
+      }
+    }
+    
+    .table-responsive {
+      font-size: 0.8rem;
+      
+      .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.375rem;
+      }
+    }
+  }
+} 

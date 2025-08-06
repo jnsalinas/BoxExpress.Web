@@ -14,11 +14,31 @@ export const routes: Routes = [
   {
     path: 'create',
     loadComponent: () =>
-      import('./create/product-loan-create/product-loan-create.component').then(
+      import('./create/product-loan-create.component').then(
         (m) => m.ProductLoanCreateComponent
       ),
     data: {
       title: 'Crear Préstamo',
+    },
+  },
+  {
+    path: ':id/edit',
+    loadComponent: () =>
+      import('./create/product-loan-create.component').then(
+        (m) => m.ProductLoanCreateComponent
+      ),
+    data: {
+      title: 'Editar Préstamo',
+    },
+  },
+  {
+    path: ':id/detail',
+    loadComponent: () =>
+      import('./detail/product-loan-detail.component').then(
+        (m) => m.ProductLoanDetailComponent
+      ),
+    data: {
+      title: 'Detalle de Préstamo',
     },
   },
 ]; 

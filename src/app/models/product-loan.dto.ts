@@ -3,7 +3,6 @@ import { ProductLoanStatus } from './enums/product-loan-status.enum';
 import { ProductLoanDetailDto } from './product-loan-detail.dto';
 
 export interface ProductLoansDto extends BaseDto {
-
   loanDate?: Date;
   responsibleName?: string;
   notes?: string;
@@ -20,5 +19,5 @@ export interface ProductLoansDto extends BaseDto {
   totalDeliveredQuantity?: number;
   totalReturnedQuantity?: number;
   totalPendingReturnQuantity?: number;  
-  productLoanItems?: ProductLoanDetailDto[];
+  details?: ProductLoanDetailDto[];
 }
