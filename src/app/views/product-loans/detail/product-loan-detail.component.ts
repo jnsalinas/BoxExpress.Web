@@ -234,12 +234,12 @@ export class ProductLoanDetailComponent implements OnInit {
     return Math.max(0, delivered - returned);
   }
 
-  calculateLost(detail: ProductLoanDetailDto): number {
-    const delivered = detail.deliveredQuantity || 0;
-    const returned = detail.returnedQuantity || 0;
-    const pending = this.calculatePendingReturn(detail);
-    return Math.max(0, delivered - returned - pending);
-  }
+  // calculateLost(detail: ProductLoanDetailDto): number {
+  //   const delivered = detail.deliveredQuantity || 0;
+  //   const returned = detail.returnedQuantity || 0;
+  //   const pending = this.calculatePendingReturn(detail);
+  //   return Math.max(0, delivered - returned - pending);
+  // }
 
   goBack(): void {
     this.router.navigate(['/product-loans']);
