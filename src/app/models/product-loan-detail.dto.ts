@@ -10,4 +10,5 @@ export interface ProductLoanDetailDto extends BaseDto {
     deliveredQuantity?: number; 
     returnedQuantity?: number;
     pendingReturnQuantity?: number;
+    lostQuantity?: number;
 }

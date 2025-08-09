@@ -204,6 +204,7 @@
               <th scope="col" class="text-center">Perdido</th>
               <th scope="col" class="text-center">Cantidad Entregada</th>
               <th scope="col" class="text-center">Cantidad Devuelta</th>
+              <th scope="col" class="text-center">Cantidad Perdida</th>
               <th scope="col" class="text-center">Acciones</th>
             </tr>
           </thead>
@@ -251,8 +252,18 @@
                   [min]="0"
                   [max]="detail.deliveredQuantity || 0"
                   (change)="updateDetailQuantities(detail, i)"
-                  [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
                 />
+              </td>
+              <td class="text-center">
+                <input
+                type="number"
+                class="form-control form-control-sm text-center"
+                style="width: 80px;"
+                [(ngModel)]="detail.lostQuantity"
+                [min]="0"
+                [max]="detail.deliveredQuantity || 0"
+                (change)="updateDetailQuantities(detail, i)"
+              />
               </td>
               <td class="text-center">
                 <div class="btn-group" role="group">

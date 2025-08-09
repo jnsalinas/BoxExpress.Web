@@ -20,4 +20,5 @@ export interface ProductLoansDto extends BaseDto {
   totalReturnedQuantity?: number;
   totalPendingReturnQuantity?: number;  
   details?: ProductLoanDetailDto[];
+  productLoanId?: number;
 }

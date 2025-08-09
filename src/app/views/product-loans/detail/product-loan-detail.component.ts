@@ -130,34 +130,36 @@ export class ProductLoanDetailComponent implements OnInit {
     // Validar que las cantidades no excedan lo solicitado
     if (detail.deliveredQuantity! > detail.requestedQuantity!) {
       this.messageService.showError('La cantidad entregada no puede exceder la cantidad solicitada');
-      detail.deliveredQuantity = detail.requestedQuantity;
+      detail.deliveredQuantity = 0;
       return;
     }
 
-    if (detail.returnedQuantity! > detail.deliveredQuantity!) {
-      this.messageService.showError('La cantidad devuelta no puede exceder la cantidad entregada');
-      detail.returnedQuantity = detail.deliveredQuantity;
-      return;
-    }
+    // if (detail.returnedQuantity! > detail.deliveredQuantity!) {
+    //   this.messageService.showError('La cantidad devuelta no puede exceder la cantidad entregada');
+    //   detail.returnedQuantity = detail.deliveredQuantity;
+    //   return;
+    // }
 
-    this.isLoading = true;
-    this.productLoansService.updateDetailQuantities(
-      this.loanId,
-      detail.id!,
-      detail.deliveredQuantity || 0,
-      detail.returnedQuantity || 0
-    ).subscribe({
-      next: () => {
-        this.messageService.showSuccess('Cantidades actualizadas correctamente');
-        this.loadLoanDetail(); // Recargar datos
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error updating quantities:', error);
-        this.messageService.showError('Error al actualizar las cantidades');
-        this.isLoading = false;
-      }
-    });
+    detail.returnedQuantity = (detail.requestedQuantity ?? 0) - (detail.deliveredQuantity ?? 0);
+
+    // this.isLoading = true;
+    // this.productLoansService.updateDetailQuantities(
+    //   this.loanId,
+    //   detail.id!,
+    //   detail.deliveredQuantity || 0,
+    //   detail.returnedQuantity || 0
+    // ).subscribe({
+    //   next: () => {
+    //     this.messageService.showSuccess('Cantidades actualizadas correctamente');
+    //     this.loadLoanDetail(); // Recargar datos
+    //     this.isLoading = false;
+    //   },
+    //   error: (error) => {
+    //     console.error('Error updating quantities:', error);
+    //     this.messageService.showError('Error al actualizar las cantidades');
+    //     this.isLoading = false;
+    //   }
+    // });
   }
 
   acceptProduct(detail: ProductLoanDetailDto, index: number): void {
@@ -165,8 +167,8 @@ export class ProductLoanDetailComponent implements OnInit {
     detail.deliveredQuantity = detail.requestedQuantity;
     detail.returnedQuantity = 0; // Sin devoluciones por defecto
     
-    this.updateDetailQuantities(detail, index);
-    this.messageService.showInfo('Producto aceptado - Cantidad entregada establecida');
+    // this.updateDetailQuantities(detail, index);
+    // this.messageService.showInfo('Producto aceptado - Cantidad entregada establecida');
   }
 
   rejectProduct(detail: ProductLoanDetailDto, index: number): void {
@@ -174,8 +176,8 @@ export class ProductLoanDetailComponent implements OnInit {
     detail.deliveredQuantity = 0;
     detail.returnedQuantity = 0;
     
-    this.updateDetailQuantities(detail, index);
-    this.messageService.showInfo('Producto rechazado - Sin entregas');
+    // this.updateDetailQuantities(detail, index);
+    // this.messageService.showInfo('Producto rechazado - Sin entregas');
   }
 
   completeLoan(): void {

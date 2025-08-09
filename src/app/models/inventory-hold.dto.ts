@@ -3,6 +3,7 @@ import { InventoryHoldType } from '../models/enums/inventory-hold-type.enum';
 import { InventoryHoldStatus } from '../models/enums/inventory-hold-status.enum';
 import { OrderItemDto } from './order-item.dto';
 import { WarehouseInventoryDto } from './warehouse-inventory.dto';
+import { ProductLoansDto } from './product-loan.dto';
 
 export interface InventoryHoldDto extends BaseDto {
   warehouseInventoryId?: number;
@@ -18,4 +19,9 @@ export interface InventoryHoldDto extends BaseDto {
   warehouseInventory?: WarehouseInventoryDto;
   clientFullName?: string;
   itemIndex?: number;
+  loanItem?: ProductLoansDto;
+  warehouseInventoryTransferDetailId?: number;
+  warehouseInventoryTransferId?: number;
+  productLoanDetailId?: number;
+  productLoanId?: number;
 }

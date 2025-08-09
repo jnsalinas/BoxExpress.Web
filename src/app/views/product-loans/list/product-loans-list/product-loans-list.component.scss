@@ -168,11 +168,11 @@
         
         tbody {
           tr {
-            transition: all 0.3s ease;
+            transition: none;
             
             &:hover {
-              background-color: #f8f9fa;
-              transform: scale(1.01);
+              background-color: transparent;
+              transform: none;
             }
             
             td {

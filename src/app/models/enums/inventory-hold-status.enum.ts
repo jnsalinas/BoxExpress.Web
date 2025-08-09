@@ -8,7 +8,7 @@ export enum InventoryHoldStatus {
 }
 
 export const InventoryHoldStatusText: Record<InventoryHoldStatus, string> = {
-  [InventoryHoldStatus.Active]: 'Orden en gestion',
+  [InventoryHoldStatus.Active]: 'Activo',
   [InventoryHoldStatus.Released]: 'Procesamiento cancelado',
   [InventoryHoldStatus.Consumed]: 'Procesamiento consumido',
   [InventoryHoldStatus.PendingReturn]: 'Pendiente por devolución',

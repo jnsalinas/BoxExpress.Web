@@ -120,8 +120,7 @@
               <th>#</th>
               <th>Cantidad</th>
               <th>Tipo</th>
-              <th>Orden</th>
-              <th>Transferencia</th>
+              <th>Id. Referencia</th>
               <th>Estatus</th>
               <th>Fecha</th>
             </tr>
@@ -133,6 +132,7 @@
               <td>
                 <span *ngIf="hold.type === 1">Orden</span>
                 <span *ngIf="hold.type === 2">Transferencia</span>
+                <span *ngIf="hold.type === 3">Préstamo</span>
               </td>
               <td>
                 <a
@@ -141,10 +141,16 @@
                 >
                   #{{ hold.orderItem.orderId }}
                 </a>
+                <a
+                  *ngIf="hold.warehouseInventoryTransferId"
+                >
+                  #{{ hold.warehouseInventoryTransferId }}
+                </a>
+                <a *ngIf="hold.productLoanId" [routerLink]="['/product-loans', hold.productLoanId, 'detail']">
+                  #{{ hold.productLoanId }}
+                </a>
               </td>
-              <td>
-                <span *ngIf="hold.transferId"> #{{ hold.transferId }} </span>
-              </td>
+
               <td>{{ getStatusLabel(hold.status) }}</td>
               <td>{{ hold.createdAt | utcDate }}</td>
             </tr>
