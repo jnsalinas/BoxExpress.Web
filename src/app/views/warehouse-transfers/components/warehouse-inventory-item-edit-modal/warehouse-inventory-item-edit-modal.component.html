@@ -75,7 +75,7 @@
           </div>
         </div>
         
-        <div class="col-md-6">
+        <div class="col-md-6" *hasRole="['admin']">
           <label for="quantity" class="form-label">
             <i class="fas fa-calculator me-1 text-muted"></i>
             Cantidad
@@ -85,6 +85,21 @@
             id="quantity"
             class="form-control"
             formControlName="quantity"
+            placeholder="0"
+            min="0"
+          />
+        </div>
+
+        <div class="col-md-6" *hasRole="['bodega', 'admin']">
+          <label for="addQuantity" class="form-label">
+            <i class="fas fa-calculator me-1 text-muted"></i>
+            Adicionar unidades
+          </label>
+          <input
+            type="number"
+            id="addQuantity"
+            class="form-control"
+            formControlName="addQuantity"
             placeholder="0"
             min="0"
           />

@@ -20,7 +20,7 @@ import { AuthService } from '../../../services/auth.service';
   styleUrls: ['./inventory-table.component.scss'],
   standalone: true,
   imports: [
-    GenericPaginationComponent,
+    GenericPaginationComponent, 
     CommonModule,
     IconDirective,
     HasRoleDirective,

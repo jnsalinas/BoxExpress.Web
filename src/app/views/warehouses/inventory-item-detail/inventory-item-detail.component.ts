@@ -3,9 +3,9 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { WarehouseInventoryService } from '../../../services/warehouse-inventory.service';
 // import { warehouseInventoryDto } from 'src/app/models/product-variant.dto';
-import { UtcDatePipe } from 'src/app/shared/pipes/utc-date.pipe';
+import { UtcDatePipe } from '../../../shared/pipes/utc-date.pipe';
 import { CommonModule } from '@angular/common';
-import { InventoryHoldDto } from 'src/app/models/inventory-hold.dto';
+import { InventoryHoldDto } from '../../../models/inventory-hold.dto';
 import {
   CardBodyComponent,
   CardComponent,
@@ -14,23 +14,23 @@ import {
   RowComponent,
   TableDirective,
 } from '@coreui/angular';
-import { GenericPaginationComponent } from 'src/app/shared/components/generic-pagination/generic-pagination.component';
-import { LoadingOverlayComponent } from 'src/app/shared/components/loading-overlay/loading-overlay.component';
+import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { IconDirective } from '@coreui/icons-angular';
 import { WarehouseTransferModalDetailComponent } from '../../warehouse-transfers/components/warehouse-transfer-modal-detail/warehouse-transfer-modal-detail.component';
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 import { freeSet } from '@coreui/icons';
 import { InventoryMovementService } from '../../../services/inventory-movement.service';
-import { InventoryMovementDto } from 'src/app/models/inventory-movement.dto';
-import { PaginationDto } from 'src/app/models/common/pagination.dto';
-import { InventoryMovementFilter } from 'src/app/models/inventory-movement-filter.model';
-import { WarehouseInventoryDto } from 'src/app/models/warehouse-inventory.dto';
-import { InventoryHoldService } from 'src/app/services/inventory-hold.service';
+import { InventoryMovementDto } from '../../../models/inventory-movement.dto';
+import { PaginationDto } from '../../../models/common/pagination.dto';
+import { InventoryMovementFilter } from '../../../models/inventory-movement-filter.model';
+import { WarehouseInventoryDto } from '../../../models/warehouse-inventory.dto';
+import { InventoryHoldService } from '../../../services/inventory-hold.service';
 import {
   InventoryMovementType,
   InventoryMovementTypeText,
-} from 'src/app/models/enums/inventory-movement-type.enum';
+} from '../../../models/enums/inventory-movement-type.enum';
 import {
   InventoryHoldStatus,
   InventoryHoldStatusText,

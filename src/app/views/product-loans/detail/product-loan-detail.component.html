@@ -11,12 +11,14 @@
         <div class="col-md-8">
           <div class="d-flex align-items-center">
             <div class="loan-icon me-3">
-              <svg [cIcon]="icons.cilPeople" size="sm" class="text-primary"></svg>
+              <svg
+                [cIcon]="icons.cilPeople"
+                size="sm"
+                class="text-primary"
+              ></svg>
             </div>
             <div>
-              <h3 class="mb-1 text-primary">
-                Préstamo #{{ loan.id }}
-              </h3>
+              <h3 class="mb-1 text-primary">Préstamo #{{ loan.id }}</h3>
               <p class="text-muted mb-0 small">
                 {{ loan.warehouseName }} - {{ loan.companyName }}
               </p>
@@ -35,11 +37,10 @@
               Volver
             </button>
             <button
-              *hasRole="['admin']"
+              *ngIf="loan.status == ProductLoanStatus.Pending && authService.hasRole('admin')"
               type="button"
               class="btn btn-success btn-sm"
               (click)="completeLoan()"
-              [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
               title="Finalizar préstamo"
             >
               <svg [cIcon]="icons.cilCheck" size="sm" class="me-1"></svg>
@@ -63,7 +64,9 @@
       <div class="row g-3">
         <div class="col-md-3">
           <div class="info-item">
-            <label class="form-label small fw-semibold mb-1">Estado Actual</label>
+            <label class="form-label small fw-semibold mb-1"
+              >Estado Actual</label
+            >
             <div>
               <span class="badge" [ngClass]="getStatusBadgeClass(loan.status)">
                 {{ getStatusDisplayName(loan.status) }}
@@ -73,29 +76,43 @@
         </div>
         <div class="col-md-3">
           <div class="info-item">
-            <label class="form-label small fw-semibold mb-1">Fecha de Préstamo</label>
-            <div class="text-muted">{{ loan.loanDate | date:'dd/MM/yyyy' }}</div>
+            <label class="form-label small fw-semibold mb-1"
+              >Fecha de Préstamo</label
+            >
+            <div class="text-muted">
+              {{ loan.loanDate | date : "dd/MM/yyyy" }}
+            </div>
           </div>
         </div>
         <div class="col-md-3">
           <div class="info-item">
             <label class="form-label small fw-semibold mb-1">Responsable</label>
-            <div class="text-muted">{{ loan.responsibleName || 'No especificado' }}</div>
+            <div class="text-muted">
+              {{ loan.responsibleName || "No especificado" }}
+            </div>
           </div>
         </div>
         <div class="col-md-3">
           <div class="info-item">
             <label class="form-label small fw-semibold mb-1">Creado por</label>
-            <div class="text-muted">{{ loan.createdByName || 'No especificado' }}</div>
+            <div class="text-muted">
+              {{ loan.createdByName || "No especificado" }}
+            </div>
           </div>
         </div>
       </div>
-      
-      <div class="row g-3 mt-2" *ngIf="loan.notes">
+
+      <div class="row g-3 mt-2">
         <div class="col-12">
           <div class="info-item">
             <label class="form-label small fw-semibold mb-1">Notas</label>
-            <div class="text-muted">{{ loan.notes }}</div>
+            <textarea
+              [disabled]="loan.status == ProductLoanStatus.CompletedOk || loan.status == ProductLoanStatus.CompletedWithIssue"
+              class="form-control form-control-sm"
+              [(ngModel)]="loan.notes"
+              rows="3"
+              placeholder="Agregar notas..."
+            ></textarea>
           </div>
         </div>
       </div>
@@ -103,7 +120,7 @@
   </c-card>
 
   <!-- Gestión de Estado -->
-  <c-card class="mb-3 status-card">
+  <!-- <c-card class="mb-3 status-card">
     <c-card-header class="bg-light py-2">
       <h6 class="mb-0">
         <svg [cIcon]="icons.cilSettings" size="sm" class="me-2 text-warning"></svg>
@@ -143,7 +160,7 @@
         </div>
       </form>
     </c-card-body>
-  </c-card>
+  </c-card> -->
 
   <!-- Resumen de Cantidades -->
   <c-card class="mb-3 summary-card">
@@ -155,28 +172,28 @@
     </c-card-header>
     <c-card-body class="py-3">
       <div class="row g-3">
-        <div class="col-md-3">
+        <div class="col-md-4">
           <div class="summary-item text-center">
-            <div class="summary-value text-primary">{{ loan.totalRequestedQuantity || 0 }}</div>
+            <div class="summary-value text-primary">
+              {{ loan.totalRequestedQuantity || 0 }}
+            </div>
             <div class="summary-label small text-muted">Solicitado</div>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <div class="summary-item text-center">
-            <div class="summary-value text-info">{{ loan.totalDeliveredQuantity || 0 }}</div>
+            <div class="summary-value text-info">
+              {{ loan.totalDeliveredQuantity || 0 }}
+            </div>
             <div class="summary-label small text-muted">Entregado</div>
           </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <div class="summary-item text-center">
-            <div class="summary-value text-success">{{ loan.totalReturnedQuantity || 0 }}</div>
+            <div class="summary-value text-success">
+              {{ loan.totalReturnedQuantity || 0 }}
+            </div>
             <div class="summary-label small text-muted">Devuelto</div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="summary-item text-center">
-            <div class="summary-value text-warning">{{ loan.totalPendingReturnQuantity || 0 }}</div>
-            <div class="summary-label small text-muted">Pendiente</div>
           </div>
         </div>
       </div>
@@ -200,87 +217,80 @@
               <th scope="col" class="text-center">Solicitado</th>
               <th scope="col" class="text-center">Entregado</th>
               <th scope="col" class="text-center">Devuelto</th>
-              <th scope="col" class="text-center">Pendiente</th>
-              <th scope="col" class="text-center">Perdido</th>
               <th scope="col" class="text-center">Cantidad Entregada</th>
               <th scope="col" class="text-center">Cantidad Devuelta</th>
-              <th scope="col" class="text-center">Cantidad Perdida</th>
               <th scope="col" class="text-center">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let detail of loan.details; let i = index" class="align-middle">
+            <tr
+              *ngFor="let detail of loan.details; let i = index"
+              class="align-middle"
+            >
               <td>
                 <div>
                   <div class="fw-medium">{{ detail.productName }}</div>
-                  <div class="small text-muted">{{ detail.productVariantName }}</div>
+                  <div class="small text-muted">
+                    {{ detail.productVariantName }}
+                  </div>
                 </div>
               </td>
               <td class="text-center">
-                <span class="badge bg-secondary">{{ detail.requestedQuantity || 0 }}</span>
+                <span class="badge bg-secondary">{{
+                  detail.requestedQuantity || 0
+                }}</span>
               </td>
               <td class="text-center">
-                <span class="badge bg-info">{{ detail.deliveredQuantity || 0 }}</span>
+                <span class="badge bg-info">{{
+                  detail.deliveredQuantity || 0
+                }}</span>
               </td>
               <td class="text-center">
-                <span class="badge bg-success">{{ detail.returnedQuantity || 0 }}</span>
+                <span class="badge bg-success">{{
+                  detail.returnedQuantity || 0
+                }}</span>
               </td>
-              <td class="text-center">
-                <span class="badge bg-warning">{{ calculatePendingReturn(detail) }}</span>
-              </td>
-              <td class="text-center">
-                <span class="badge bg-danger">{{ calculateLost(detail) }}</span>
-              </td>
+
               <td class="text-center">
                 <input
                   type="number"
                   class="form-control form-control-sm text-center"
-                  style="width: 80px;"
+                  style="width: 80px"
                   [(ngModel)]="detail.deliveredQuantity"
                   [min]="0"
                   [max]="detail.requestedQuantity || 0"
-                  (change)="updateDetailQuantities(detail, i)"
-                  [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
+                  [disabled]="true"
                 />
               </td>
               <td class="text-center">
                 <input
                   type="number"
                   class="form-control form-control-sm text-center"
-                  style="width: 80px;"
+                  style="width: 80px"
                   [(ngModel)]="detail.returnedQuantity"
                   [min]="0"
                   [max]="detail.deliveredQuantity || 0"
                   (change)="updateDetailQuantities(detail, i)"
+                  [disabled]="detail.isAccepted ?? false || loan.status == ProductLoanStatus.CompletedOk || loan.status == ProductLoanStatus.CompletedWithIssue"
                 />
               </td>
-              <td class="text-center">
-                <input
-                type="number"
-                class="form-control form-control-sm text-center"
-                style="width: 80px;"
-                [(ngModel)]="detail.lostQuantity"
-                [min]="0"
-                [max]="detail.deliveredQuantity || 0"
-                (change)="updateDetailQuantities(detail, i)"
-              />
-              </td>
+
               <td class="text-center">
                 <div class="btn-group" role="group">
                   <button
+                    [disabled]="loan.status == ProductLoanStatus.CompletedOk || loan.status == ProductLoanStatus.CompletedWithIssue"
                     type="button"
                     class="btn btn-outline-success btn-sm"
                     (click)="acceptProduct(detail, i)"
-                    [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
                     title="Aceptar producto"
                   >
                     <svg [cIcon]="icons.cilCheck" size="sm"></svg>
                   </button>
                   <button
+                  [disabled]="loan.status == ProductLoanStatus.CompletedOk || loan.status == ProductLoanStatus.CompletedWithIssue"
                     type="button"
                     class="btn btn-outline-danger btn-sm"
                     (click)="rejectProduct(detail, i)"
-                    [disabled]="loan.status === ProductLoanStatus.CompletedOk || loan.status === ProductLoanStatus.CompletedWithIssue"
                     title="Rechazar producto"
                   >
                     <svg [cIcon]="icons.cilX" size="sm"></svg>
@@ -291,10 +301,17 @@
           </tbody>
         </table>
       </div>
-      
+
       <!-- Mensaje cuando no hay detalles -->
-      <div *ngIf="!loan.details || loan.details.length === 0" class="text-center py-5">
-        <svg [cIcon]="icons.cilInbox" size="sm" class="text-muted fs-1 mb-3"></svg>
+      <div
+        *ngIf="!loan.details || loan.details.length === 0"
+        class="text-center py-5"
+      >
+        <svg
+          [cIcon]="icons.cilInbox"
+          size="sm"
+          class="text-muted fs-1 mb-3"
+        ></svg>
         <h5 class="text-muted">No hay productos en este préstamo</h5>
         <p class="text-muted small">No se encontraron detalles de productos</p>
       </div>
@@ -302,4 +319,4 @@
   </c-card>
 </div>
 
- 
+<app-generic-modal></app-generic-modal>

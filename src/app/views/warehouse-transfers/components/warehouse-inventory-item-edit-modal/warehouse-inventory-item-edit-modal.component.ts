@@ -24,10 +24,11 @@ import {
 import { IconDirective } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
 import { UtcDatePipe } from '../../../../shared/pipes/utc-date.pipe';
-import { WarehouseInventoryService } from 'src/app/services/warehouse-inventory.service';
-import { StoreService } from 'src/app/services/store.service';
+import { WarehouseInventoryService } from '../../../../services/warehouse-inventory.service';
+import { StoreService } from '../../../../services/store.service';
 import { StoreDto } from '../../../../models/store.dto';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 
 @Component({
   standalone: true,
@@ -50,6 +51,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     RowComponent,
     UtcDatePipe,
     NgSelectModule,
+    HasRoleDirective
   ],
   templateUrl: './warehouse-inventory-item-edit-modal.component.html',
   styleUrl: './warehouse-inventory-item-edit-modal.component.scss',
@@ -111,6 +113,7 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
         this.warehouseInventoryItem?.quantity || 0,
         [Validators.required, Validators.min(0)],
       ],
+      addQuantity: [0, [Validators.required, Validators.min(0)]],
       storeId: [{
         value: this.warehouseInventoryItem?.store?.id || null,
         disabled: !!this.warehouseInventoryItem?.store?.id
@@ -153,5 +156,9 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
 
   reject() {
     this.onReject.emit();
+  }
+
+  getTotalWithAddition(){
+    return (this.warehouseInventoryForm.value.quantity ?? 0) + (this.warehouseInventoryForm.value.addQuantity ?? 0) || 0;
   }
 }

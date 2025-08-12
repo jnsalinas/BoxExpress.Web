@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute } from '@angular/router';
 import {
@@ -20,7 +20,7 @@ import { GenericModalComponent } from '../../shared/components/generic-modal/gen
 import { ProductLoansService } from '../../../services/product-loans.service';
 import { WarehouseService } from '../../../services/warehouse.service';
 import { ProductVariantService } from '../../../services/product-variant.service';
-import { ProductLoansDto } from '../../../models/product-loan.dto';
+import { ProductLoanDto } from '../../../models/product-loan.dto';
 import { ProductLoanDetailDto } from '../../../models/product-loan-detail.dto';
 import { WarehouseDto } from '../../../models/warehouse.dto';
 import { ProductVariantDto } from '../../../models/product-variant.dto';
@@ -64,7 +64,8 @@ export class ProductLoanCreateComponent implements OnInit {
     private warehouseinventories: WarehouseInventoryService,
     private messageService: MessageService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
     this.initializeForm();
   }
@@ -141,21 +142,25 @@ export class ProductLoanCreateComponent implements OnInit {
   }
 
   private loadProductVariants(): void {
+    this.productVariantOptions = [];
     this.warehouseinventories
       .getWarehouseInventories({ warehouseId: this.productLoanForm.value.warehouseId })
       .subscribe({
         next: (response) => {
+          const options: any[] = [];
           response.data.forEach((element) => {
             element.variants.forEach((variant) => {
-              this.productVariantOptions.push({...variant, displayName: `${variant.productName} - ${variant.name} - ${variant.sku} - ${variant.store?.name || ''}`});
+              options.push({
+                ...variant, 
+                displayName: `${variant.productName} - ${variant.name} - ${variant.sku} - ${variant.store?.name || ''}`
+              });
+              // options.push({...variant, displayName: `${variant.productName} - ${variant.name} - ${variant.sku} - ${variant.store?.name || ''}`});
             });
           });
        
-          console.log(this.productVariantOptions);
-          // this.addProductItem();
+          this.productVariantOptions = [...options];
         },
         error: (error) => {
-          console.error('Error cargando variantes de productos:', error);
           this.messageService.showError('Error al cargar los productos');
         },
       });
@@ -242,7 +247,7 @@ export class ProductLoanCreateComponent implements OnInit {
     this.isLoading = true;
     const formValue = this.productLoanForm.value;
 
-    const productLoanData: ProductLoansDto = {
+    const productLoanData: ProductLoanDto = {
       id: this.isEditMode ? this.loanId : 0,
       name: 'Préstamo de productos',
       warehouseId: formValue.warehouseId,

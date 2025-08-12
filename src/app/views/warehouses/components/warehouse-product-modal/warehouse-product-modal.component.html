@@ -1,4 +1,11 @@
-<c-modal [visible]="isVisible" size="lg" backdrop="static" keyboard="false" scrollable class="modern-modal">
+<c-modal
+  [visible]="isVisible"
+  size="lg"
+  backdrop="static"
+  keyboard="false"
+  scrollable
+  class="modern-modal"
+>
   <c-modal-header class="modal-header-custom">
     <h5 class="modal-title">
       <div class="d-flex align-items-center">
@@ -6,8 +13,12 @@
           <i class="fas fa-box text-primary"></i>
         </div>
         <div>
-          <span class="fw-bold" *ngIf="productToEdit == null">Nuevo producto a {{ warehouseName }}</span>
-          <span class="fw-bold" *ngIf="productToEdit">Editar producto a {{ warehouseName }}</span>
+          <span class="fw-bold" *ngIf="productToEdit == null"
+            >Nuevo producto a {{ warehouseName }}</span
+          >
+          <span class="fw-bold" *ngIf="productToEdit"
+            >Editar producto a {{ warehouseName }}</span
+          >
         </div>
       </div>
     </h5>
@@ -15,7 +26,11 @@
 
   <c-modal-body class="modal-body-custom">
     <form [formGroup]="productForm">
-      <div *ngIf="productForm && products" formArrayName="products" class="d-flex flex-column gap-3">
+      <div
+        *ngIf="productForm && products"
+        formArrayName="products"
+        class="d-flex flex-column gap-3"
+      >
         <div
           *ngFor="let product of products?.controls; let i = index"
           [formGroupName]="i"
@@ -24,7 +39,7 @@
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h6 class="fw-bold mb-0 text-primary">
               <i class="fas fa-box me-2"></i>
-              Producto {{ i + 1 }}
+              Producto {{ getProductName(i) }}
             </h6>
             <button
               *ngIf="productToEdit == null"
@@ -38,7 +53,10 @@
             </button>
           </div>
 
-          <div class="row g-3 mb-3 align-items-center">
+          <div
+            class="row g-3 mb-3 align-items-center"
+            *ngIf="productToEdit == null"
+          >
             <div class="col-12">
               <label class="form-label">
                 <i class="fas fa-tag me-1 text-muted"></i>
@@ -78,7 +96,9 @@
               [formGroupName]="j"
               class="variant-card border rounded p-3 mb-3 shadow-sm bg-white"
             >
-              <div class="d-flex justify-content-between align-items-center mb-3">
+              <div
+                class="d-flex justify-content-between align-items-center mb-3"
+              >
                 <span class="fw-bold text-primary">
                   <i class="fas fa-cube me-2"></i>
                   Variante {{ j + 1 }}
@@ -207,7 +227,11 @@
 
   <c-modal-footer class="modal-footer-custom">
     <div class="d-flex gap-2 w-100">
-      <button class="btn btn-outline-secondary flex-fill" type="button" (click)="close()">
+      <button
+        class="btn btn-outline-secondary flex-fill"
+        type="button"
+        (click)="close()"
+      >
         <i class="fas fa-times me-1"></i>
         Cancelar
       </button>
@@ -217,9 +241,12 @@
         (click)="save()"
         [disabled]="productForm.invalid || isSaving"
       >
-        <span *ngIf="isSaving" class="spinner-border spinner-border-sm me-2"></span>
+        <span
+          *ngIf="isSaving"
+          class="spinner-border spinner-border-sm me-2"
+        ></span>
         <i class="fas fa-save me-1" *ngIf="!isSaving"></i>
-        {{ isSaving ? 'Guardando...' : 'Guardar' }}
+        {{ isSaving ? "Guardando..." : "Guardar" }}
       </button>
     </div>
   </c-modal-footer>

@@ -251,4 +251,10 @@ export class WarehouseProductModalComponent implements OnInit {
 
     variantsArray.push(newVariant);
   }
+
+  getProductName(index: number): string {
+    return this.products.at(index).get('id')?.value > 0
+      ? this.products.at(index).get('name')?.value
+      : `${index + 1}`;
+  }
 }

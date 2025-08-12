@@ -15,7 +15,7 @@ import { GenericPaginationComponent } from '../../../../shared/components/generi
 import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 import { ProductLoansService } from '../../../../services/product-loans.service';
 import { WarehouseService } from '../../../../services/warehouse.service';
-import { ProductLoansDto } from '../../../../models/product-loan.dto';
+import { ProductLoanDto } from '../../../../models/product-loan.dto';
 import { ProductLoansFilter } from '../../../../models/product-loan-filter.model';
 import { WarehouseDto } from '../../../../models/warehouse.dto';
 import { PaginationDto } from '../../../../models/common/pagination.dto';
@@ -54,7 +54,7 @@ export class ProductLoansListComponent implements OnInit {
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
   icons = freeSet;
   isLoading: boolean = false;
-  productLoans: ProductLoansDto[] = [];
+  productLoans: ProductLoanDto[] = [];
   warehouseOptions: WarehouseDto[] = [];
   statusOptions: { id: number; name: string }[] = [];
   filtersForm: FormGroup = new FormGroup({});
@@ -169,7 +169,7 @@ export class ProductLoansListComponent implements OnInit {
     this.loadProductLoans();
   }
 
-  viewDetail(loan: ProductLoansDto): void {
+  viewDetail(loan: ProductLoanDto): void {
     // Navegar al detalle/gestión del préstamo
     this.router.navigate(['/product-loans', loan.id, 'detail']);
   }

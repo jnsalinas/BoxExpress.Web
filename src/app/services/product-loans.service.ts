@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BaseApiService } from './base-api.service';
 import { HttpClient } from '@angular/common/http';
-import { ProductLoansDto } from '../models/product-loan.dto';
+import { ProductLoanDto } from '../models/product-loan.dto';
 import { ProductLoansFilter } from '../models/product-loan-filter.model';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../models/common/api-response';
@@ -11,7 +11,7 @@ import { ProductLoanStatus } from '../models/enums/product-loan-status.enum';
 
 @Injectable({ providedIn: 'root' })
 export class ProductLoansService extends BaseApiService<
-  ProductLoansDto,
+  ProductLoanDto,
   ProductLoansFilter
 > {
   constructor(http: HttpClient) {
@@ -19,9 +19,9 @@ export class ProductLoansService extends BaseApiService<
   }
 
   // Obtener detalle completo de un préstamo
-  getLoanDetail(id: number): Observable<ProductLoansDto> {
+  getLoanDetail(id: number): Observable<ProductLoanDto> {
     return this.http
-      .get<ApiResponse<ProductLoansDto>>(
+      .get<ApiResponse<ProductLoanDto>>(
         `${environment.apiUrl}/productloans/${id}/detail`
       )
       .pipe(this.handleResponse());
@@ -53,11 +53,11 @@ export class ProductLoansService extends BaseApiService<
   }
 
   // Finalizar préstamo (marcar como completado)
-  completeLoan(id: number): Observable<void> {
+  complete(id: number, productLoanDto: ProductLoanDto): Observable<void> {
     return this.http
-      .post<ApiResponse<null>>(
+      .put<ApiResponse<null>>(
         `${environment.apiUrl}/productloans/${id}/complete`,
-        {}
+        productLoanDto
       )
       .pipe(this.handleResponse());
   }

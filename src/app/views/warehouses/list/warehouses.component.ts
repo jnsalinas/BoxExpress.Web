@@ -19,6 +19,7 @@ import {
 import { IconDirective } from '@coreui/icons-angular';
 import { freeSet } from '@coreui/icons';
 import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
+import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 
 @Component({
   standalone: true,
@@ -39,9 +40,11 @@ import { HasRoleDirective } from '../../../shared/directives/has-role.directive'
     WarehouseCreateModalComponent,
     HasRoleDirective,
     RouterLink,
+    GenericModalComponent,
   ],
 })
 export class WarehousesComponent implements OnInit {
+  @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
   @ViewChild('createModal') createModal!: WarehouseCreateModalComponent;
   selectedWarehouseId: number | undefined;
   icons = freeSet;
@@ -57,8 +60,7 @@ export class WarehousesComponent implements OnInit {
 
   loadWarehouses(): void {
     this.isLoading = true;
-    const filter: WarehouseFilter = {
-    };
+    const filter: WarehouseFilter = {};
     this.warehouseService.getAll(filter).subscribe({
       next: (result) => {
         this.warehouses = result.data;
@@ -80,16 +82,22 @@ export class WarehousesComponent implements OnInit {
   }
 
   onModalSave(warehouseData: CreateWarehouseDto) {
-    this.warehouseService.createWarehouse(warehouseData).subscribe({
-      next: (response) => {
-        this.showCreateModal = false;
-        this.loadWarehouses();
-      },
-      error: (error) => {
-        console.error('Error al crear bodega:', error);
-        if (this.createModal) {
-          this.createModal.resetLoading();
-        }
+    this.modal.show({
+      title: '¿Estás seguro de que deseas crear esta bodega?',
+      body: 'Esta acción no se puede deshacer',
+      ok: () => {
+        this.warehouseService.createWarehouse(warehouseData).subscribe({
+          next: (response) => {
+            this.showCreateModal = false;
+            this.loadWarehouses();
+          },
+          error: (error) => {
+            console.error('Error al crear bodega:', error);
+            if (this.createModal) {
+              this.createModal.resetLoading();
+            }
+          },
+        });
       },
     });
   }
