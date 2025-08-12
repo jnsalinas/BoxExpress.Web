@@ -90,7 +90,7 @@
           />
         </div>
 
-        <div class="col-md-6" *hasRole="['bodega', 'admin']">
+        <div class="col-md-6" *hasRole="['bodega']">
           <label for="addQuantity" class="form-label">
             <i class="fas fa-calculator me-1 text-muted"></i>
             Adicionar unidades
@@ -103,6 +103,7 @@
             placeholder="0"
             min="0"
           />
+          <small class="text-muted">Total con adición: {{ getTotalWithAddition() }}</small>
         </div>
         
         <div class="col-md-6">
