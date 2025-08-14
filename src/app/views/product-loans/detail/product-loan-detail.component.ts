@@ -72,9 +72,9 @@ export class ProductLoanDetailComponent implements OnInit {
     { value: ProductLoanStatus.InProcess, label: 'En Proceso' },
     {
       value: ProductLoanStatus.CompletedWithIssue,
-      label: 'Completado con Problemas',
+      label: 'Completado',
     },
-    { value: ProductLoanStatus.CompletedOk, label: 'Completado OK' },
+    { value: ProductLoanStatus.CompletedOk, label: 'Completado' },
   ];
 
   // Hacer ProductLoanStatus disponible en el template
@@ -202,10 +202,8 @@ export class ProductLoanDetailComponent implements OnInit {
         return 'Pendiente';
       case ProductLoanStatus.InProcess:
         return 'En Proceso';
-      case ProductLoanStatus.CompletedWithIssue:
-        return 'Completado con Problemas';
-      case ProductLoanStatus.CompletedOk:
-        return 'Completado OK';
+      case ProductLoanStatus.CompletedOk || ProductLoanStatus.CompletedWithIssue:
+        return 'Completado';
       default:
         return 'Desconocido';
     }
@@ -217,9 +215,7 @@ export class ProductLoanDetailComponent implements OnInit {
         return 'bg-warning';
       case ProductLoanStatus.InProcess:
         return 'bg-info';
-      case ProductLoanStatus.CompletedWithIssue:
-        return 'bg-danger';
-      case ProductLoanStatus.CompletedOk:
+      case ProductLoanStatus.CompletedOk || ProductLoanStatus.CompletedWithIssue:
         return 'bg-success';
       default:
         return 'bg-secondary';
