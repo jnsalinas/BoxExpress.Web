@@ -262,4 +262,5 @@
   *ngIf="showBulkUploadModal"
   (onSave)="onBulkUploadSave($event)"
   (onClose)="onBulkUploadClose($event)"
+  [bulkUploadResults$]="bulkUploadResults$"
 ></app-bulk-upload-modal>

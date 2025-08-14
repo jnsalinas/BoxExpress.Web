@@ -10,9 +10,37 @@
         </div>
       </div>
     </h5>
+    <!-- Botón de descarga del formato -->
+    <div class="ms-auto">
+      <a 
+        href="assets/files/templates/FormatoCargaOrdenes.xlsx" 
+        download="FormatoCargaOrdenes.xlsx"
+        class="btn btn-outline-info btn-sm"
+        title="Descargar formato Excel para carga masiva"
+      >
+        <i class="fas fa-download me-1"></i>
+        Descargar Formato
+      </a>
+    </div>
   </c-modal-header>
 
   <c-modal-body class="modal-body-custom">
+    <!-- Información de ciudades compacta -->
+    <div class="mt-3 p-3 bg-light rounded">
+      <h6 class="fw-bold text-muted mb-2">
+        <i class="fas fa-info-circle me-2"></i>
+        IDs de ciudades disponibles:
+      </h6>
+      <div class="d-flex flex-wrap gap-1">
+        <span 
+          *ngFor="let city of cities" 
+          class="badge bg-secondary me-1 mb-1"
+          title="{{ city.name }}"
+        >
+          {{ city.id }}: {{ city.name }}
+        </span>
+      </div>
+    </div>
     <form [formGroup]="form" (ngSubmit)="save()" novalidate>
       <div class="row g-3">
         <div class="col-md-6" *hasRole="['admin']">
@@ -34,21 +62,92 @@
           ></ng-select>
         </div>
         <div class="col-md-6">
-            <label for="file" class="form-label">
-              <i class="fas fa-file-excel me-1 text-muted"></i>
-              Archivo Excel <span class="text-danger">*</span>
-            </label>
-            <input 
-              type="file" 
-              class="form-control" 
-              (change)="onFileSelected($event)" 
-              accept=".xlsx,.xls" 
-              id="file"
-            />
-            <small class="text-muted">Solo archivos Excel (.xlsx, .xls)</small>
-         </div>
+          <label for="file" class="form-label">
+            <i class="fas fa-file-excel me-1 text-muted"></i>
+            Archivo Excel <span class="text-danger">*</span>
+          </label>
+          <input
+            type="file"
+            class="form-control"
+            (change)="onFileSelected($event)"
+            accept=".xlsx,.xls"
+            id="file"
+          />
+          <small class="text-muted">Solo archivos Excel (.xlsx, .xls)</small>
+        </div>
       </div>
     </form>
+    <div *ngIf="getShowResults()">
+      <h6>Resultados de la carga:</h6>
+      <div *ngIf="bulkUploadResults$ | async as results" class="mt-3">
+        <h6 class="fw-bold text-primary mb-3">
+          <i class="fas fa-list me-2"></i>
+          Resultados de la carga:
+        </h6>
+
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead class="table-light">
+              <tr>
+                <th scope="col" class="text-center">Id</th>
+                <th scope="col">Fila</th>
+                <th scope="col">Código</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Mensaje</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let result of results; let i = index">
+                <td class="text-center">{{ result.id || "N/A" }}</td>
+                <td>{{ result.rowNumber || "N/A" }}</td>
+                <td>{{ result.code || "N/A" }}</td>
+                <td>
+                  <span
+                    class="badge"
+                    [ngClass]="result.isLoaded ? 'bg-success' : 'bg-danger'"
+                  >
+                    {{ getStatusText(result) }}
+                  </span>
+                </td>
+                <td class="message-cell">
+                  <span
+                    [class]="result.isLoaded ? 'text-success' : 'text-danger'"
+                    class="message-text"
+                    [title]="result.message || 'N/A'"
+                  >
+                    {{ result.message || "N/A" }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Resumen de resultados -->
+        <div class="mt-3 p-3 bg-light rounded">
+          <div class="row text-center">
+            <div class="col">
+              <div class="text-success fw-bold">
+                {{ getSuccessfulCount(results) }}
+              </div>
+              <div class="small text-muted">Exitosos</div>
+            </div>
+            <div class="col">
+              <div class="text-danger fw-bold">
+                {{ getErrorCount(results) }}
+              </div>
+              <div class="small text-muted">Con errores</div>
+            </div>
+            <div class="col">
+              <div class="text-primary fw-bold">
+                {{ getTotalCount(results) }}
+              </div>
+              <div class="small text-muted">Total</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </c-modal-body>
 
   <c-modal-footer class="modal-footer-custom">

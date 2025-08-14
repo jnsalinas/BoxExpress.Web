@@ -1,0 +1,32 @@
+// Estilos para la columna de mensaje
+.message-cell {
+  max-width: 200px;
+  min-width: 200px;
+}
+
+.message-text {
+  display: inline-block;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: help;
+}
+
+// Estilos para los badges de ciudades
+.badge.bg-secondary {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.5rem;
+}
+
+// Estilos para el botón de descarga
+.btn-outline-info {
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}

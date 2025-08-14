@@ -51,6 +51,7 @@ import { OrderSummaryDto } from '../../../models/order-summary.dto';
 import { BulkUploadModalComponent } from '../components/bulk-upload-modal/bulk-upload-modal.component';
 import { UploadOrdersDto } from '../../../models/upload-orders.dto';
 import { MessageService } from '../../../services/message.service';
+import { BulkUploadDataDto, BulkUploadResponseDto } from '../../../models/bulk-upload-response.dto';
 
 @Component({
   standalone: true,
@@ -110,6 +111,7 @@ export class OrderListComponent implements OnInit {
   pagination: PaginationDto = {};
   currentPage: number = 1;
   showBulkUploadModal: boolean = false;
+  bulkUploadResults$ = new BehaviorSubject<BulkUploadDataDto[]>([]);
   
   constructor(
     private orderService: OrderService,
@@ -450,11 +452,12 @@ export class OrderListComponent implements OnInit {
         } as UploadOrdersDto).subscribe({
           next: (result) => {
             console.log('Resultado de carga masiva:', result);
+            this.bulkUploadResults$.next(result);
             
             // Mostrar resultados de la carga
-            if (result.data && result.data.length > 0) {
-              const successCount = result.data.filter(item => item.isLoaded).length;
-              const errorCount = result.data.filter(item => !item.isLoaded).length;
+            if (result.length > 0) {
+              const successCount = result.filter(item => item.isLoaded).length;
+              const errorCount = result.filter(item => !item.isLoaded).length;
               
               if (errorCount > 0) {
                 this.messageService.showWarning(`Carga completada con errores. ${successCount} exitosos, ${errorCount} con errores.`);
@@ -466,14 +469,16 @@ export class OrderListComponent implements OnInit {
             }
             
             this.loadOrders();
-            this.showBulkUploadModal = false;
+
+
+            // this.showBulkUploadModal = false;
           },
           error: (error) => {
             console.error('Error al cargar las órdenes', error);
             this.messageService.showError('Error al cargar las órdenes');
           },
         });
-        this.showBulkUploadModal = false;
+        // this.showBulkUploadModal = false;
       },
       close: () => {
         this.showBulkUploadModal = false;

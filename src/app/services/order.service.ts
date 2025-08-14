@@ -13,7 +13,7 @@ import { OrderItemDto } from '../models/order-item.dto';
 import { OrderSummaryDto } from '../models/order-summary.dto';
 import { CreateOrderDto } from '../models/create-order.dto';
 import { UploadOrdersDto } from '../models/upload-orders.dto';
-import { BulkUploadResponse } from '../models/bulk-upload-response.dto';
+import { BulkUploadDataDto, BulkUploadResponseDto } from '../models/bulk-upload-response.dto';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
@@ -104,14 +104,14 @@ export class OrderService extends BaseApiService<OrderDto, OrderFilter> {
       .pipe(this.handleResponse());
   }
 
-  bulkUpload(payload: UploadOrdersDto): Observable<BulkUploadResponse> {
+  bulkUpload(payload: UploadOrdersDto): Observable<BulkUploadDataDto[]> {
     // Crear FormData para enviar el archivo correctamente
     const formData = new FormData();
     formData.append('file', payload.file);
     formData.append('storeId', payload.storeId.toString());
 
     return this.http
-      .post<ApiResponse<BulkUploadResponse>>(`${environment.apiUrl}/orders/bulk-upload`, formData, {
+      .post<ApiResponse<BulkUploadDataDto[]>>(`${environment.apiUrl}/orders/bulk-upload`, formData, {
         // No establecer Content-Type para que el navegador lo establezca automáticamente con el boundary
         headers: {
           // Remover cualquier Content-Type que pueda estar establecido

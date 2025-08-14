@@ -1,5 +1,5 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import {
   ModalBodyComponent,
   ModalComponent,
@@ -16,47 +16,66 @@ import {
   Validators,
 } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { StoreBalanceListComponent } from 'src/app/views/stores/list/store-balance-list/store-balance-list.component';
-import { StoreService } from 'src/app/services/store.service';
-import { StoreDto } from 'src/app/models/store.dto';
-import { HasRoleDirective } from 'src/app/shared/directives/has-role.directive';
-import { AuthService } from 'src/app/services/auth.service';
+import { StoreService } from '../../../../services/store.service';
+import { StoreDto } from '../../../../models/store.dto';
+import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
+import { AuthService } from '../../../../services/auth.service';
+import { BulkUploadDataDto } from '../../../../models/bulk-upload-response.dto';
+import { BehaviorSubject } from 'rxjs';
+import { CityService } from '../../../../services/city.service';
+import { CityDto } from '../../../../models/city.dto';
 
 @Component({
   selector: 'app-bulk-upload-modal',
+  standalone: true,
   imports: [
     CommonModule,
     ModalComponent,
     ModalHeaderComponent,
-    ModalBodyComponent, 
+    ModalBodyComponent,
     ReactiveFormsModule,
     ModalFooterComponent,
     NgSelectModule,
-    HasRoleDirective
+    HasRoleDirective,
+    AsyncPipe,
+    CommonModule,
   ],
   templateUrl: './bulk-upload-modal.component.html',
-  styleUrl: './bulk-upload-modal.component.scss'
+  styleUrl: './bulk-upload-modal.component.scss',
 })
 export class BulkUploadModalComponent {
   @Output() onSave = new EventEmitter<any>();
+  @Input() bulkUploadResults$!: BehaviorSubject<BulkUploadDataDto[]>;
   @Output() onClose = new EventEmitter<any>();
 
   isLoading = false;
   form!: FormGroup;
   stores: StoreDto[] = [];
   selectedFile: File | null = null;
-
-  constructor(private fb: FormBuilder, private storeService: StoreService, private authService: AuthService) {
-    if(this.authService.hasAnyRole(['admin'])) {
+  cities: CityDto[] = [];
+  constructor(
+    private fb: FormBuilder,
+    private storeService: StoreService,
+    private authService: AuthService,
+    private cityService: CityService,
+  ) {
+    if (this.authService.hasAnyRole(['admin'])) {
       this.loadStores();
+      this.loadCities();
     }
   }
 
   loadStores() {
     this.isLoading = true;
     this.storeService.getAll().subscribe((result) => {
-      this.stores = result.data
+      this.stores = result.data;
       this.isLoading = false;
+    });
+  }
+
+  loadCities() {
+    this.cityService.getAll().subscribe((result) => {
+      this.cities = result.data;
     });
   }
 
@@ -73,7 +92,7 @@ export class BulkUploadModalComponent {
       this.isLoading = true;
       const payload = {
         ...this.form.value,
-        file: this.selectedFile
+        file: this.selectedFile,
       };
       this.onSave.emit(payload);
       this.isLoading = false;
@@ -89,7 +108,38 @@ export class BulkUploadModalComponent {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      storeId: [this.authService.hasAnyRole(['admin']) ? null : this.authService.getStoreId(), Validators.required],
+      storeId: [
+        this.authService.hasAnyRole(['admin'])
+          ? null
+          : this.authService.getStoreId(),
+        Validators.required,
+      ],
     });
+  }
+
+  getSuccessfulCount(results: BulkUploadDataDto[]): number {
+    return results.filter((r) => r.isLoaded).length;
+  }
+
+  getErrorCount(results: BulkUploadDataDto[]): number {
+    return results.filter((r) => !r.isLoaded).length;
+  }
+
+  getTotalCount(results: BulkUploadDataDto[]): number {
+    return results.length;
+  }
+
+  getShowResults(): boolean {
+    return this.bulkUploadResults$ && this.bulkUploadResults$.value.length > 0;
+  }
+
+  getStatusText(result: any): string {
+    if (result.isLoaded) {
+      return 'Exitoso';
+    } else if (result?.id > 0) {
+      return 'Cargado con errores';
+    } else {
+      return 'No cargado';
+    }
   }
 }

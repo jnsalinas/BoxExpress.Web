@@ -1,9 +1,11 @@
-export interface BulkUploadResponse {
-  data: BulkUploadData[];
+export interface BulkUploadResponseDto {
+  data: BulkUploadDataDto[];
 }
 
-export interface BulkUploadData {
+export interface BulkUploadDataDto {
   code: string;
   message: string;
   isLoaded: boolean;
+  rowNumber: number;
+  id?: number;
 } 
