@@ -260,11 +260,11 @@ export class WarehouseDetailComponent implements OnInit {
     this.loadWarehouseInventories();
   }
 
-  //#region Inventory Item Edit
-  openInventoryItemModal(variant: ProductVariantDto) {
-    console.log('Selected variant:', variant);
-    this.warehouseInventoryId = variant.warehouseInventoryId ?? null;
-  }
+  // //#region Inventory Item Edit
+  // openInventoryItemModal(variant: ProductVariantDto) {
+  //   console.log('Selected variant:', variant);
+  //   this.warehouseInventoryId = variant.warehouseInventoryId ?? null;
+  // }
 
   handleInventoryItemSave(data: any) {
     console.log('Saved data:', data);
@@ -323,4 +323,8 @@ export class WarehouseDetailComponent implements OnInit {
     this.editProduct(product);
   }
   //#endregion
+
+  onRefreshData() {
+    this.loadWarehouseInventories();
+  }
 }

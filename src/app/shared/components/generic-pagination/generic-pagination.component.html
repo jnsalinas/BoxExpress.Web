@@ -3,7 +3,7 @@
     <ul class="pagination pagination-sm mb-0">
       <li class="page-item" [class.disabled]="currentPage === 1">
         <a class="page-link" (click)="onPageChange(currentPage - 1)" href="javascript:void(0)">
-          <i class="fas fa-chevron-left"></i>
+          <svg cIcon name="cil-chevron-left" size="sm"></svg>
           <span class="d-none d-sm-inline ms-1">Anterior</span>
         </a>
       </li>
@@ -27,7 +27,7 @@
       <li class="page-item" [class.disabled]="currentPage === totalPages">
         <a class="page-link" (click)="onPageChange(currentPage + 1)" href="javascript:void(0)">
           <span class="d-none d-sm-inline me-1">Siguiente</span>
-          <i class="fas fa-chevron-right"></i>
+          <svg cIcon name="cil-chevron-right" size="sm"></svg>
         </a>
       </li>
     </ul>

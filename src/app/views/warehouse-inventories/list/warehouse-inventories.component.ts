@@ -50,7 +50,7 @@ import { InventoryTableComponent } from '../../../shared/components/inventory-ta
     NgSelectModule,
     HasRoleDirective,
     GenericPaginationComponent,
-    InventoryTableComponent, 
+    InventoryTableComponent,
   ],
   templateUrl: './warehouse-inventories.component.html',
   styleUrls: ['./warehouse-inventories.component.scss'],
@@ -97,19 +97,17 @@ export class WarehouseInventoriesComponent implements OnInit {
       pageSize: this.pageSize,
     };
 
-    this.warehouseInventoryService
-      .getWarehouseInventories(filter)
-      .subscribe({
-        next: (response) => {
-          this.filteredProducts = response.data;
-          this.pagination = response.pagination;
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error loading warehouse inventories:', error);
-          this.isLoading = false;
-        },
-      });
+    this.warehouseInventoryService.getWarehouseInventories(filter).subscribe({
+      next: (response) => {
+        this.filteredProducts = response.data;
+        this.pagination = response.pagination;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error loading warehouse inventories:', error);
+        this.isLoading = false;
+      },
+    });
   }
 
   onFilterChange(): void {
@@ -119,7 +117,9 @@ export class WarehouseInventoriesComponent implements OnInit {
   resetFilters(): void {
     this.filterForm.patchValue({
       query: '',
-      storeId: this.authService.hasRole('tienda') ? this.authService.getStoreId() : null,
+      storeId: this.authService.hasRole('tienda')
+        ? this.authService.getStoreId()
+        : null,
     });
     this.currentPage = 1;
     this.loadData();
@@ -166,6 +166,10 @@ export class WarehouseInventoriesComponent implements OnInit {
 
   onPageChange(page: number): void {
     this.currentPage = page;
+    this.loadData();
+  }
+
+  onRefreshData() {
     this.loadData();
   }
 }

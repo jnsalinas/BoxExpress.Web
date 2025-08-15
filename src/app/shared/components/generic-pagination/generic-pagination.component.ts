@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IconDirective } from '@coreui/icons-angular';
 
 import { PaginationDto } from '../../../models/common/pagination.dto';
 
@@ -7,6 +8,7 @@ import { PaginationDto } from '../../../models/common/pagination.dto';
   selector: 'app-generic-pagination',
   imports: [
     CommonModule,
+    IconDirective,
   ],
   standalone: true,
   templateUrl: './generic-pagination.component.html',

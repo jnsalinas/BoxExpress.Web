@@ -17,15 +17,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UtcDatePipe } from 'src/app/shared/pipes/utc-date.pipe';
-import { GenericPaginationComponent } from 'src/app/shared/components/generic-pagination/generic-pagination.component';
-import { LoadingOverlayComponent } from 'src/app/shared/components/loading-overlay/loading-overlay.component';
+import { UtcDatePipe } from '../../../shared/pipes/utc-date.pipe';
+import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
+import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { IconDirective } from '@coreui/icons-angular';
-import { PaginationDto } from 'src/app/models/common/pagination.dto';
-import { WarehouseInventoryTransferFilter } from 'src/app/models/warehouse-inventory-transfer-filter.model';
-import { WarehouseService } from 'src/app/services/warehouse.service';
-import { WarehouseDto } from 'src/app/models/warehouse.dto';
+import { PaginationDto } from '../../../models/common/pagination.dto';
+import { WarehouseInventoryTransferFilter } from '../../../models/warehouse-inventory-transfer-filter.model';
+import { WarehouseService } from '../../../services/warehouse.service';
+import { WarehouseDto } from '../../../models/warehouse.dto';
 import {
   WarehouseTransferStatus,
   WarehouseTransferStatusText,

@@ -56,60 +56,6 @@
               <h5 class="mb-3">Datos de la Tienda</h5>
               <c-row>
                 <c-col md="6" class="mb-3">
-                  <label class="form-label">Correo electrónico</label>
-                  <input
-                    cInput
-                    formControlName="email"
-                    type="email"
-                    class="form-control"
-                    placeholder="Email"
-                    [class.input-error]="isInvalid('email')"
-                  />
-                </c-col>
-                <c-col md="6" class="mb-3">
-                  <label class="form-label">Contraseña</label>
-                  <div class="d-flex align-items-center gap-2">
-                    <div class="form-group position-relative">
-                      <input
-                        formControlName="password"
-                        [type]="showPassword ? 'text' : 'password'"
-                        class="form-control"
-                        placeholder="Contraseña"
-                        [class.input-error]="isInvalid('password')"
-                      />
-
-                      <!-- Botón ojito -->
-                      <button
-                        type="button"
-                        class="btn btn-sm position-absolute end-0 me-2 bg-transparent border-0"
-                        (click)="togglePasswordVisibility()"
-                        style="top: 50%; transform: translateY(-50%)"
-                      >
-                        <img
-                          *ngIf="!showPassword"
-                          src="assets/eye-solid.svg"
-                          alt="Mostrar contraseña"
-                          width="20"
-                          height="20"
-                        />
-                        <img
-                          *ngIf="showPassword"
-                          src="assets/eye-slash-solid.svg"
-                          alt="Ocultar contraseña"
-                          width="20"
-                          height="20"
-                        />
-                      </button>
-                    </div>
-                  </div>
-                  <!-- Aquí va el texto de ayuda -->
-                  <small class="form-text text-muted ms-1">
-                    La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.
-                  </small>
-                </c-col>
-              </c-row>
-              <c-row>
-                <c-col md="6" class="mb-3">
                   <label class="form-label">Nombre legal</label>
                   <input
                     cInput
@@ -158,6 +104,61 @@
                       {{ city.name }}
                     </option>
                   </select>
+                </c-col>
+              </c-row>
+              <c-row>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Correo electrónico</label>
+                  <input
+                    cInput
+                    formControlName="email"
+                    type="email"
+                    class="form-control"
+                    placeholder="Email"
+                    [class.input-error]="isInvalid('email')"
+                  />
+                </c-col>
+                <c-col md="6" class="mb-3">
+                  <label class="form-label">Contraseña</label>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="form-group position-relative">
+                      <input
+                        formControlName="password"
+                        [type]="showPassword ? 'text' : 'password'"
+                        class="form-control"
+                        placeholder="Contraseña"
+                        [class.input-error]="isInvalid('password')"
+                      />
+
+                      <!-- Botón ojito -->
+                      <button
+                        type="button"
+                        class="btn btn-sm position-absolute end-0 me-2 bg-transparent border-0"
+                        (click)="togglePasswordVisibility()"
+                        style="top: 50%; transform: translateY(-50%)"
+                      >
+                        <img
+                          *ngIf="!showPassword"
+                          src="assets/eye-solid.svg"
+                          alt="Mostrar contraseña"
+                          width="20"
+                          height="20"
+                        />
+                        <img
+                          *ngIf="showPassword"
+                          src="assets/eye-slash-solid.svg"
+                          alt="Ocultar contraseña"
+                          width="20"
+                          height="20"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <!-- Aquí va el texto de ayuda -->
+                  <small class="form-text text-muted ms-1">
+                    La contraseña debe tener al menos 8 caracteres, una
+                    mayúscula y un número.
+                  </small>
                 </c-col>
               </c-row>
             </c-card-body>

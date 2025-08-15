@@ -115,7 +115,7 @@
               <svg [cIcon]="icons.cilHistory" size="sm" class="me-1"></svg>
               Ver historial
             </a>
-            <a
+            <!-- <a
               *hasRole="['admin']"
               class="btn btn-sm btn-outline-primary"
               (click)="openInventoryItemModal(variant)"
@@ -123,19 +123,20 @@
             >
               <svg [cIcon]="icons.cilPencil" size="sm" class="me-1"></svg>
               Editar
-            </a>
+            </a> -->
           </div>
         </ng-template>
 
         <app-inventory-table
           [products]="filteredProducts || []"
-          [showActions]="authService.hasRole('admin')"
+          [showActions]="authService.hasAnyRole(['admin', 'bodega'])"
           [showStore]="true"
           [pagination]="pagination"
           [currentPage]="currentPage"
           (pageChange)="onPageChange($event)"
           [actionsTemplate]="actions"
           (addVariant)="onAddVariant($event)"
+          (onRefreshData)="onRefreshData()"
         >
         </app-inventory-table>
       </div>
@@ -165,9 +166,9 @@
 
 <app-generic-modal></app-generic-modal>
 
-<app-warehouse-inventory-item-edit-modal
+<!-- <app-warehouse-inventory-item-edit-modal
   *ngIf="warehouseInventoryId"
   [warehouseInventoryId]="warehouseInventoryId"
   (onSave)="handleInventoryItemSave($event)"
   (onClose)="handleInventoryItemClose()"
-></app-warehouse-inventory-item-edit-modal>
+></app-warehouse-inventory-item-edit-modal> -->

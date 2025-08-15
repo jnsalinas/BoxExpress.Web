@@ -202,7 +202,8 @@ export class ProductLoanDetailComponent implements OnInit {
         return 'Pendiente';
       case ProductLoanStatus.InProcess:
         return 'En Proceso';
-      case ProductLoanStatus.CompletedOk || ProductLoanStatus.CompletedWithIssue:
+      case ProductLoanStatus.CompletedOk ||
+        ProductLoanStatus.CompletedWithIssue:
         return 'Completado';
       default:
         return 'Desconocido';
@@ -215,7 +216,8 @@ export class ProductLoanDetailComponent implements OnInit {
         return 'bg-warning';
       case ProductLoanStatus.InProcess:
         return 'bg-info';
-      case ProductLoanStatus.CompletedOk || ProductLoanStatus.CompletedWithIssue:
+      case ProductLoanStatus.CompletedOk ||
+        ProductLoanStatus.CompletedWithIssue:
         return 'bg-success';
       default:
         return 'bg-secondary';

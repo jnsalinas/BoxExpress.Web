@@ -11,7 +11,7 @@
         <div class="col-md-8">
           <div class="d-flex align-items-center">
             <div class="header-icon me-3">
-              <i class="fas fa-exchange-alt text-primary fs-3"></i>
+              <svg cIcon name="cil-loop-circular" size="3xl" class="text-primary"></svg>
             </div>
             <div>
               <h3 class="mb-1 text-primary">Gestión de Transferencias</h3>
@@ -27,7 +27,7 @@
               (click)="downloadExcel()"
               title="Exportar a Excel"
             >
-              <i class="fas fa-download me-1"></i>
+              <svg cIcon name="cil-cloud-download" size="sm" class="me-1"></svg>
               Exportar
             </button>
           </div>
@@ -40,7 +40,7 @@
   <c-card class="mb-3 filters-card">
     <c-card-header class="bg-light py-2">
       <h6 class="mb-0">
-        <i class="fas fa-filter me-2 text-info"></i>
+        <svg cIcon name="cil-filter" size="sm" class="me-2 text-info"></svg>
         Filtros de Búsqueda
       </h6>
     </c-card-header>
@@ -53,7 +53,7 @@
         <div class="row g-3 align-items-end">
           <div class="col-md-2">
             <label for="fromWarehouseId" class="form-label small fw-semibold mb-1">
-              <i class="fas fa-warehouse me-1 text-muted"></i>
+              <svg cIcon name="cil-home" size="sm" class="me-1 text-muted"></svg>
               Origen
             </label>
             <ng-select
@@ -69,7 +69,7 @@
           </div>
           <div class="col-md-2">
             <label for="toWarehouseId" class="form-label small fw-semibold mb-1">
-              <i class="fas fa-warehouse me-1 text-muted"></i>
+              <svg cIcon name="cil-home" size="sm" class="me-1 text-muted"></svg>
               Destino
             </label>
             <ng-select
@@ -85,7 +85,7 @@
           </div>
           <div class="col-md-2">
             <label for="statusId" class="form-label small fw-semibold mb-1">
-              <i class="fas fa-tasks me-1 text-muted"></i>
+              <svg cIcon name="cil-task" size="sm" class="me-1 text-muted"></svg>
               Estado
             </label>
             <ng-select
@@ -101,7 +101,7 @@
           </div>
           <div class="col-md-2">
             <label for="startDate" class="form-label small fw-semibold mb-1">
-              <i class="fas fa-calendar me-1 text-muted"></i>
+              <svg cIcon name="cil-calendar" size="sm" class="me-1 text-muted"></svg>
               Fecha inicio
             </label>
             <input
@@ -113,7 +113,7 @@
           </div>
           <div class="col-md-2">
             <label for="endDate" class="form-label small fw-semibold mb-1">
-              <i class="fas fa-calendar me-1 text-muted"></i>
+              <svg cIcon name="cil-calendar" size="sm" class="me-1 text-muted"></svg>
               Fecha fin
             </label>
             <input
@@ -126,7 +126,7 @@
           <div class="col-md-2">
             <div class="d-flex gap-1 w-100">
               <button type="submit" class="btn btn-primary btn-sm flex-fill">
-                <i class="fas fa-search me-1"></i>
+                <svg cIcon name="cil-magnifying-glass" size="sm" class="me-1"></svg>
                 Filtrar
               </button>
               <button
@@ -134,7 +134,7 @@
                 class="btn btn-outline-secondary btn-sm flex-fill"
                 (click)="resetFilters()"
               >
-                <i class="fas fa-times me-1"></i>
+                <svg cIcon name="cil-x" size="sm" class="me-1"></svg>
                 Limpiar
               </button>
             </div>
@@ -153,39 +153,39 @@
             <thead class="table-light">
               <tr>
                 <th class="id-column">
-                  <i class="fas fa-hashtag me-1"></i>
+                  <svg cIcon name="cil-tag" size="sm" class="me-1"></svg>
                   ID
                 </th>
                 <th class="warehouses-column">
-                  <i class="fas fa-exchange-alt me-1"></i>
+                  <svg cIcon name="cil-loop-circular" size="sm" class="me-1"></svg>
                   Bodegas
                 </th>
                 <th class="date-column">
-                  <i class="fas fa-calendar me-1"></i>
+                  <svg cIcon name="cil-calendar" size="sm" class="me-1"></svg>
                   Fecha
                 </th>
                 <th class="status-column">
-                  <i class="fas fa-tasks me-1"></i>
+                  <svg cIcon name="cil-task" size="sm" class="me-1"></svg>
                   Estado
                 </th>
                 <th class="creator-column">
-                  <i class="fas fa-user me-1"></i>
+                  <svg cIcon name="cil-user" size="sm" class="me-1"></svg>
                   Creador
                 </th>
                 <th class="accepted-by-column">
-                  <i class="fas fa-user-check me-1"></i>
+                  <svg cIcon name="cil-user-follow" size="sm" class="me-1"></svg>
                   Aceptado por
                 </th>
                 <th class="rejection-column">
-                  <i class="fas fa-times-circle me-1"></i>
+                  <svg cIcon name="cil-x-circle" size="sm" class="me-1"></svg>
                   Rechazado
                 </th>
                 <th class="contains-column">
-                  <i class="fas fa-box me-1"></i>
+                  <svg cIcon name="cil-basket" size="sm" class="me-1"></svg>
                   Contiene
                 </th>
                 <th class="actions-column">
-                  <i class="fas fa-cogs me-1"></i>
+                  <svg cIcon name="cil-settings" size="sm" class="me-1"></svg>
                   Acciones
                 </th>
               </tr>
@@ -198,7 +198,7 @@
                 <td class="warehouses-cell">
                   <div class="d-flex align-items-center">
                     <span class="fw-bold">{{ tx.fromWarehouse }}</span>
-                    <i class="fas fa-arrow-right mx-2 text-muted"></i>
+                    <svg cIcon name="cil-arrow-right" size="sm" class="mx-2 text-muted"></svg>
                     <span class="fw-bold">{{ tx.toWarehouse }}</span>
                   </div>
                 </td>
@@ -248,7 +248,7 @@
                     (click)="showDetail(tx)"
                     title="Ver detalle"
                   >
-                    <i class="fas fa-eye me-1"></i>
+                    <svg cIcon name="cil-eye" size="sm" class="me-1"></svg>
                     Ver detalle
                   </button>
                 </td>

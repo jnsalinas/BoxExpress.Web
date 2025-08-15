@@ -22,7 +22,6 @@
         <div class="col-md-4 text-end">
           <div class="action-buttons d-flex gap-2">
             <button
-              *hasRole="['tienda']"
               type="button"
               class="btn btn-primary btn-sm"
               (click)="downloadSku()"
@@ -107,11 +106,12 @@
       <div class="inventory-table-container p-4">
         <app-inventory-table
           [products]="filteredProducts || []"
-          [showActions]="false"
+          [showActions]="authService.hasAnyRole(['admin', 'bodega'])"
           [showStore]="authService.hasRole('admin')"
           [pagination]="pagination"
           [currentPage]="currentPage"
           (pageChange)="onPageChange($event)"
+          (onRefreshData)="onRefreshData()"
         >
         </app-inventory-table>
       </div>
