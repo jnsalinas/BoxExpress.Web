@@ -9,4 +9,5 @@ export interface OrderFilter extends PaginationFilter {
   startDate?: Date | null;
   endDate?: Date | null;
   orderId?: string | null;
+  warehouseId?: number | null;
 }

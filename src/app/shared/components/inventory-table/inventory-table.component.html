@@ -1,9 +1,6 @@
 <div class="inventory-table-container">
   <div class="products-grid">
-    <div
-      *ngFor="let product of products; let productIndex = index"
-      class="product-card"
-    >
+    <div *ngFor="let product of products; let productIndex = index" class="product-card">
       <!-- Header del producto -->
       <div class="product-card-header">
         <div class="product-info">
@@ -19,21 +16,15 @@
             </div>
             <div class="variants-count">
               <i class="fas fa-tags me-1"></i>
-              <span
-                >{{ product.variants?.length || 0 }} variante{{
-                  product.variants?.length !== 1 ? "s" : ""
-                }}</span
-              >
+              <span>{{ product.variants?.length || 0 }} variante{{
+                product.variants?.length !== 1 ? "s" : ""
+                }}</span>
             </div>
           </div>
         </div>
         <div class="product-actions">
-          <button
-            type="button"
-            *ngIf="actionsTemplate && isAdmin"
-            class="btn btn-sm btn-outline-primary"
-            (click)="onAddVariant(product)"
-          >
+          <button type="button" *ngIf="actionsTemplate && isAdmin" class="btn btn-sm btn-outline-primary"
+            (click)="onAddVariant(product)">
             <i class="fas fa-plus me-1"></i>
             Agregar variante
           </button>
@@ -82,7 +73,7 @@
                   <i class="fas fa-barcode me-1"></i>
                   SKU
                 </th>
-                <th *ngIf="showActions" class="actions-column">
+                <th *hasRole="['admin', 'supervisor', 'bodega']" class="actions-column">
                   <i class="fas fa-cogs me-1"></i>
                   Acciones
                 </th>
@@ -102,22 +93,22 @@
                 <td class="available-cell">
                   <span class="badge bg-success">{{
                     variant.availableQuantity || 0
-                  }}</span>
+                    }}</span>
                 </td>
                 <td class="processing-cell">
                   <span class="badge bg-warning">{{
                     variant.reservedQuantity || 0
-                  }}</span>
+                    }}</span>
                 </td>
                 <td class="delivered-cell">
                   <span class="badge bg-info">{{
                     variant.deliveredQuantity || 0
-                  }}</span>
+                    }}</span>
                 </td>
                 <td class="return-cell">
                   <span class="badge bg-danger">{{
                     variant.pendingReturnQuantity || 0
-                  }}</span>
+                    }}</span>
                 </td>
                 <td class="total-cell">
                   <strong>{{ variant.quantity || 0 }}</strong>
@@ -128,37 +119,22 @@
                   </span>
                   <span *ngIf="!variant.sku" class="text-muted small">-</span>
                 </td>
-                <td *ngIf="showActions" class="actions-cell">
+                <td *hasRole="['admin', 'supervisor', 'bodega']" class="actions-cell">
                   <div class="d-flex gap-1">
-                    <!-- <a
-                      class="btn btn-sm btn-outline-primary"
-                      [routerLink]="[
+                    <a *hasRole="['admin', 'supervisor']" class="btn btn-sm btn-outline-primary"
+                      (click)="openInventoryItemModal(variant)" title="Editar">
+                      <svg [cIcon]="icons.cilPencil" size="sm" class="me-1"></svg>
+                      Editar
+                    </a>
+
+                    <a class="btn btn-sm btn-outline-primary" [routerLink]="[
                         '/warehouses',
-                        warehouseDetail?.id,
+                        variant?.warehouseId,
                         'inventory',
                         variant.warehouseInventoryId
-                      ]"
-                      title="Ver historial"
-                    >
-                      <svg
-                        [cIcon]="icons.cilHistory"
-                        size="sm"
-                        class="me-1"
-                      ></svg>
+                      ]" title="Ver historial">
+                      <svg [cIcon]="icons.cilHistory" size="sm" class="me-1"></svg>
                       Ver historial
-                    </a> -->
-                    <a
-                      *hasRole="['admin', 'bodega']"
-                      class="btn btn-sm btn-outline-primary"
-                      (click)="openInventoryItemModal(variant)"
-                      title="Ver historial"
-                    >
-                      <svg
-                        [cIcon]="icons.cilPencil"
-                        size="sm"
-                        class="me-1"
-                      ></svg>
-                      Editar
                     </a>
                   </div>
                 </td>
@@ -170,19 +146,12 @@
     </div>
   </div>
 
-  <app-generic-pagination
-    *ngIf="pagination"
-    [pagination]="pagination"
-    [currentPage]="currentPage"
-    (pageChange)="onPageChange($event)"
-  ></app-generic-pagination>
+  <app-generic-pagination *ngIf="pagination" [pagination]="pagination" [currentPage]="currentPage"
+    (pageChange)="onPageChange($event)"></app-generic-pagination>
 </div>
 
 <app-generic-modal></app-generic-modal>
 
-<app-warehouse-inventory-item-edit-modal
-  *ngIf="warehouseInventoryId"
-  [warehouseInventoryId]="warehouseInventoryId"
-  (onSave)="handleInventoryItemSave($event)"
-  (onClose)="handleInventoryItemClose()"
-></app-warehouse-inventory-item-edit-modal>
+<app-warehouse-inventory-item-edit-modal *ngIf="warehouseInventoryId" [warehouseInventoryId]="warehouseInventoryId"
+  (onSave)="handleInventoryItemSave($event)" (onClose)="handleInventoryItemClose()"
+  (refreshData)="refreshData.emit()"></app-warehouse-inventory-item-edit-modal>

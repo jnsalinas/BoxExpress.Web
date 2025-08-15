@@ -90,6 +90,8 @@ export class WarehouseInventoriesComponent implements OnInit {
   }
 
   loadData(): void {
+    debugger;
+    console.log('inventories loadData');
     this.isLoading = true;
     const filter: WarehouseInventoryFilter = {
       ...this.filterForm.value,

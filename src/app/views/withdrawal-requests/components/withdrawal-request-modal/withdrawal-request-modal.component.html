@@ -32,7 +32,7 @@
 
     <form [formGroup]="form" class="withdrawal-form">
       <!-- Store Selection (Admin only) -->
-      <div class="row mb-3" *hasRole="['admin']">
+      <div class="row mb-3" *hasRole="['admin', 'supervisor']">
         <div class="col-12">
           <label class="form-label">
             <i class="fas fa-home me-1 text-muted"></i>
@@ -171,7 +171,7 @@
       </div>
 
       <!-- Management (Admin only) -->
-      <div class="row mb-3" *hasRole="['admin']">
+      <div class="row mb-3" *hasRole="['admin', 'supervisor']">
         <div class="col-12">
           <label class="form-label">
             <i class="fas fa-comments me-1 text-muted"></i>

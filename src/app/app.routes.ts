@@ -21,63 +21,63 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./views/warehouses/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin'] },
+        data: { roles: ['admin', 'supervisor'] },
       },
       {
         path: 'transfers',
         loadChildren: () =>
           import('./views/warehouse-transfers/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin', 'bodega'] },
+        data: { roles: ['admin', 'supervisor', 'bodega'] },
       },
       {
         path: 'orders',
         loadChildren: () =>
           import('./views/orders/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin', 'bodega', 'tienda'] },
+        data: { roles: ['admin', 'supervisor', 'bodega', 'tienda'] },
       },
       {
         path: 'inventory-returns',
         loadChildren: () =>
           import('./views/inventory-returns/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin', 'bodega'] },
+        data: { roles: ['admin', 'supervisor', 'bodega'] },
       },
       {
         path: 'wallet',
         loadChildren: () =>
           import('./views/wallet-transactions/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin', 'tienda'] },
+        data: { roles: ['admin', 'supervisor', 'tienda'] },
       },
       {
         path: 'withdrawal-requests',
         loadChildren: () =>
           import('./views/withdrawal-requests/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin', 'tienda'] },
+        data: { roles: ['admin', 'supervisor', 'tienda'] },
       },
       {
         path: 'stores',
         loadChildren: () =>
           import('./views/stores/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin', 'tienda'] },
+        data: { roles: ['admin', 'supervisor', 'tienda'] },
       },
       {
         path: 'warehouse-inventories',
         loadChildren: () =>
           import('./views/warehouse-inventories/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['administrador', 'admin', 'bodega', 'tienda'] },
+        data: { roles: ['admin', 'supervisor', 'bodega', 'tienda'] },
       },
       {
         path: 'product-loans',
         loadChildren: () =>
           import('./views/product-loans/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin'] },
+        data: { roles: ['admin', 'supervisor'] },
       },
       {
         path: 'dashboard',

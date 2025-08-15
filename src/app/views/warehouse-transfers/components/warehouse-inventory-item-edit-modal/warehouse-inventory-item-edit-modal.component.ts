@@ -29,6 +29,7 @@ import { StoreService } from '../../../../services/store.service';
 import { StoreDto } from '../../../../models/store.dto';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
+import { HasRoleOrHigherDirective } from '../../../../shared/directives/has-role-or-higher.directive';
 
 @Component({
   standalone: true,
@@ -51,7 +52,8 @@ import { HasRoleDirective } from '../../../../shared/directives/has-role.directi
     RowComponent,
     UtcDatePipe,
     NgSelectModule,
-    HasRoleDirective
+    HasRoleDirective,
+    HasRoleOrHigherDirective
   ],
   templateUrl: './warehouse-inventory-item-edit-modal.component.html',
   styleUrl: './warehouse-inventory-item-edit-modal.component.scss',
@@ -62,6 +64,7 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
   @Output() onClose = new EventEmitter<any>();
   @Output() onSave = new EventEmitter<any>();
   @Output() onReject = new EventEmitter<any>();
+  @Output() refreshData = new EventEmitter<void>();
   warehouseInventoryForm: FormGroup = this.fb.group({});
   isSaving = false;
   icons = freeSet;
@@ -143,6 +146,7 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
       };
       
       this.onSave.emit(submitData);
+      // El refreshData se emite desde el componente padre cuando se confirma el guardado
     } else {
       console.log('Formulario inválido:', this.warehouseInventoryForm.value);
     }

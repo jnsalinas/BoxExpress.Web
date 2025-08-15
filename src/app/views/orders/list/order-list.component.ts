@@ -97,14 +97,9 @@ export class OrderListComponent implements OnInit {
   selectedOrderName: string = '';
   orders: OrderDto[] = [];
   orderSummary: OrderSummaryDto[] = [];
-  warehouseOptions: WarehouseDto[] = [
-    {
-      id: 0,
-      name: 'Tradicional',
-    },
-  ];
   activeTab: number;
   stores: StoreDto[] = [];
+  warehouses: WarehouseDto[] = [];
   private ordersSubject = new BehaviorSubject<OrderDto[]>([]); // Aquí almacenamos las órdenes
   orders$ = this.ordersSubject.asObservable(); // Observable para los componentes que escuchan cambios
   orderSelected: OrderDto | null = null;
@@ -124,12 +119,13 @@ export class OrderListComponent implements OnInit {
     private warehouseInventoryService: WarehouseInventoryService,
     private messageService: MessageService
   ) {
-    this.activeTab = this.authService.hasAnyRole(['admin', 'tienda']) ? 0 : 1;
+    this.activeTab = this.authService.isAdminOrSupervisor() || this.authService.isTienda() ? 0 : 1;
     this.filtersForm = this.fb.group({
       startDate: [null],
       endDate: [null],
       orderId: [null],
       storeId: [null],
+      warehouseId: [null],
       scheduledDate: [null],
     });
   }
@@ -148,7 +144,8 @@ export class OrderListComponent implements OnInit {
         this.statusOptions = responses.statuses.data;
         this.categoryOptions = responses.categories.data;
         this.stores = responses.stores.data;
-        this.warehouseOptions.push(...responses.warehouses.data);
+        this.warehouses.push(...responses.warehouses.data);
+        this.warehouses = responses.warehouses.data;
         this.isLoading = false;
       },
       error: (error) => {
@@ -169,6 +166,7 @@ export class OrderListComponent implements OnInit {
       orderId: filters.orderId ?? null,
       storeId: filters.storeId || null,
       page: this.currentPage,
+      warehouseId: filters.warehouseId || null,
       // pageSize: 2
     };
     return payload;
@@ -434,6 +432,44 @@ export class OrderListComponent implements OnInit {
       return 'status-cancelled';
     } else {
       return 'status-default';
+    }
+  }
+
+  // Método para obtener la clase CSS del resumen usando las mismas clases que la tabla
+  getStatusClassForSummary(statusName: string): string {
+    const statusLower = statusName.toLowerCase();
+    
+    if (statusLower.includes('sin programar') || statusLower.includes('unscheduled')) {
+      return 'bg-sin-programar';
+    } else if (statusLower.includes('programado') || statusLower.includes('scheduled')) {
+      return 'bg-programado';
+    } else if (statusLower.includes('en ruta') || statusLower.includes('in transit')) {
+      return 'bg-en-ruta';
+    } else if (statusLower.includes('entregado') || statusLower.includes('delivered')) {
+      return 'bg-entregado';
+    } else if (statusLower.includes('cancelado') || statusLower.includes('cancelled')) {
+      return 'bg-cancelado';
+    } else {
+      return 'bg-secondary'; // Color por defecto
+    }
+  }
+
+  // Método para obtener el icono representativo de cada estado
+  getStatusIcon(statusName: string): string {
+    const statusLower = statusName.toLowerCase();
+    
+    if (statusLower.includes('sin programar') || statusLower.includes('unscheduled')) {
+      return 'cil-clock';
+    } else if (statusLower.includes('programado') || statusLower.includes('scheduled')) {
+      return 'cil-calendar-check';
+    } else if (statusLower.includes('en ruta') || statusLower.includes('in transit')) {
+      return 'cil-truck';
+    } else if (statusLower.includes('entregado') || statusLower.includes('delivered')) {
+      return 'cil-check-circle';
+    } else if (statusLower.includes('cancelado') || statusLower.includes('cancelled')) {
+      return 'cil-x-circle';
+    } else {
+      return 'cil-circle'; // Icono por defecto
     }
   }
 

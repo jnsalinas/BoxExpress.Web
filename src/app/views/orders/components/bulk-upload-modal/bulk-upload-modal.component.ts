@@ -59,7 +59,7 @@ export class BulkUploadModalComponent {
     private authService: AuthService,
     private cityService: CityService,
   ) {
-    if (this.authService.hasAnyRole(['admin'])) {
+    if (this.authService.isAdminOrSupervisor()) {
       this.loadStores();
       this.loadCities();
     }
@@ -109,7 +109,7 @@ export class BulkUploadModalComponent {
   ngOnInit(): void {
     this.form = this.fb.group({
       storeId: [
-        this.authService.hasAnyRole(['admin'])
+        this.authService.isAdminOrSupervisor()
           ? null
           : this.authService.getStoreId(),
         Validators.required,

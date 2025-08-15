@@ -70,7 +70,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     this.navItems = this.filterNavByRole(navItems, role ?? '');
 
     // Actualizar el nombre del menú de inventario si el usuario es bodega
-    if (role === 'bodega') {
+    if (this.auth.isBodega()) {
       this.navItems = this.navItems.map((item) => {
         if (item.name === 'Inventario') {
           return {

@@ -66,7 +66,7 @@
             <svg [cIcon]="icons.cilStorage" class="me-2 text-muted"></svg>
             Bodega
           </th>
-          <th *ngIf="hasColumn('category') && authService.hasRole('admin')" class="category-column">
+          <th *ngIf="hasColumn('category') && authService.hasAnyRole(['admin', 'supervisor'])" class="category-column">
             <svg [cIcon]="icons.cilTag" class="me-2 text-muted"></svg>
             Categoría
           </th>
@@ -104,7 +104,7 @@
           <td *ngIf="hasColumn('status')" class="status-cell">
             <div class="status-controls">
               <ng-select
-                *hasRole="['admin']"
+                *hasRole="['admin', 'supervisor']"
                 [items]="statusOptions"
                 bindLabel="name"
                 bindValue="id"
@@ -246,7 +246,7 @@
           </td>
           
           <td
-            *ngIf="hasColumn('category') && authService.hasRole('admin')"
+            *ngIf="hasColumn('category') && authService.hasAnyRole(['admin', 'supervisor'])"
             class="category-cell"
           >
             <select
@@ -291,7 +291,7 @@
               <button
                 *ngIf="
                   (authService.hasRole('tienda') && order.categoryId == null) ||
-                  authService.hasRole('admin')
+                  authService.isAdminOrSupervisor()
                 "
                 class="btn btn-sm btn-outline-primary action-btn"
                 [routerLink]="['/orders/edit', order.id]"
@@ -301,7 +301,7 @@
               </button>
               
               <button
-                *ngIf="authService.hasRole('admin')"
+                *ngIf="authService.isAdminOrSupervisor()"
                 class="btn btn-sm btn-outline-info action-btn"
                 [routerLink]="[order.id]"
                 title="Ver detalles"
@@ -313,7 +313,7 @@
                 *ngIf="
                   hasColumn('action-edit') &&
                   order.statusId !== getStatusDelivered() &&
-                  authService.hasRole('admin')
+                  authService.isAdminOrSupervisor()
                 "
                 class="btn btn-sm btn-outline-warning action-btn"
                 (click)="onScheduleOrder(order)"

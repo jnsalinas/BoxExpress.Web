@@ -1,7 +1,4 @@
-<app-loading-overlay
-  *ngIf="isLoading"
-  [loadingText]="'Cargando órdenes...'"
-></app-loading-overlay>
+<app-loading-overlay *ngIf="isLoading" [loadingText]="'Cargando órdenes...'"></app-loading-overlay>
 
 <div *ngIf="!isLoading" class="orders-list-container">
   <!-- Header con estadísticas -->
@@ -21,35 +18,20 @@
         </div>
         <div class="col-md-4 text-end">
           <div class="action-buttons d-flex gap-2">
-            <button
-              type="button"
-              class="btn btn-primary btn-sm"
-              (click)="downloadExcel()"
-              title="Exportar a Excel"
-            >
+            <button type="button" class="btn btn-primary btn-sm" (click)="downloadExcel()" title="Exportar a Excel">
               <svg cIcon name="cil-cloud-download" size="sm" class="me-1"></svg>
               Exportar
             </button>
-            <button
-              *hasRole="['admin', 'tienda']"
-              type="button"
-              class="btn btn-primary btn-sm"
-              [routerLink]="['/orders/create']"
-              title="Crear nueva orden"
-            >
+            <button *hasRole="['admin', 'supervisor', 'tienda']" type="button" class="btn btn-primary btn-sm"
+              [routerLink]="['/orders/create']" title="Crear nueva orden">
               <svg cIcon name="cil-plus" size="sm" class="me-1"></svg>
               Nueva Orden
             </button>
-            <button
-            *hasRole="['admin', 'tienda']"
-            type="button"
-            class="btn btn-primary btn-sm"
-            (click)="showModalBulkUpload()"
-            title="Carga masiva"
-          >
-            <svg cIcon name="cil-cloud-upload" size="sm" class="me-1"></svg>
-            Carga masiva
-          </button>
+            <button *hasRole="['admin', 'supervisor', 'tienda']" type="button" class="btn btn-primary btn-sm"
+              (click)="showModalBulkUpload()" title="Carga masiva">
+              <svg cIcon name="cil-cloud-upload" size="sm" class="me-1"></svg>
+              Carga masiva
+            </button>
           </div>
         </div>
       </div>
@@ -65,96 +47,79 @@
       </h6>
     </c-card-header>
     <c-card-body class="py-3">
-      <form
-        [formGroup]="filtersForm"
-        (ngSubmit)="onFilter()"
-        class="filters-form"
-      >
-        <div class="row g-2 align-items-end">
-          <div class="col-md-1">
+      <form [formGroup]="filtersForm" (ngSubmit)="onFilter()" class="filters-form">
+        <!-- Primera fila: ID, Tienda, Bodega -->
+        <div class="row g-3 align-items-end mb-3">
+          <!-- ID - Más grande -->
+          <div class="col-md-2 col-sm-4 col-6">
             <label cLabel for="orderId" class="form-label small fw-semibold mb-1">
               <svg cIcon name="cil-tag" size="sm" class="me-1 text-muted"></svg>
               ID
             </label>
-            <input
-              cFormControl
-              type="number"
-              id="orderId"
-              formControlName="orderId"
-              class="form-control form-control-sm"
-              placeholder="12345"
-            />
+            <input cFormControl type="number" id="orderId" formControlName="orderId"
+              class="form-control form-control-sm" placeholder="12345" />
           </div>
-          
-          <div class="col-md-2" *hasRole="['admin']">
+
+          <!-- Tienda - Más grande para ng-select -->
+          <div class="col-md-5 col-sm-6 col-12" *hasRole="['admin', 'supervisor']">
             <label for="store" class="form-label small fw-semibold mb-1">
               <svg cIcon name="cil-home" size="sm" class="me-1 text-muted"></svg>
               Tienda
             </label>
-            <ng-select
-              cFormControl
-              [items]="stores"
-              bindLabel="name"
-              bindValue="id"
-              formControlName="storeId"
-              [searchable]="true"
-              placeholder="Seleccione tienda"
-              class="custom-select"
-            >
+            <ng-select cFormControl [items]="stores" bindLabel="name" bindValue="id" formControlName="storeId"
+              [searchable]="true" placeholder="Seleccione tienda" class="custom-select">
             </ng-select>
           </div>
-          
-          <div class="col-md-2">
+
+          <!-- Bodega - Más grande para ng-select -->
+          <div class="col-md-5 col-sm-6 col-12" *hasRole="['admin', 'supervisor']">
+            <label for="warehouse" class="form-label small fw-semibold mb-1">
+              <svg cIcon name="cil-building" size="sm" class="me-1 text-muted"></svg>
+              Bodega
+            </label>
+            <ng-select cFormControl [items]="warehouses" bindLabel="name" bindValue="id" formControlName="warehouseId"
+              [searchable]="true" placeholder="Seleccione bodega" class="custom-select">
+            </ng-select>
+          </div>
+        </div>
+
+        <!-- Segunda fila: Fechas y Botones -->
+        <div class="row g-3 align-items-end">
+          <!-- Fechas -->
+          <div class="col-md-2 col-sm-4 col-6">
             <label for="startDate" class="form-label small fw-semibold mb-1">
               <svg cIcon name="cil-calendar" size="sm" class="me-1 text-muted"></svg>
               Desde
             </label>
-            <input
-              type="date"
-              id="startDate"
-              formControlName="startDate"
-              class="form-control form-control-sm"
-            />
+            <input type="date" id="startDate" formControlName="startDate" class="form-control form-control-sm" />
           </div>
 
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-4 col-6">
             <label for="endDate" class="form-label small fw-semibold mb-1">
               <svg cIcon name="cil-calendar" size="sm" class="me-1 text-muted"></svg>
               Hasta
             </label>
-            <input
-              type="date"
-              id="endDate"
-              formControlName="endDate"
-              class="form-control form-control-sm"
-            />
+            <input type="date" id="endDate" formControlName="endDate" class="form-control form-control-sm" />
           </div>
-          
-          <div class="col-md-2">
+
+          <div class="col-md-2 col-sm-4 col-6">
             <label for="scheduledDate" class="form-label small fw-semibold mb-1">
               <svg cIcon name="cil-clock" size="sm" class="me-1 text-muted"></svg>
               Programación
             </label>
-            <input
-              type="date"
-              id="scheduledDate"
-              formControlName="scheduledDate"
-              class="form-control form-control-sm"
-            />
+            <input type="date" id="scheduledDate" formControlName="scheduledDate"
+              class="form-control form-control-sm" />
           </div>
 
-          <div class="col-md-3">
-            <div class="d-flex gap-1 w-100">
-              <button type="submit" class="btn btn-primary btn-sm flex-fill">
-                <svg cIcon name="cil-magnifying-glass" size="sm" class="me-1"></svg>
+          <!-- Botones de acción -->
+          <div class="col-md-6 col-sm-12 col-12">
+            <div class="d-flex gap-3 justify-content-start align-items-center">
+              <button type="submit" class="btn btn-primary btn-sm">
+                <svg cIcon name="cil-magnifying-glass" size="sm" class="me-2"></svg>
                 Buscar
               </button>
-              <button
-                type="button"
-                class="btn btn-outline-secondary btn-sm flex-fill"
-                (click)="resetFilters()"
-              >
-                <svg cIcon name="cil-x" size="sm" class="me-1"></svg>
+              <button type="button" class="btn btn-outline-secondary btn-sm" (click)="resetFilters()">
+                <svg cIcon name="cil-x" size="sm" class="me-2"></svg>
                 Limpiar
               </button>
             </div>
@@ -167,12 +132,9 @@
   <!-- Contenido principal -->
   <c-card class="main-content-card">
     <c-card-body class="p-0">
-      <c-tabs
-        [activeItemKey]="activeTab"
-        (activeItemKeyChange)="handleActiveItemChange($event)"
-      >
+      <c-tabs [activeItemKey]="activeTab" (activeItemKeyChange)="handleActiveItemChange($event)">
         <c-tabs-list variant="underline-border" class="px-4 pt-2">
-          <button *hasRole="['admin', 'tienda']" cTab [itemKey]="0" class="tab-button">
+          <button *hasRole="['admin', 'supervisor', 'tienda']" cTab [itemKey]="0" class="tab-button">
             <svg cIcon name="cil-list" size="sm" class="me-1"></svg>
             Todas las Órdenes
           </button>
@@ -180,18 +142,14 @@
             <svg cIcon name="cil-bolt" size="sm" class="me-1"></svg>
             Express
           </button>
-          <button *hasRole="['admin', 'tienda']" cTab [itemKey]="2" class="tab-button">
+          <button *hasRole="['admin', 'supervisor', 'tienda']" cTab [itemKey]="2" class="tab-button">
             <svg cIcon name="cil-truck" size="sm" class="me-1"></svg>
             Tradicional
           </button>
         </c-tabs-list>
 
         <c-tabs-content>
-          <c-tab-panel
-            *ngFor="let i of [0, 1, 2]; let idx = index"
-            [itemKey]="idx"
-            class="p-4"
-          >
+          <c-tab-panel *ngFor="let i of [0, 1, 2]; let idx = index" [itemKey]="idx" class="p-4">
             <!-- Resumen de estados -->
             <div class="status-summary mb-3">
               <h6 class="mb-2 text-muted small">
@@ -200,13 +158,10 @@
               </h6>
               <div class="row g-2">
                 <div class="col-md-2 col-sm-4 col-6" *ngFor="let status of orderSummary">
-                  <c-card
-                    class="status-card text-center h-100"
-                    [ngClass]="getStatusClass(status.statusName)"
-                  >
+                  <c-card class="status-card text-center h-100" [ngClass]="getStatusClassForSummary(status.statusName)">
                     <c-card-body class="p-2">
                       <div class="status-icon mb-1">
-                        <svg cIcon name="cil-circle" size="sm"></svg>
+                        <svg [cIcon]="getStatusIcon(status.statusName)" size="sm" [title]="status.statusName"></svg>
                       </div>
                       <h6 class="mb-1 status-name small">{{ status.statusName }}</h6>
                       <p class="m-0 status-count fw-bold">{{ status.count }}</p>
@@ -218,25 +173,15 @@
 
             <!-- Tabla de órdenes -->
             <div class="orders-table-container">
-              <app-order-table
-                *ngIf="orders"
-                [orders]="orders"
-                [columns]="columns"
-                [statusOptions]="statusOptions"
-                [categoryOptions]="categoryOptions"
-                [warehouseOptions]="warehouseOptions"
-                (statusChanged)="handleStatusChange($event)"
-                (warehouseChanged)="handleWarehouseChange($event)"
-                (scheduleOrder)="handleScheduleOrder($event)"
-              />
-              
+              <app-order-table *ngIf="orders" [orders]="orders" [columns]="columns" [statusOptions]="statusOptions"
+                [categoryOptions]="categoryOptions" [warehouseOptions]="warehouses"
+                (statusChanged)="handleStatusChange($event)" (warehouseChanged)="handleWarehouseChange($event)"
+                (scheduleOrder)="handleScheduleOrder($event)" />
+
               <!-- Paginación -->
               <div class="pagination-container mt-4">
-                <app-generic-pagination
-                  [pagination]="pagination"
-                  [currentPage]="currentPage"
-                  (pageChange)="onPageChange($event)"
-                >
+                <app-generic-pagination [pagination]="pagination" [currentPage]="currentPage"
+                  (pageChange)="onPageChange($event)">
                 </app-generic-pagination>
               </div>
             </div>
@@ -249,18 +194,9 @@
 
 <!-- Modales -->
 <app-generic-modal></app-generic-modal>
-<app-order-edit-modal
-  *ngIf="orderSelected"
-  [order]="orderSelected"
-  [isVisible]="orderSelected != null"
-  [statusOptions]="statusOptions"
-  (onSave)="onModalScheduleSave($event)"
-  (onClose)="onModalScheduleClose($event)"
-></app-order-edit-modal>
+<app-order-edit-modal *ngIf="orderSelected" [order]="orderSelected" [isVisible]="orderSelected != null"
+  [statusOptions]="statusOptions" (onSave)="onModalScheduleSave($event)"
+  (onClose)="onModalScheduleClose($event)"></app-order-edit-modal>
 
-<app-bulk-upload-modal
-  *ngIf="showBulkUploadModal"
-  (onSave)="onBulkUploadSave($event)"
-  (onClose)="onBulkUploadClose($event)"
-  [bulkUploadResults$]="bulkUploadResults$"
-></app-bulk-upload-modal>
+<app-bulk-upload-modal *ngIf="showBulkUploadModal" (onSave)="onBulkUploadSave($event)"
+  (onClose)="onBulkUploadClose($event)" [bulkUploadResults$]="bulkUploadResults$"></app-bulk-upload-modal>

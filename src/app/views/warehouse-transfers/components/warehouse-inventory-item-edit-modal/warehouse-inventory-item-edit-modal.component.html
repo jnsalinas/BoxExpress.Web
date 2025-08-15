@@ -75,7 +75,7 @@
           </div>
         </div>
         
-        <div class="col-md-6" *hasRole="['admin']">
+        <div class="col-md-6" *hasRoleOrHigher="'admin'">
           <label for="quantity" class="form-label">
             <svg cIcon name="cil-calculator" size="sm" class="me-1 text-muted"></svg>
             Cantidad
@@ -90,7 +90,7 @@
           />
         </div>
 
-        <div class="col-md-6" *hasRole="['bodega']">
+        <div class="col-md-6" *hasRole="'supervisor'">
           <label for="addQuantity" class="form-label">
             <svg cIcon name="cil-calculator" size="sm" class="me-1 text-muted"></svg>
             Adicionar unidades

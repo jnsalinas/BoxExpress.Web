@@ -37,7 +37,7 @@
               Volver
             </button>
             <button
-              *ngIf="loan.status == ProductLoanStatus.Pending && authService.hasRole('admin')"
+              *ngIf="loan.status == ProductLoanStatus.Pending && authService.hasAnyRole(['admin', 'supervisor'])"
               type="button"
               class="btn btn-success btn-sm"
               (click)="completeLoan()"

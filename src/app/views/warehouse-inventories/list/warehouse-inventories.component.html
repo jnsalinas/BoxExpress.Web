@@ -61,7 +61,7 @@
               placeholder="Nombre del producto o SKU"
             />
           </div>
-          <div class="col-md-4" *ngIf="authService.hasRole('admin')">
+          <div class="col-md-4" *ngIf="authService.hasAnyRole(['admin', 'supervisor'])">
             <label cLabel for="storeId" class="form-label small fw-semibold mb-1">
               <i class="fas fa-store me-1 text-muted"></i>
               Filtrar por tienda
@@ -106,12 +106,12 @@
       <div class="inventory-table-container p-4">
         <app-inventory-table
           [products]="filteredProducts || []"
-          [showActions]="authService.hasAnyRole(['admin', 'bodega'])"
-          [showStore]="authService.hasRole('admin')"
+          [showActions]="authService.hasAnyRole(['admin', 'supervisor', 'bodega'])"
+          [showStore]="authService.hasAnyRole(['admin', 'supervisor'])"
           [pagination]="pagination"
           [currentPage]="currentPage"
           (pageChange)="onPageChange($event)"
-          (onRefreshData)="onRefreshData()"
+          (refreshData)="onRefreshData()"
         >
         </app-inventory-table>
       </div>

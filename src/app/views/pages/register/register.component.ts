@@ -130,7 +130,7 @@ export class RegisterComponent {
           'Bienvenido a la plataforma'
         );
         this.authService.saveAuth(response);
-        if (this.authService.hasAnyRole(['tienda', 'admin'])) {
+        if (this.authService.hasAnyRole(['tienda', 'admin', 'supervisor'])) {
           this.router.navigate(['/orders']);
         } else {
           this.router.navigate(['/warehouses']);

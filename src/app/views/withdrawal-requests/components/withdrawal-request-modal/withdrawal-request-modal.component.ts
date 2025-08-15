@@ -92,7 +92,7 @@ export class WithdrawalRequestModalComponent implements OnInit {
   }
 
   ngOnInit() {
-    const isStore = this.authService.hasRole('tienda');
+    const isStore = this.authService.isTienda();
 
     this.form = this.fb.group({
       id: [],

@@ -85,7 +85,7 @@ export class WithdrawalRequestListComponent implements OnInit {
   ngOnInit(): void {
     this.loadWithdrawalRequest();
     this.loadStores();
-    this.storeId = this.authService.hasRole('admin')
+    this.storeId = this.authService.hasAnyRole(['admin', 'supervisor'])
       ? 1
       : this.authService.getStoreId();
   }

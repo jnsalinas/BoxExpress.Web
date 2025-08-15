@@ -4,7 +4,6 @@
 ></app-loading-overlay>
 
 <div *ngIf="!isLoading" class="warehouse-detail-container">
-  <!-- Header con estadísticas estilo gestión de órdenes -->
   <c-card class="mb-3 stats-header-card">
     <c-card-body class="p-3">
       <div class="row align-items-center">
@@ -116,7 +115,7 @@
               Ver historial
             </a>
             <!-- <a
-              *hasRole="['admin']"
+              *hasRole="['admin', 'supervisor']"
               class="btn btn-sm btn-outline-primary"
               (click)="openInventoryItemModal(variant)"
               title="Ver historial"
@@ -129,14 +128,14 @@
 
         <app-inventory-table
           [products]="filteredProducts || []"
-          [showActions]="authService.hasAnyRole(['admin', 'bodega'])"
+          [showActions]="authService.hasAnyRole(['admin', 'supervisor', 'bodega'])"
           [showStore]="true"
           [pagination]="pagination"
           [currentPage]="currentPage"
           (pageChange)="onPageChange($event)"
           [actionsTemplate]="actions"
           (addVariant)="onAddVariant($event)"
-          (onRefreshData)="onRefreshData()"
+          (refreshData)="onRefreshData()"
         >
         </app-inventory-table>
       </div>
@@ -165,10 +164,3 @@
 </app-warehouse-transfer-modal>
 
 <app-generic-modal></app-generic-modal>
-
-<!-- <app-warehouse-inventory-item-edit-modal
-  *ngIf="warehouseInventoryId"
-  [warehouseInventoryId]="warehouseInventoryId"
-  (onSave)="handleInventoryItemSave($event)"
-  (onClose)="handleInventoryItemClose()"
-></app-warehouse-inventory-item-edit-modal> -->

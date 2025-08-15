@@ -48,11 +48,12 @@ export class InventoryTableComponent {
 
   @Output() pageChange = new EventEmitter<number>();
   @Output() addVariant = new EventEmitter<ProductDto>();
+  @Output() refreshData = new EventEmitter<void>();
+
   icons = freeSet;
   @ViewChild(WarehouseInventoryItemEditModalComponent)
   inventoryItemModal!: WarehouseInventoryItemEditModalComponent;
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
-  @Output() refreshData = new EventEmitter<void>();
 
   constructor(
     private authService: AuthService,
@@ -61,7 +62,7 @@ export class InventoryTableComponent {
   ) {}
 
   get isAdmin() {
-    return this.authService.hasRole('admin');
+    return this.authService.isAdminOrSupervisor();
   }
 
   onPageChange(page: number) {

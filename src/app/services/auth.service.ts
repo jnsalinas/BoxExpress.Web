@@ -63,4 +63,46 @@ export class AuthService extends BaseApiService<any, any> {
   hasAnyRole(roles: string[]): boolean {
     return roles.includes(this.role || '');
   }
+
+  // Definir jerarquía de roles
+  private readonly roleHierarchy: { [key: string]: string[] } = {
+    'admin': ['admin', 'supervisor', 'bodega', 'tienda'],
+    'supervisor': ['supervisor', 'bodega', 'tienda'],
+    'bodega': ['bodega'],
+    'tienda': ['tienda']
+  };
+
+  // Nuevo método: verificar si tiene rol o superior
+  hasRoleOrHigher(requiredRole: string): boolean {
+    const userRole = this.role;
+    if (!userRole) return false;
+    
+    const userPermissions = this.roleHierarchy[userRole];
+    return userPermissions ? userPermissions.includes(requiredRole) : false;
+  }
+
+  // Método para verificar si es admin o supervisor
+  isAdminOrSupervisor(): boolean {
+    return this.hasAnyRole(['admin', 'supervisor']);
+  }
+
+  // Método para verificar si es admin
+  isAdmin(): boolean {
+    return this.role === 'admin';
+  }
+
+  // Método para verificar si es supervisor
+  isSupervisor(): boolean {
+    return this.role === 'supervisor';
+  }
+
+  // Método para verificar si es bodega
+  isBodega(): boolean {
+    return this.role === 'bodega';
+  }
+
+  // Método para verificar si es tienda
+  isTienda(): boolean {
+    return this.role === 'tienda';
+  }
 }
