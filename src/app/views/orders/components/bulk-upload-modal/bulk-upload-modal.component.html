@@ -12,8 +12,8 @@
     </h5>
     <!-- Botón de descarga del formato -->
     <div class="ms-auto">
-      <a 
-        href="assets/files/templates/FormatoCargaOrdenes.xlsx" 
+      <a
+        href="assets/files/templates/FormatoCargaOrdenes.xlsx"
         download="FormatoCargaOrdenes.xlsx"
         class="btn btn-outline-info btn-sm"
         title="Descargar formato Excel para carga masiva"
@@ -32,8 +32,8 @@
         IDs de ciudades disponibles:
       </h6>
       <div class="d-flex flex-wrap gap-1">
-        <span 
-          *ngFor="let city of cities" 
+        <span
+          *ngFor="let city of cities"
           class="badge bg-secondary me-1 mb-1"
           title="{{ city.name }}"
         >
@@ -165,14 +165,17 @@
         type="button"
         class="btn btn-primary flex-fill"
         (click)="save()"
-        [disabled]="form.invalid || !selectedFile || isLoading"
+        [disabled]="form.invalid || !selectedFile || isLoading || isSaving"
       >
         <span
           *ngIf="isLoading"
           class="spinner-border spinner-border-sm me-2"
         ></span>
-        <i class="fas fa-upload me-1" *ngIf="!isLoading"></i>
-        {{ isLoading ? "Cargando..." : "Cargar órdenes" }}
+        <span
+          *ngIf="isSaving"
+          class="spinner-border spinner-border-sm me-2"
+        ></span>
+        {{ isLoading || isSaving ? "Cargando..." : "Cargar órdenes" }}
       </button>
     </div>
   </c-modal-footer>

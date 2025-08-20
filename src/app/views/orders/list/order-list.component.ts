@@ -32,7 +32,7 @@ import {
 import { WarehouseFilter } from '../../../models/warehouse-filter.model';
 import { WarehouseDto } from '../../../models/warehouse.dto';
 import { OrderTableComponent } from '../components/order-table/order-table.component';
-import { BehaviorSubject, forkJoin } from 'rxjs';
+import { BehaviorSubject, delay, forkJoin } from 'rxjs';
 import { OrderCategoryDto } from '../../../models/order-category.dto';
 import { OrderStatusDto } from '../../../models/order-status.dto';
 import { FormsModule } from '@angular/forms';
@@ -51,7 +51,10 @@ import { OrderSummaryDto } from '../../../models/order-summary.dto';
 import { BulkUploadModalComponent } from '../components/bulk-upload-modal/bulk-upload-modal.component';
 import { UploadOrdersDto } from '../../../models/upload-orders.dto';
 import { MessageService } from '../../../services/message.service';
-import { BulkUploadDataDto, BulkUploadResponseDto } from '../../../models/bulk-upload-response.dto';
+import {
+  BulkUploadDataDto,
+  BulkUploadResponseDto,
+} from '../../../models/bulk-upload-response.dto';
 
 @Component({
   standalone: true,
@@ -83,7 +86,7 @@ import { BulkUploadDataDto, BulkUploadResponseDto } from '../../../models/bulk-u
     GenericPaginationComponent,
     HasRoleDirective,
     RouterLink,
-    BulkUploadModalComponent
+    BulkUploadModalComponent,
   ],
 })
 export class OrderListComponent implements OnInit {
@@ -107,7 +110,9 @@ export class OrderListComponent implements OnInit {
   currentPage: number = 1;
   showBulkUploadModal: boolean = false;
   bulkUploadResults$ = new BehaviorSubject<BulkUploadDataDto[]>([]);
-  
+  @ViewChild(BulkUploadModalComponent)
+  bulkUploadModal!: BulkUploadModalComponent;
+
   constructor(
     private orderService: OrderService,
     private warehouseService: WarehouseService,
@@ -119,7 +124,11 @@ export class OrderListComponent implements OnInit {
     private warehouseInventoryService: WarehouseInventoryService,
     private messageService: MessageService
   ) {
-    this.activeTab = this.authService.isAdminOrSupervisor() || this.authService.isTienda() ? 0 : 1;
+    this.activeTab =
+      this.authService.hasRoleOrHigher('supervisor') ||
+      this.authService.isTienda()
+        ? 0
+        : 1;
     this.filtersForm = this.fb.group({
       startDate: [null],
       endDate: [null],
@@ -167,6 +176,9 @@ export class OrderListComponent implements OnInit {
       storeId: filters.storeId || null,
       page: this.currentPage,
       warehouseId: filters.warehouseId || null,
+      scheduledDate: filters.scheduledDate
+        ? toUtcStartOfDayLocal(filters.scheduledDate)
+        : null,
       // pageSize: 2
     };
     return payload;
@@ -222,6 +234,8 @@ export class OrderListComponent implements OnInit {
           { key: 'storeName', label: 'Tienda' },
           { key: 'clientPhone', label: 'Teléfono' },
           { key: 'clientAddress', label: 'Dirección' },
+          { key: 'clientAddressComplement', label: 'Complemento' },
+          { key: 'postalCode', label: 'Código Postal' },
           { key: 'notes', label: 'Notas' },
           { key: 'deliveryFee', label: 'Flete' },
           { key: 'totalAmount', label: 'Valor total' },
@@ -238,6 +252,8 @@ export class OrderListComponent implements OnInit {
           { key: 'storeName', label: 'Tienda' }, //todo: solo para admin
           { key: 'clientPhone', label: 'Teléfono' },
           { key: 'clientAddress', label: 'Dirección' },
+          { key: 'clientAddressComplement', label: 'Complemento' },
+          { key: 'postalCode', label: 'Código Postal' },
           { key: 'notes', label: 'Notas' },
           { key: 'deliveryFee', label: 'Flete' },
           { key: 'totalAmount', label: 'Valor' },
@@ -289,7 +305,10 @@ export class OrderListComponent implements OnInit {
             },
             error: (err) => {
               console.error('Error changing status', err);
-              order.statusId = event.previousStatusId;
+              if (!this.authService.hasRole('bodega')) {
+                order.statusId = event.previousStatusId;
+              }
+
               this.modal.show({
                 title: 'Error',
                 body: `${err.message}`,
@@ -300,6 +319,7 @@ export class OrderListComponent implements OnInit {
           });
       },
       close: () => {
+        console.log('close');
         order.statusId = event.previousStatusId;
       },
     });
@@ -419,16 +439,28 @@ export class OrderListComponent implements OnInit {
 
   getStatusClass(status: string): string {
     const statusLower = status.toLowerCase();
-    
+
     if (statusLower.includes('pendiente') || statusLower.includes('pending')) {
       return 'status-pending';
-    } else if (statusLower.includes('procesando') || statusLower.includes('processing')) {
+    } else if (
+      statusLower.includes('procesando') ||
+      statusLower.includes('processing')
+    ) {
       return 'status-processing';
-    } else if (statusLower.includes('enviado') || statusLower.includes('shipped')) {
+    } else if (
+      statusLower.includes('enviado') ||
+      statusLower.includes('shipped')
+    ) {
       return 'status-shipped';
-    } else if (statusLower.includes('entregado') || statusLower.includes('delivered')) {
+    } else if (
+      statusLower.includes('entregado') ||
+      statusLower.includes('delivered')
+    ) {
       return 'status-delivered';
-    } else if (statusLower.includes('cancelado') || statusLower.includes('cancelled')) {
+    } else if (
+      statusLower.includes('cancelado') ||
+      statusLower.includes('cancelled')
+    ) {
       return 'status-cancelled';
     } else {
       return 'status-default';
@@ -438,16 +470,31 @@ export class OrderListComponent implements OnInit {
   // Método para obtener la clase CSS del resumen usando las mismas clases que la tabla
   getStatusClassForSummary(statusName: string): string {
     const statusLower = statusName.toLowerCase();
-    
-    if (statusLower.includes('sin programar') || statusLower.includes('unscheduled')) {
+
+    if (
+      statusLower.includes('sin programar') ||
+      statusLower.includes('unscheduled')
+    ) {
       return 'bg-sin-programar';
-    } else if (statusLower.includes('programado') || statusLower.includes('scheduled')) {
+    } else if (
+      statusLower.includes('programado') ||
+      statusLower.includes('scheduled')
+    ) {
       return 'bg-programado';
-    } else if (statusLower.includes('en ruta') || statusLower.includes('in transit')) {
+    } else if (
+      statusLower.includes('en ruta') ||
+      statusLower.includes('in transit')
+    ) {
       return 'bg-en-ruta';
-    } else if (statusLower.includes('entregado') || statusLower.includes('delivered')) {
+    } else if (
+      statusLower.includes('entregado') ||
+      statusLower.includes('delivered')
+    ) {
       return 'bg-entregado';
-    } else if (statusLower.includes('cancelado') || statusLower.includes('cancelled')) {
+    } else if (
+      statusLower.includes('cancelado') ||
+      statusLower.includes('cancelled')
+    ) {
       return 'bg-cancelado';
     } else {
       return 'bg-secondary'; // Color por defecto
@@ -457,16 +504,31 @@ export class OrderListComponent implements OnInit {
   // Método para obtener el icono representativo de cada estado
   getStatusIcon(statusName: string): string {
     const statusLower = statusName.toLowerCase();
-    
-    if (statusLower.includes('sin programar') || statusLower.includes('unscheduled')) {
+
+    if (
+      statusLower.includes('sin programar') ||
+      statusLower.includes('unscheduled')
+    ) {
       return 'cil-clock';
-    } else if (statusLower.includes('programado') || statusLower.includes('scheduled')) {
+    } else if (
+      statusLower.includes('programado') ||
+      statusLower.includes('scheduled')
+    ) {
       return 'cil-calendar-check';
-    } else if (statusLower.includes('en ruta') || statusLower.includes('in transit')) {
+    } else if (
+      statusLower.includes('en ruta') ||
+      statusLower.includes('in transit')
+    ) {
       return 'cil-truck';
-    } else if (statusLower.includes('entregado') || statusLower.includes('delivered')) {
+    } else if (
+      statusLower.includes('entregado') ||
+      statusLower.includes('delivered')
+    ) {
       return 'cil-check-circle';
-    } else if (statusLower.includes('cancelado') || statusLower.includes('cancelled')) {
+    } else if (
+      statusLower.includes('cancelado') ||
+      statusLower.includes('cancelled')
+    ) {
       return 'cil-x-circle';
     } else {
       return 'cil-circle'; // Icono por defecto
@@ -478,43 +540,52 @@ export class OrderListComponent implements OnInit {
   }
 
   onBulkUploadSave(event: any) {
-    this.modal.show({ 
+    this.modal.show({
       title: 'Carga masiva',
       body: '¿Estás seguro de que desea cargar las órdenes?',
       ok: () => {
-        this.orderService.bulkUpload({
-          file: event.file,
-          storeId: event.storeId,
-        } as UploadOrdersDto).subscribe({
-          next: (result) => {
-            console.log('Resultado de carga masiva:', result);
-            this.bulkUploadResults$.next(result);
-            
-            // Mostrar resultados de la carga
-            if (result.length > 0) {
-              const successCount = result.filter(item => item.isLoaded).length;
-              const errorCount = result.filter(item => !item.isLoaded).length;
-              
-              if (errorCount > 0) {
-                this.messageService.showWarning(`Carga completada con errores. ${successCount} exitosos, ${errorCount} con errores.`);
+        this.orderService
+          .bulkUpload({
+            file: event.file,
+            storeId: event.storeId,
+          } as UploadOrdersDto)
+          .subscribe({
+            next: (result) => {
+              console.log('Resultado de carga masiva:', result);
+              this.bulkUploadResults$.next(result);
+
+              // Mostrar resultados de la carga
+              if (result.length > 0) {
+                const successCount = result.filter(
+                  (item) => item.isLoaded
+                ).length;
+                const errorCount = result.filter(
+                  (item) => !item.isLoaded
+                ).length;
+
+                if (errorCount > 0) {
+                  this.messageService.showWarning(
+                    `Carga completada con errores. ${successCount} exitosos, ${errorCount} con errores.`
+                  );
+                } else {
+                  this.messageService.showSuccess(
+                    `Carga exitosa. ${successCount} órdenes cargadas correctamente.`
+                  );
+                }
               } else {
-                this.messageService.showSuccess(`Carga exitosa. ${successCount} órdenes cargadas correctamente.`);
+                this.messageService.showSuccess(
+                  'Órdenes cargadas correctamente'
+                );
               }
-            } else {
-              this.messageService.showSuccess('Órdenes cargadas correctamente');
-            }
-            
-            this.loadOrders();
 
-
-            // this.showBulkUploadModal = false;
-          },
-          error: (error) => {
-            console.error('Error al cargar las órdenes', error);
-            this.messageService.showError('Error al cargar las órdenes');
-          },
-        });
-        // this.showBulkUploadModal = false;
+              this.loadOrders();
+              this.bulkUploadModal.resetSavingState();
+            },
+            error: (error) => {
+              console.error('Error al cargar las órdenes', error);
+              this.messageService.showError('Error al cargar las órdenes');
+            },
+          });
       },
       close: () => {
         this.showBulkUploadModal = false;
@@ -522,7 +593,7 @@ export class OrderListComponent implements OnInit {
     });
   }
 
-  onBulkUploadClose(event: any) { 
+  onBulkUploadClose(event: any) {
     this.showBulkUploadModal = false;
   }
 }

@@ -98,7 +98,7 @@ export class LoginComponent {
       next: (response) => {
         if (response) {
           this.authService.saveAuth(response);
-          if (this.authService.isAdminOrSupervisor() || this.authService.isTienda()) {
+          if (this.authService.hasRoleOrHigher('supervisor') || this.authService.isTienda()) {
             this.router.navigate(['/orders']);
           } else {
             this.router.navigate(['/warehouse-inventories']);

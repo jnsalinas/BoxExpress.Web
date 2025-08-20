@@ -165,12 +165,34 @@
       font-weight: 600;
       color: #212529;
       font-size: 0.875rem;
+      
+      .action-btn {
+        padding: 0.25rem !important;
+        border-radius: 4px;
+        min-width: auto;
+        height: auto;
+        
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+      
+      .date-text {
+        font-weight: 600;
+        color: #212529;
+      }
     }
     
     .delivery-time {
       font-size: 0.75rem;
       color: #6c757d;
       font-weight: 500;
+      
+      .time-text {
+        font-size: 0.75rem;
+        color: #6c757d;
+      }
     }
   }
   

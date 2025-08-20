@@ -30,6 +30,7 @@ import { StoreDto } from '../../../../models/store.dto';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 import { HasRoleOrHigherDirective } from '../../../../shared/directives/has-role-or-higher.directive';
+import { AuthService } from '../../../../services/auth.service';
 
 @Component({
   standalone: true,
@@ -53,7 +54,7 @@ import { HasRoleOrHigherDirective } from '../../../../shared/directives/has-role
     UtcDatePipe,
     NgSelectModule,
     HasRoleDirective,
-    HasRoleOrHigherDirective
+    HasRoleOrHigherDirective,
   ],
   templateUrl: './warehouse-inventory-item-edit-modal.component.html',
   styleUrl: './warehouse-inventory-item-edit-modal.component.scss',
@@ -69,11 +70,12 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
   isSaving = false;
   icons = freeSet;
   stores: StoreDto[] = [];
-  
+
   constructor(
     private fb: FormBuilder,
     private warehouseInventoryService: WarehouseInventoryService,
-    private storeService: StoreService
+    private storeService: StoreService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -106,21 +108,27 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
     const variant = this.warehouseInventoryItem?.productVariant;
 
     this.warehouseInventoryForm = this.fb.group({
-      // productName: [variant?.productName || '', Validators.required],
-      variantName: [variant?.name || '', Validators.required],
-      // productSku: [variant?.productSku || '', Validators.required],
-      variantSku: [variant?.sku || '', Validators.required],
+      variantName: [
+        { value: variant?.name || '', disabled: !this.authService.isAdmin() },
+        Validators.required,
+      ],
+      variantSku: [
+        { value: variant?.sku || '', disabled: !this.authService.isAdmin() },
+        Validators.required,
+      ],
       shopifyVariantId: [variant?.shopifyVariantId || ''],
-      price: [variant?.price || 0, [Validators.required, Validators.min(0)]],
+      price: [{ value: variant?.price || 0, disabled: !this.authService.isAdmin() }, [Validators.required, Validators.min(0)]],
       quantity: [
         this.warehouseInventoryItem?.quantity || 0,
         [Validators.required, Validators.min(0)],
       ],
       addQuantity: [null, [Validators.min(0)]],
-      storeId: [{
-        value: this.warehouseInventoryItem?.store?.id || null,
-        disabled: !!this.warehouseInventoryItem?.store?.id
-      }],
+      storeId: [
+        {
+          value: this.warehouseInventoryItem?.store?.id || null,
+          disabled: !!this.warehouseInventoryItem?.store?.id,
+        },
+      ],
     });
   }
 
@@ -131,7 +139,7 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
   save() {
     if (this.warehouseInventoryForm.valid) {
       this.isSaving = true;
-      
+
       // Modelo plano para enviar al backend
       const formData = this.warehouseInventoryForm.value;
       const submitData = {
@@ -144,7 +152,7 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
         addQuantity: formData.addQuantity,
         storeId: formData.storeId,
       };
-      
+
       this.onSave.emit(submitData);
       // El refreshData se emite desde el componente padre cuando se confirma el guardado
     } else {
@@ -161,7 +169,10 @@ export class WarehouseInventoryItemEditModalComponent implements OnInit {
     this.onReject.emit();
   }
 
-  getTotalWithAddition(){
-    return (this.warehouseInventoryForm.value.quantity ?? 0) + (this.warehouseInventoryForm.value.addQuantity ?? 0) || 0;
+  getTotalWithAddition() {
+    return (
+      (this.warehouseInventoryForm.value.quantity ?? 0) +
+        (this.warehouseInventoryForm.value.addQuantity ?? 0) || 0
+    );
   }
 }

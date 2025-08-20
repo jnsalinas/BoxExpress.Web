@@ -81,11 +81,6 @@ export class AuthService extends BaseApiService<any, any> {
     return userPermissions ? userPermissions.includes(requiredRole) : false;
   }
 
-  // Método para verificar si es admin o supervisor
-  isAdminOrSupervisor(): boolean {
-    return this.hasAnyRole(['admin', 'supervisor']);
-  }
-
   // Método para verificar si es admin
   isAdmin(): boolean {
     return this.role === 'admin';

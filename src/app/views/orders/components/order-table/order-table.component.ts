@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
@@ -41,7 +41,7 @@ import { HasRoleDirective } from '../../../../shared/directives/has-role.directi
   templateUrl: './order-table.component.html',
   styleUrl: './order-table.component.scss',
 })
-export class OrderTableComponent {
+export class OrderTableComponent implements OnInit {
   icons = freeSet;
   @Input() orders: any[] = [];
   @Input() columns: { key: string; label: string; isButton?: boolean }[] = [];
@@ -69,6 +69,21 @@ export class OrderTableComponent {
   };
 
   constructor(public authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.warehouseOptions = [
+      {
+        id: 0,
+        name: 'Tradicional',
+        address: '',
+        cityId: 0,
+        cityName: '',
+        countryId: 0,
+        countryName: '',
+      },
+      ...this.warehouseOptions,
+    ];
+  }
 
   getStatusDelivered(): number {
     return this.statusOptions.find((x) => x.name == OrderStatusName.Delivered)!

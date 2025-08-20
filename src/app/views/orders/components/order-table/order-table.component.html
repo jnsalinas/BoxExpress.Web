@@ -8,15 +8,11 @@
             <svg [cIcon]="icons.cilBadge" class="me-2 text-muted"></svg>
             ID
           </th>
-          <th *ngIf="hasColumn('code')" class="order-code-column">
-            <svg [cIcon]="icons.cilBarcode" class="me-2 text-muted"></svg>
-            Código
-          </th>
           <th *ngIf="hasColumn('status')" class="status-column">
             <svg [cIcon]="icons.cilTask" class="me-2 text-muted"></svg>
             Estado
           </th>
-          
+
           <!-- Información del cliente -->
           <th *ngIf="hasColumn('clientFullName')" class="client-column">
             <svg [cIcon]="icons.cilUser" class="me-2 text-muted"></svg>
@@ -30,7 +26,7 @@
             <svg [cIcon]="icons.cilLocationPin" class="me-2 text-muted"></svg>
             Ciudad
           </th>
-          
+
           <!-- Información de entrega -->
           <th *ngIf="hasColumn('scheduledDate')" class="date-column">
             <svg [cIcon]="icons.cilCalendar" class="me-2 text-muted"></svg>
@@ -40,7 +36,20 @@
             <svg [cIcon]="icons.cilMap" class="me-2 text-muted"></svg>
             Dirección
           </th>
-          
+
+          <th
+            *ngIf="hasColumn('clientAddressComplement')"
+            class="address-column"
+          >
+            <svg [cIcon]="icons.cilMap" class="me-2 text-muted"></svg>
+            Complemento
+          </th>
+
+          <th *ngIf="hasColumn('postalCode')" class="address-column">
+            <svg [cIcon]="icons.cilMap" class="me-2 text-muted"></svg>
+            Código Postal
+          </th>
+
           <!-- Información comercial -->
           <th *ngIf="hasColumn('totalAmount')" class="amount-column">
             <svg [cIcon]="icons.cilDollar" class="me-2 text-muted"></svg>
@@ -50,13 +59,13 @@
             <svg [cIcon]="icons.cilTruck" class="me-2 text-muted"></svg>
             Flete
           </th>
-          
+
           <!-- Información de productos -->
           <th *ngIf="hasColumn('contains')" class="products-column">
             <svg [cIcon]="icons.cilInbox" class="me-2 text-muted"></svg>
             Productos
           </th>
-          
+
           <!-- Información administrativa -->
           <th *ngIf="hasColumn('storeName')" class="store-column">
             <svg [cIcon]="icons.cilHome" class="me-2 text-muted"></svg>
@@ -66,20 +75,32 @@
             <svg [cIcon]="icons.cilStorage" class="me-2 text-muted"></svg>
             Bodega
           </th>
-          <th *ngIf="hasColumn('category') && authService.hasAnyRole(['admin', 'supervisor'])" class="category-column">
+          <th
+            *ngIf="
+              hasColumn('category') &&
+              authService.hasAnyRole(['admin', 'supervisor'])
+            "
+            class="category-column"
+          >
             <svg [cIcon]="icons.cilTag" class="me-2 text-muted"></svg>
             Categoría
           </th>
-          
+
           <!-- Notas -->
           <th *ngIf="hasColumn('notes')" class="notes-column">
             <svg [cIcon]="icons.cilNotes" class="me-2 text-muted"></svg>
             Notas
           </th>
-          
+          <th *ngIf="hasColumn('code')" class="order-code-column">
+            <svg [cIcon]="icons.cilBarcode" class="me-2 text-muted"></svg>
+            Código
+          </th>
           <!-- Acciones -->
           <th
-            *ngIf="hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])"
+            *ngIf="
+              hasColumn('actions') &&
+              authService.hasAnyRole(['admin', 'tienda'])
+            "
             class="actions-column"
           >
             <svg [cIcon]="icons.cilSettings" class="me-2 text-muted"></svg>
@@ -89,18 +110,18 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let order of orders" [ngClass]="getStatusClass(order.status)" class="order-row">
+        <tr
+          *ngFor="let order of orders"
+          [ngClass]="getStatusClass(order.status)"
+          class="order-row"
+        >
           <!-- Información principal -->
           <td *ngIf="hasColumn('id')" class="order-id-cell">
             <div class="order-id-badge">
               <span class="order-number">#{{ order.id }}</span>
             </div>
           </td>
-          
-          <td *ngIf="hasColumn('code')" class="order-code-cell">
-            <span class="order-code">{{ order.code || 'N/A' }}</span>
-          </td>
-          
+
           <td *ngIf="hasColumn('status')" class="status-cell">
             <div class="status-controls">
               <ng-select
@@ -156,61 +177,90 @@
               </span>
             </div>
           </td>
-          
+
           <!-- Información del cliente -->
           <td *ngIf="hasColumn('clientFullName')" class="client-cell">
             <div class="client-info">
               <div class="client-name">{{ order.clientFullName }}</div>
             </div>
           </td>
-          
+
           <td *ngIf="hasColumn('clientPhone')" class="phone-cell">
             <a href="tel:{{ order.clientPhone }}" class="phone-link">
               <svg [cIcon]="icons.cilPhone" class="me-1"></svg>
               {{ order.clientPhone }}
             </a>
           </td>
-          
+
           <td *ngIf="hasColumn('city')" class="city-cell">
-            <span class="city-name">{{ order.city || 'N/A' }}</span>
+            <span class="city-name">{{ order.city || "N/A" }}</span>
           </td>
-          
+
           <!-- Información de entrega -->
           <td *ngIf="hasColumn('scheduledDate')" class="date-cell">
             <div class="delivery-info">
-              <div class="delivery-date">
-                <svg [cIcon]="icons.cilCalendar" class="me-1"></svg>
-                {{ order.scheduledDate | date : "dd/MM/yyyy" }}
+              <div class="delivery-date d-flex align-items-center gap-2">
+                <button
+                  *ngIf="
+                    hasColumn('action-edit') &&
+                    order.statusId !== getStatusDelivered() &&
+                    authService.hasRoleOrHigher('supervisor')
+                  "
+                  class="btn btn-sm btn-outline-warning action-btn p-1"
+                  (click)="onScheduleOrder(order)"
+                  title="Programar orden"
+                >
+                  <svg [cIcon]="icons.cilCalendar" size="sm"></svg>
+                </button>
+                <span class="date-text">{{ order.scheduledDate | date : "dd/MM/yyyy" }}</span>
               </div>
-              <div *ngIf="order.timeSlotStartTime" class="delivery-time">
-                <svg [cIcon]="icons.cilClock" class="me-1"></svg>
-                {{ order.timeSlotStartTime | slice : 0 : 5 }} - {{ order.timeSlotEndTime | slice : 0 : 5 }}
+              <div *ngIf="order.timeSlotStartTime" class="delivery-time d-flex align-items-center">
+                <svg [cIcon]="icons.cilClock" size="sm" class="me-1"></svg>
+                <span class="time-text">{{ order.timeSlotStartTime | slice : 0 : 5 }} - {{ order.timeSlotEndTime | slice : 0 : 5 }}</span>
               </div>
             </div>
           </td>
-          
+
           <td *ngIf="hasColumn('clientAddress')" class="address-cell">
             <div class="address-info" title="{{ order.clientAddress }}">
               <svg [cIcon]="icons.cilLocationPin" class="me-1"></svg>
               <span class="address-text">{{ order.clientAddress }}</span>
             </div>
           </td>
-          
+
+          <td *ngIf="hasColumn('clientAddressComplement')" class="address-cell">
+            <div class="address-info" title="{{ order.clientAddress }}">
+              <span
+                class="address-text"
+                >{{ order.client?.addresses?.[0]?.complement }}</span
+              >
+            </div>
+          </td>
+
+          <td *ngIf="hasColumn('postalCode')" class="address-cell">
+            <div class="address-info" title="{{ order.clientAddress }}">
+              <span
+                class="address-text"
+                >{{ order.client?.addresses?.[0]?.postalCode}}</span
+              >
+            </div>
+          </td>
+
           <!-- Información comercial -->
           <td *ngIf="hasColumn('totalAmount')" class="amount-cell">
             <div class="amount-info">
               <span class="amount-value">
-                {{ order.totalAmount | number:'1.0-2' }}
+                {{ order.totalAmount | number : "1.0-2" }}
               </span>
             </div>
           </td>
-          
+
           <td *ngIf="hasColumn('deliveryFee')" class="fee-cell">
             <span class="fee-value">
-                {{ order.deliveryFee | number:'1.0-2' }}
+              {{ order.deliveryFee | number : "1.0-2" }}
             </span>
           </td>
-          
+
           <!-- Información de productos -->
           <td *ngIf="hasColumn('contains')" class="products-cell">
             <div class="products-info">
@@ -218,7 +268,10 @@
                 *ngIf="order.orderItems?.length; else showContains"
                 class="products-list"
               >
-                <div *ngFor="let item of order.orderItems; let last = last" class="product-item">
+                <div
+                  *ngFor="let item of order.orderItems; let last = last"
+                  class="product-item"
+                >
                   <span class="product-name">{{ item.productName }}</span>
                   <span *ngIf="item.productVariantName" class="product-variant">
                     ({{ item.productVariantName }})
@@ -235,18 +288,23 @@
               </ng-template>
             </div>
           </td>
-          
+
           <!-- Información administrativa -->
           <td *ngIf="hasColumn('storeName')" class="store-cell">
             <span class="store-name">{{ order.storeName }}</span>
           </td>
-          
+
           <td *ngIf="hasColumn('warehouseName')" class="warehouse-cell">
-            <span class="warehouse-name">{{ order.warehouseName || 'N/A' }}</span>
+            <span class="warehouse-name">{{
+              order.warehouseName || "N/A"
+            }}</span>
           </td>
-          
+
           <td
-            *ngIf="hasColumn('category') && authService.hasAnyRole(['admin', 'supervisor'])"
+            *ngIf="
+              hasColumn('category') &&
+              authService.hasAnyRole(['admin', 'supervisor'])
+            "
             class="category-cell"
           >
             <select
@@ -272,26 +330,37 @@
               Tradicional
             </span>
           </td>
-          
+
           <!-- Notas -->
           <td *ngIf="hasColumn('notes')" class="notes-cell">
-            <div class="notes-info" *ngIf="order.notes" title="{{ order.notes }}">
+            <div
+              class="notes-info"
+              *ngIf="order.notes"
+              title="{{ order.notes }}"
+            >
               <svg [cIcon]="icons.cilNotes" class="me-1"></svg>
               <span class="notes-text">{{ order.notes }}</span>
             </div>
             <span *ngIf="!order.notes" class="no-notes">Sin notas</span>
           </td>
-          
+
+          <td *ngIf="hasColumn('code')" class="order-code-cell">
+            <span class="order-code">{{ order.code || "N/A" }}</span>
+          </td>
+
           <!-- Acciones -->
           <td
-            *ngIf="hasColumn('actions') && authService.hasAnyRole(['admin', 'tienda'])"
+            *ngIf="
+              hasColumn('actions') &&
+              authService.hasAnyRole(['admin', 'tienda', 'supervisor'])
+            "
             class="actions-cell"
           >
             <div class="action-buttons">
               <button
                 *ngIf="
                   (authService.hasRole('tienda') && order.categoryId == null) ||
-                  authService.isAdminOrSupervisor()
+                  authService.hasRoleOrHigher('supervisor')
                 "
                 class="btn btn-sm btn-outline-primary action-btn"
                 [routerLink]="['/orders/edit', order.id]"
@@ -299,27 +368,14 @@
               >
                 <svg [cIcon]="icons.cilPencil"></svg>
               </button>
-              
+
               <button
-                *ngIf="authService.isAdminOrSupervisor()"
+                *ngIf="authService.hasRoleOrHigher('supervisor')"
                 class="btn btn-sm btn-outline-info action-btn"
                 [routerLink]="[order.id]"
                 title="Ver detalles"
               >
                 <svg [cIcon]="icons.cilViewModule"></svg>
-              </button>
-              
-              <button
-                *ngIf="
-                  hasColumn('action-edit') &&
-                  order.statusId !== getStatusDelivered() &&
-                  authService.isAdminOrSupervisor()
-                "
-                class="btn btn-sm btn-outline-warning action-btn"
-                (click)="onScheduleOrder(order)"
-                title="Programar orden"
-              >
-                <svg [cIcon]="icons.cilCalendar"></svg>
               </button>
             </div>
           </td>

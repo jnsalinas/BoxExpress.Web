@@ -12,7 +12,7 @@
         <svg [cIcon]="icons.cilTruck" size="lg"></svg>
       </div>
       <div>
-        <span class="fw-bold">Asignar Entrega</span>
+        <span class="fw-bold">Programar Entrega</span>
         <small class="text-muted d-block">Orden #{{ order.id }}</small>
       </div>
     </div>
@@ -77,11 +77,11 @@
     </form>
   </c-modal-body>
 
-  <c-modal-footer>
-    <div class="modal-actions">
+  <c-modal-footer class="modal-footer-custom">
+    <div class="d-flex gap-2 w-100">
       <button 
         type="button" 
-        class="btn btn-outline-secondary btn-modern" 
+        class="btn btn-outline-secondary flex-fill" 
         (click)="close()"
       >
         <svg [cIcon]="icons.cilX" size="sm" class="me-2"></svg>
@@ -89,7 +89,7 @@
       </button>
       <button 
         type="submit" 
-        class="btn btn-primary btn-modern" 
+        class="btn btn-primary flex-fill" 
         (click)="save()"
       >
         <svg [cIcon]="icons.cilSave" size="sm" class="me-2"></svg>

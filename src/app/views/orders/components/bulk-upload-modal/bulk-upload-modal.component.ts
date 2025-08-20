@@ -49,6 +49,7 @@ export class BulkUploadModalComponent {
   @Output() onClose = new EventEmitter<any>();
 
   isLoading = false;
+  isSaving = false;
   form!: FormGroup;
   stores: StoreDto[] = [];
   selectedFile: File | null = null;
@@ -57,9 +58,9 @@ export class BulkUploadModalComponent {
     private fb: FormBuilder,
     private storeService: StoreService,
     private authService: AuthService,
-    private cityService: CityService,
+    private cityService: CityService
   ) {
-    if (this.authService.isAdminOrSupervisor()) {
+    if (this.authService.hasRoleOrHigher('supervisor')) {
       this.loadStores();
       this.loadCities();
     }
@@ -89,13 +90,12 @@ export class BulkUploadModalComponent {
 
   save() {
     if (this.form.valid && this.selectedFile) {
-      this.isLoading = true;
+      this.isSaving = true;
       const payload = {
         ...this.form.value,
         file: this.selectedFile,
       };
       this.onSave.emit(payload);
-      this.isLoading = false;
     } else {
       console.error('Formulario inválido o archivo no seleccionado');
     }
@@ -103,13 +103,13 @@ export class BulkUploadModalComponent {
 
   close() {
     this.onClose.emit();
-    this.isLoading = false;
+    this.isSaving = false;
   }
 
   ngOnInit(): void {
     this.form = this.fb.group({
       storeId: [
-        this.authService.isAdminOrSupervisor()
+        this.authService.hasRoleOrHigher('supervisor')
           ? null
           : this.authService.getStoreId(),
         Validators.required,
@@ -140,6 +140,26 @@ export class BulkUploadModalComponent {
       return 'Cargado con errores';
     } else {
       return 'No cargado';
+    }
+  }
+
+  resetSavingState() {
+    this.isSaving = false;
+    this.resetForm();
+  }
+
+  resetForm() {
+    debugger;
+    this.form.reset();
+    this.form.patchValue({
+      file: null,
+    });
+    this.selectedFile = null;
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
     }
   }
 }

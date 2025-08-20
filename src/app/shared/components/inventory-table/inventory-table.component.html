@@ -23,7 +23,7 @@
           </div>
         </div>
         <div class="product-actions">
-          <button type="button" *ngIf="actionsTemplate && isAdmin" class="btn btn-sm btn-outline-primary"
+          <button type="button" *ngIf="actionsTemplate && authService.hasRoleOrHigher('supervisor')" class="btn btn-sm btn-outline-primary"
             (click)="onAddVariant(product)">
             <i class="fas fa-plus me-1"></i>
             Agregar variante

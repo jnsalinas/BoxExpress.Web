@@ -56,14 +56,10 @@ export class InventoryTableComponent {
   @ViewChild(GenericModalComponent) modal!: GenericModalComponent;
 
   constructor(
-    private authService: AuthService,
+    public authService: AuthService,
     private warehouseInventoryService: WarehouseInventoryService,
     private messageService: MessageService
   ) {}
-
-  get isAdmin() {
-    return this.authService.isAdminOrSupervisor();
-  }
 
   onPageChange(page: number) {
     this.pageChange.emit(page);
