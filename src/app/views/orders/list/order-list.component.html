@@ -1,4 +1,4 @@
-<app-loading-overlay *ngIf="isLoading" [loadingText]="'Cargando órdenes...'"></app-loading-overlay>
+<app-loading-overlay *ngIf="isLoading" [loadingText]="loadingText ?? 'Cargando órdenes...'"></app-loading-overlay>
 
 <div *ngIf="!isLoading" class="orders-list-container">
   <!-- Header con estadísticas -->

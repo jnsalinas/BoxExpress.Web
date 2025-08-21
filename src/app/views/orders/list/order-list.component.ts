@@ -96,6 +96,7 @@ export class OrderListComponent implements OnInit {
   categoryOptions: OrderCategoryDto[] = [];
   filtersForm: FormGroup = new FormGroup({});
   isLoading: boolean = false;
+  loadingText: string = 'Cargando órdenes...';
   selectedOrderId: number | undefined;
   selectedOrderName: string = '';
   orders: OrderDto[] = [];
@@ -186,6 +187,7 @@ export class OrderListComponent implements OnInit {
 
   loadOrders(): void {
     this.isLoading = true;
+    this.loadingText = 'Cargando órdenes...';
     this.orderService.getAll(this.getFilters()).subscribe({
       next: (result) => {
         this.orders = result.data;
@@ -297,16 +299,20 @@ export class OrderListComponent implements OnInit {
       title: 'Cambio de estado',
       body: `¿Estás seguro de que desea pasar la orden ${event.orderId} como ${status?.name}?`,
       ok: () => {
+        this.isLoading = true;
+        this.loadingText = 'Cambiando estado...';
         this.orderService
           .changeStatus(event.orderId, event.statusId)
           .subscribe({
             next: (data) => {
               this.loadOrders();
+              this.isLoading = false;
             },
             error: (err) => {
               console.error('Error changing status', err);
               if (!this.authService.hasRole('bodega')) {
                 order.statusId = event.previousStatusId;
+                this.isLoading = false;
               }
 
               this.modal.show({
@@ -315,6 +321,7 @@ export class OrderListComponent implements OnInit {
                 showCancelButton: false,
                 okText: 'Ok',
               });
+              this.isLoading = false;
             },
           });
       },
