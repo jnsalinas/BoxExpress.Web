@@ -21,7 +21,7 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./views/warehouses/routes').then((m) => m.routes),
         canActivate: [RoleGuard],
-        data: { roles: ['admin', 'supervisor'] },
+        data: { roles: ['admin', 'supervisor', 'bodega'] },
       },
       {
         path: 'transfers',

@@ -10,11 +10,18 @@
         <div class="col-md-8">
           <div class="d-flex align-items-center">
             <div class="header-icon me-3">
-              <svg cIcon name="cil-loop-circular" size="3xl" class="text-primary"></svg>
+              <svg
+                cIcon
+                name="cil-loop-circular"
+                size="3xl"
+                class="text-primary"
+              ></svg>
             </div>
             <div>
               <h3 class="mb-1 text-primary">Gestión de Transferencias</h3>
-              <p class="text-muted mb-0 small">Administra y monitorea todas las transferencias entre bodegas</p>
+              <p class="text-muted mb-0 small">
+                Administra y monitorea todas las transferencias entre bodegas
+              </p>
             </div>
           </div>
         </div>
@@ -51,8 +58,16 @@
       >
         <div class="row g-3 align-items-end">
           <div class="col-md-2">
-            <label for="fromWarehouseId" class="form-label small fw-semibold mb-1">
-              <svg cIcon name="cil-home" size="sm" class="me-1 text-muted"></svg>
+            <label
+              for="fromWarehouseId"
+              class="form-label small fw-semibold mb-1"
+            >
+              <svg
+                cIcon
+                name="cil-home"
+                size="sm"
+                class="me-1 text-muted"
+              ></svg>
               Origen
             </label>
             <ng-select
@@ -67,8 +82,16 @@
             </ng-select>
           </div>
           <div class="col-md-2">
-            <label for="toWarehouseId" class="form-label small fw-semibold mb-1">
-              <svg cIcon name="cil-home" size="sm" class="me-1 text-muted"></svg>
+            <label
+              for="toWarehouseId"
+              class="form-label small fw-semibold mb-1"
+            >
+              <svg
+                cIcon
+                name="cil-home"
+                size="sm"
+                class="me-1 text-muted"
+              ></svg>
               Destino
             </label>
             <ng-select
@@ -84,7 +107,12 @@
           </div>
           <div class="col-md-2">
             <label for="statusId" class="form-label small fw-semibold mb-1">
-              <svg cIcon name="cil-task" size="sm" class="me-1 text-muted"></svg>
+              <svg
+                cIcon
+                name="cil-task"
+                size="sm"
+                class="me-1 text-muted"
+              ></svg>
               Estado
             </label>
             <ng-select
@@ -100,7 +128,12 @@
           </div>
           <div class="col-md-2">
             <label for="startDate" class="form-label small fw-semibold mb-1">
-              <svg cIcon name="cil-calendar" size="sm" class="me-1 text-muted"></svg>
+              <svg
+                cIcon
+                name="cil-calendar"
+                size="sm"
+                class="me-1 text-muted"
+              ></svg>
               Fecha inicio
             </label>
             <input
@@ -112,7 +145,12 @@
           </div>
           <div class="col-md-2">
             <label for="endDate" class="form-label small fw-semibold mb-1">
-              <svg cIcon name="cil-calendar" size="sm" class="me-1 text-muted"></svg>
+              <svg
+                cIcon
+                name="cil-calendar"
+                size="sm"
+                class="me-1 text-muted"
+              ></svg>
               Fecha fin
             </label>
             <input
@@ -125,7 +163,12 @@
           <div class="col-md-2">
             <div class="d-flex gap-1 w-100">
               <button type="submit" class="btn btn-primary btn-sm flex-fill">
-                <svg cIcon name="cil-magnifying-glass" size="sm" class="me-1"></svg>
+                <svg
+                  cIcon
+                  name="cil-magnifying-glass"
+                  size="sm"
+                  class="me-1"
+                ></svg>
                 Filtrar
               </button>
               <button
@@ -156,7 +199,12 @@
                   ID
                 </th>
                 <th class="warehouses-column">
-                  <svg cIcon name="cil-loop-circular" size="sm" class="me-1"></svg>
+                  <svg
+                    cIcon
+                    name="cil-loop-circular"
+                    size="sm"
+                    class="me-1"
+                  ></svg>
                   Bodegas
                 </th>
                 <th class="date-column">
@@ -172,7 +220,12 @@
                   Creador
                 </th>
                 <th class="accepted-by-column">
-                  <svg cIcon name="cil-user-follow" size="sm" class="me-1"></svg>
+                  <svg
+                    cIcon
+                    name="cil-user-follow"
+                    size="sm"
+                    class="me-1"
+                  ></svg>
                   Aceptado por
                 </th>
                 <th class="rejection-column">
@@ -190,14 +243,22 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let tx of warehouseInventoryTransfers; let i = index" class="data-row">
+              <tr
+                *ngFor="let tx of warehouseInventoryTransfers; let i = index"
+                class="data-row"
+              >
                 <td class="id-cell">
                   <span class="badge bg-secondary">{{ tx.id }}</span>
                 </td>
                 <td class="warehouses-cell">
                   <div class="d-flex align-items-center">
                     <span class="fw-bold">{{ tx.fromWarehouse }}</span>
-                    <svg cIcon name="cil-arrow-right" size="sm" class="mx-2 text-muted"></svg>
+                    <svg
+                      cIcon
+                      name="cil-arrow-right"
+                      size="sm"
+                      class="mx-2 text-muted"
+                    ></svg>
                     <span class="fw-bold">{{ tx.toWarehouse }}</span>
                   </div>
                 </td>
@@ -211,7 +272,10 @@
                       'bg-success': getStatusLabel(tx.status) === 'Aprobado',
                       'bg-warning': getStatusLabel(tx.status) === 'Pendiente',
                       'bg-danger': getStatusLabel(tx.status) === 'Rechazada',
-                      'bg-secondary': getStatusLabel(tx.status) !== 'Aprobado' && getStatusLabel(tx.status) !== 'Pendiente' && getStatusLabel(tx.status) !== 'Rechazada'
+                      'bg-secondary':
+                        getStatusLabel(tx.status) !== 'Aprobado' &&
+                        getStatusLabel(tx.status) !== 'Pendiente' &&
+                        getStatusLabel(tx.status) !== 'Rechazada'
                     }"
                   >
                     {{ getStatusLabel(tx.status) }}
@@ -221,10 +285,13 @@
                   {{ tx.creator }}
                 </td>
                 <td class="accepted-by-cell">
-                  {{ tx.acceptedBy || '-' }}
+                  {{ tx.acceptedBy || "-" }}
                 </td>
                 <td class="rejection-cell">
-                  <span *ngIf="tx.rejectionReason; else noRechazo" class="text-danger small">
+                  <span
+                    *ngIf="tx.rejectionReason; else noRechazo"
+                    class="text-danger small"
+                  >
                     {{ tx.rejectionReason }}
                   </span>
                   <ng-template #noRechazo>
@@ -235,8 +302,12 @@
                   <div *ngFor="let item of tx.transferDetails; let last = last">
                     <div class="d-flex align-items-center">
                       <span class="fw-semibold small">{{ item.product }}</span>
-                      <span class="text-muted small ms-1">{{ item.productVariant }}</span>
-                      <span class="badge bg-secondary ms-1 small">{{ item.quantity }}</span>
+                      <span class="text-muted small ms-1">{{
+                        item.productVariant
+                      }}</span>
+                      <span class="badge bg-secondary ms-1 small">{{
+                        item.quantity
+                      }}</span>
                     </div>
                     <hr *ngIf="!last" class="my-1" />
                   </div>
@@ -247,7 +318,7 @@
                     (click)="showDetail(tx)"
                     title="Ver detalle"
                   >
-                    <svg cIcon name="cil-eye" size="sm" class="me-1"></svg>
+                    <svg [cIcon]="icons.cilHistory" size="sm" class="me-1"></svg>
                     Ver detalle
                   </button>
                 </td>
@@ -256,7 +327,7 @@
           </table>
         </div>
       </div>
-      
+
       <div class="p-3">
         <app-generic-pagination
           [pagination]="pagination"

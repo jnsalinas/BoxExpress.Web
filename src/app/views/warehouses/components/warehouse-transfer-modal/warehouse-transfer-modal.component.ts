@@ -237,7 +237,7 @@ export class WarehouseTransferModalComponent implements OnInit {
       return;
     }
     this.onSave.emit(this.form.value);
-    // this.resetForm(); todo: descomentar
+    this.resetForm();
   }
 
   close(): void {

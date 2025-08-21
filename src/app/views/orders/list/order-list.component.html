@@ -161,7 +161,7 @@
                   <c-card class="status-card text-center h-100" [ngClass]="getStatusClassForSummary(status.statusName)">
                     <c-card-body class="p-2">
                       <div class="status-icon mb-1">
-                        <svg [cIcon]="getStatusIcon(status.statusName)" size="sm" [title]="status.statusName"></svg>
+                        <svg cIcon [name]="getStatusIcon(status.statusName)" size="sm" [title]="status.statusName"></svg>
                       </div>
                       <h6 class="mb-1 status-name small">{{ status.statusName }}</h6>
                       <p class="m-0 status-count fw-bold">{{ status.count }}</p>

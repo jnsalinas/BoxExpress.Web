@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {
@@ -41,7 +41,7 @@ import { HasRoleDirective } from '../../../../shared/directives/has-role.directi
   templateUrl: './order-table.component.html',
   styleUrl: './order-table.component.scss',
 })
-export class OrderTableComponent implements OnInit {
+export class OrderTableComponent implements OnInit, OnChanges {
   icons = freeSet;
   @Input() orders: any[] = [];
   @Input() columns: { key: string; label: string; isButton?: boolean }[] = [];
@@ -59,12 +59,13 @@ export class OrderTableComponent implements OnInit {
   }>();
   @Output() scheduleOrder = new EventEmitter<OrderDto>();
   previousStatusId: number = 0;
+  availableStatusesByOrderId: { [orderId: number]: OrderStatusDto[] } = {};
   
   validationsAvailableStatus: { [key in OrderStatusName]: OrderStatusName[] } = {
     [OrderStatusName.Unscheduled]: [OrderStatusName.Scheduled],
     [OrderStatusName.Scheduled]: [OrderStatusName.InTransit],
     [OrderStatusName.InTransit]: [OrderStatusName.Delivered, OrderStatusName.Cancelled],
-    [OrderStatusName.Delivered]: [],
+    [OrderStatusName.Delivered]: [OrderStatusName.Cancelled],
     [OrderStatusName.Cancelled]: [OrderStatusName.Delivered, OrderStatusName.Scheduled],
   };
 
@@ -83,6 +84,32 @@ export class OrderTableComponent implements OnInit {
       },
       ...this.warehouseOptions,
     ];
+
+    this.recomputeAvailableStatuses();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['orders'] || changes['statusOptions']) {
+      this.recomputeAvailableStatuses();
+    }
+  }
+
+  private recomputeAvailableStatuses(): void {
+    const map: { [orderId: number]: OrderStatusDto[] } = {};
+    (this.orders || []).forEach((order) => {
+      map[order.id] = this.buildAvailableStatuses(order);
+    });
+    this.availableStatusesByOrderId = map;
+  }
+
+  private buildAvailableStatuses(order: any): OrderStatusDto[] {
+    const currentStatusName = this.getCurrentStatusName(order) as OrderStatusName;
+    const allowedStatusNames = this.validationsAvailableStatus[currentStatusName] || [];
+    const currentStatus = this.statusOptions.find((s) => s.name === currentStatusName);
+    const allowedStatuses = this.statusOptions.filter((status) =>
+      allowedStatusNames.includes(status.name as OrderStatusName)
+    );
+    return [currentStatus ? { ...currentStatus, disabled: false } as OrderStatusDto : null, ...allowedStatuses].filter(Boolean) as OrderStatusDto[];
   }
 
   getStatusDelivered(): number {
@@ -114,6 +141,15 @@ export class OrderTableComponent implements OnInit {
     const previousStatusId = this.previousStatusId;
     this.statusChanged.emit({ orderId, statusId, previousStatusId });
   }
+
+  // Recalcular opciones disponibles para esta orden tras el cambio
+  recalculateAvailableStatuses(orderId: number, statusId: number) {
+    const order = this.orders?.find((o) => o.id === orderId);
+    if (order) {
+    order.statusId = statusId;
+    this.availableStatusesByOrderId[orderId] = this.buildAvailableStatuses(order);
+  }
+}
 
   onWarehouseChange(orderId: number, warehouseId: number) {
     this.warehouseChanged.emit({ orderId, warehouseId });

@@ -8,6 +8,18 @@
             <svg [cIcon]="icons.cilBadge" class="me-2 text-muted"></svg>
             ID
           </th>
+
+          <th
+            *ngIf="
+              hasColumn('category') &&
+              authService.hasAnyRole(['admin', 'supervisor'])
+            "
+            class="category-column"
+          >
+            <svg [cIcon]="icons.cilTag" class="me-2 text-muted"></svg>
+            Categoría
+          </th>
+
           <th *ngIf="hasColumn('status')" class="status-column">
             <svg [cIcon]="icons.cilTask" class="me-2 text-muted"></svg>
             Estado
@@ -75,16 +87,6 @@
             <svg [cIcon]="icons.cilStorage" class="me-2 text-muted"></svg>
             Bodega
           </th>
-          <th
-            *ngIf="
-              hasColumn('category') &&
-              authService.hasAnyRole(['admin', 'supervisor'])
-            "
-            class="category-column"
-          >
-            <svg [cIcon]="icons.cilTag" class="me-2 text-muted"></svg>
-            Categoría
-          </th>
 
           <!-- Notas -->
           <th *ngIf="hasColumn('notes')" class="notes-column">
@@ -122,32 +124,55 @@
             </div>
           </td>
 
+          <td
+            *ngIf="
+              hasColumn('category') &&
+              authService.hasAnyRole(['admin', 'supervisor'])
+            "
+            class="category-cell"
+          >
+            <select
+              *ngIf="order.categoryId != 2"
+              class="form-select form-select-sm category-select"
+              [(ngModel)]="order.warehouseId"
+              (ngModelChange)="onWarehouseChange(order.id, $event)"
+              [disabled]="
+                warehouseOptions.length === 0 || order.categoryId !== null
+              "
+            >
+              <option [value]="null" disabled>Seleccione bodega...</option>
+              <option
+                *ngFor="let warehouse of warehouseOptions"
+                [value]="warehouse.id"
+              >
+                {{ warehouse.name }}
+              </option>
+            </select>
+
+            <span *ngIf="order.categoryId == 2" class="category-tag">
+              <svg [cIcon]="icons.cilTruck" class="me-1"></svg>
+              Tradicional
+            </span>
+          </td>
+
           <td *ngIf="hasColumn('status')" class="status-cell">
             <div class="status-controls">
               <ng-select
                 *hasRole="['admin', 'supervisor']"
-                [items]="statusOptions"
+                [items]="availableStatusesByOrderId[order.id]"
                 bindLabel="name"
                 bindValue="id"
                 [(ngModel)]="order.statusId"
                 (ngModelChange)="onStatusChange(order.id, $event)"
-                [disabled]="
-                  order.scheduledDate === null ||
-                  order.timeSlotStartTime === null ||
-                  order.statusId === getStatusDelivered()
-                "
+                [disabled]="order.scheduledDate === null"
                 (mousedown)="previousStatusId = order.statusId"
                 placeholder="Cambiar estado..."
                 [clearable]="false"
                 [searchable]="false"
+                [dropdownPosition]="'bottom'"
                 [appendTo]="'body'"
                 class="status-select"
               >
-                <ng-template ng-option-tmp let-item="item">
-                  <span [ngClass]="{ 'text-muted': item.disabled }">{{
-                    item.name
-                  }}</span>
-                </ng-template>
               </ng-select>
 
               <button
@@ -212,11 +237,19 @@
                 >
                   <svg [cIcon]="icons.cilCalendar" size="sm"></svg>
                 </button>
-                <span class="date-text">{{ order.scheduledDate | date : "dd/MM/yyyy" }}</span>
+                <span class="date-text">{{
+                  order.scheduledDate | date : "dd/MM/yyyy"
+                }}</span>
               </div>
-              <div *ngIf="order.timeSlotStartTime" class="delivery-time d-flex align-items-center">
+              <div
+                *ngIf="order.timeSlotStartTime"
+                class="delivery-time d-flex align-items-center"
+              >
                 <svg [cIcon]="icons.cilClock" size="sm" class="me-1"></svg>
-                <span class="time-text">{{ order.timeSlotStartTime | slice : 0 : 5 }} - {{ order.timeSlotEndTime | slice : 0 : 5 }}</span>
+                <span class="time-text"
+                  >{{ order.timeSlotStartTime | slice : 0 : 5 }} -
+                  {{ order.timeSlotEndTime | slice : 0 : 5 }}</span
+                >
               </div>
             </div>
           </td>
@@ -298,37 +331,6 @@
             <span class="warehouse-name">{{
               order.warehouseName || "N/A"
             }}</span>
-          </td>
-
-          <td
-            *ngIf="
-              hasColumn('category') &&
-              authService.hasAnyRole(['admin', 'supervisor'])
-            "
-            class="category-cell"
-          >
-            <select
-              *ngIf="order.categoryId != 2"
-              class="form-select form-select-sm category-select"
-              [(ngModel)]="order.warehouseId"
-              (ngModelChange)="onWarehouseChange(order.id, $event)"
-              [disabled]="
-                warehouseOptions.length === 0 || order.categoryId !== null
-              "
-            >
-              <option [value]="null" disabled>Seleccione bodega...</option>
-              <option
-                *ngFor="let warehouse of warehouseOptions"
-                [value]="warehouse.id"
-              >
-                {{ warehouse.name }}
-              </option>
-            </select>
-
-            <span *ngIf="order.categoryId == 2" class="category-tag">
-              <svg [cIcon]="icons.cilTruck" class="me-1"></svg>
-              Tradicional
-            </span>
           </td>
 
           <!-- Notas -->

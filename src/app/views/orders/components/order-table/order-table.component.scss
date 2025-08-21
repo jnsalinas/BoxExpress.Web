@@ -63,6 +63,16 @@
         transition: all 0.2s ease;
         border-bottom: 1px solid #f1f3f4;
         
+        &.bg-entregado,
+        &.bg-delivered {
+          background-color: #86efac !important; /* verde más fuerte para entregado */
+        }
+
+        &.bg-entregado:hover,
+        &.bg-delivered:hover {
+          background-color: #6ee7b7 !important; /* hover ligeramente más intenso */
+        }
+
         &:hover {
           background-color: #f8f9fa;
           transform: translateY(-1px);

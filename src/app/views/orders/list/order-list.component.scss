@@ -5,7 +5,9 @@
 
 ::ng-deep .bg-sin-programar, ::ng-deep tr.bg-sin-programar td { background-color: #e6f7ff !important; }
 ::ng-deep .bg-programado, ::ng-deep tr.bg-programado td { background-color: #fffbe6 !important; }
-::ng-deep .bg-entregado, ::ng-deep tr.bg-entregado td { background-color: #f6ffed !important; }
+/* Entregado: aplicar solo a filas de tabla para no afectar tarjetas */
+::ng-deep tr.bg-entregado td, ::ng-deep tr.bg-delivered td { background-color: #4ade80 !important; }
+::ng-deep tr.bg-entregado:hover td, ::ng-deep tr.bg-delivered:hover td { background-color: #34d399 !important; }
 ::ng-deep .bg-cancelado, ::ng-deep tr.bg-cancelado td { background-color: #fff1f0 !important; }
 ::ng-deep .bg-cancelado, ::ng-deep tr.bg-cancelado1 td { background-color: #f9f0ff !important; }
 ::ng-deep .bg-en-ruta, ::ng-deep tr.bg-en-ruta td { background-color: #0dcaf0 !important; }
@@ -420,12 +422,12 @@ td { vertical-align: middle; }
   }
   
   .bg-entregado {
-    background-color: #f6ffed !important;
-    color: #52c41a;
+    background-color: #059669 !important;
+    color: #16a34a;
     
-    .status-icon svg { color: #52c41a; }
-    .status-name { color: #52c41a; }
-    .status-count { color: #52c41a; }
+    .status-icon svg { color: white; }
+    .status-name { color: white; }
+    .status-count { color: white; }
   }
   
   .bg-cancelado {

@@ -320,7 +320,9 @@ export class OrderListComponent implements OnInit {
       },
       close: () => {
         console.log('close');
-        order.statusId = event.previousStatusId;
+        if (!this.authService.hasRole('bodega')) {
+          order.statusId = event.previousStatusId;
+        }
       },
     });
   }
@@ -514,7 +516,7 @@ export class OrderListComponent implements OnInit {
       statusLower.includes('programado') ||
       statusLower.includes('scheduled')
     ) {
-      return 'cil-calendar-check';
+      return 'cil-calendar';
     } else if (
       statusLower.includes('en ruta') ||
       statusLower.includes('in transit')
@@ -524,12 +526,12 @@ export class OrderListComponent implements OnInit {
       statusLower.includes('entregado') ||
       statusLower.includes('delivered')
     ) {
-      return 'cil-check-circle';
+      return 'cil-task';
     } else if (
       statusLower.includes('cancelado') ||
       statusLower.includes('cancelled')
     ) {
-      return 'cil-x-circle';
+      return 'cil-x';
     } else {
       return 'cil-circle'; // Icono por defecto
     }
