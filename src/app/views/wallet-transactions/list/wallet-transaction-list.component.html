@@ -188,7 +188,7 @@
                   </span>
                 </td>
                 <td class="status-cell">
-                  <span class="badge" [ngClass]="getStatusBadgeClass(tx.orderStatus)">
+                  <span class="badge bg-secondary">
                     {{ tx.orderStatus }}
                   </span>
                 </td>
@@ -196,7 +196,7 @@
                   {{ tx.createdAt | utcDate }}
                 </td>
                 <td class="amount-cell">
-                  <span class="badge" [ngClass]="getAmountBadgeClass(tx.amount)">
+                  <span class="badge" [ngClass]="getAmountBadgeClass(tx)">
                     {{ tx.amount | number:'1.0-0' }}
                   </span>
                 </td>

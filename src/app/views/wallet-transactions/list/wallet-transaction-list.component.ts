@@ -154,47 +154,51 @@ export class WalletTransactionListComponent implements OnInit {
   }
 
   getTransactionTypeBadgeClass(type: string | undefined): string {
-    switch (type?.toUpperCase()) {
-      case 'DEPOSIT':
+    if (!type) {
+      return 'bg-secondary';
+    }
+    const normalizedType = type.trim().toLowerCase();
+    switch (normalizedType) {
+      case 'entrada':
         return 'bg-success';
-      case 'WITHDRAWAL':
+      case 'salida':
         return 'bg-danger';
-      case 'PURCHASE':
-        return 'bg-primary';
-      case 'REFUND':
-        return 'bg-warning';
-      case 'TRANSFER':
-        return 'bg-info';
       default:
         return 'bg-secondary';
     }
   }
 
   getStatusBadgeClass(status: string | undefined): string {
-    switch (status?.toUpperCase()) {
-      case 'COMPLETED':
-      case 'APPROVED':
+    if (!status) {
+      return 'bg-secondary';
+    }
+    const normalized = status.trim().toLowerCase();
+    switch (normalized) {
+      case 'entregado':
+      case 'completed':
+      case 'approved':
         return 'bg-success';
-      case 'PENDING':
+      case 'pendiente':
+      case 'pending':
         return 'bg-warning';
-      case 'REJECTED':
-      case 'CANCELLED':
+      case 'cancelado':
+      case 'rechazado':
+      case 'rejected':
+      case 'cancelled':
         return 'bg-danger';
-      case 'PROCESSING':
+      case 'procesando':
+      case 'processing':
         return 'bg-info';
       default:
         return 'bg-secondary';
     }
   }
 
-  getAmountBadgeClass(amount: number | undefined): string {
-    if (!amount) return 'bg-secondary';
-    if (amount > 0) {
-      return 'bg-success';
-    } else if (amount < 0) {
-      return 'bg-danger';
-    } else {
+  getAmountBadgeClass(tx: WalletTransactionDto): string {
+    const type = tx?.transactionType?.trim().toLowerCase();
+    if (!type) {
       return 'bg-secondary';
     }
+    return type === 'entrada' ? 'bg-success' : type === 'salida' ? 'bg-danger' : 'bg-secondary';
   }
 }
