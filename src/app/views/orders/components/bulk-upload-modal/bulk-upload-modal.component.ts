@@ -24,6 +24,8 @@ import { BulkUploadDataDto } from '../../../../models/bulk-upload-response.dto';
 import { BehaviorSubject } from 'rxjs';
 import { CityService } from '../../../../services/city.service';
 import { CityDto } from '../../../../models/city.dto';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
+import { freeSet } from '@coreui/icons';
 
 @Component({
   selector: 'app-bulk-upload-modal',
@@ -39,6 +41,8 @@ import { CityDto } from '../../../../models/city.dto';
     HasRoleDirective,
     AsyncPipe,
     CommonModule,
+    IconDirective,
+    IconModule,
   ],
   templateUrl: './bulk-upload-modal.component.html',
   styleUrl: './bulk-upload-modal.component.scss',
@@ -54,6 +58,7 @@ export class BulkUploadModalComponent {
   stores: StoreDto[] = [];
   selectedFile: File | null = null;
   cities: CityDto[] = [];
+  icons = freeSet;
   constructor(
     private fb: FormBuilder,
     private storeService: StoreService,

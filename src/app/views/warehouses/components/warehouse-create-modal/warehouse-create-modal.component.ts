@@ -24,6 +24,8 @@ import { CityService } from '../../../../services/city.service';
 import { CreateWarehouseDto } from '../../../../models/create-warehouse.dto';
 import { CityDto } from '../../../../models/city.dto';
 import { passwordPattern } from '../../../../shared/validators/custom-validators';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
+import { freeSet } from '@coreui/icons';
 
 @Component({
   selector: 'app-warehouse-create-modal',
@@ -47,6 +49,8 @@ import { passwordPattern } from '../../../../shared/validators/custom-validators
     InputGroupTextDirective,
     RowComponent,
     ColComponent,
+    IconDirective,
+    IconModule,
   ],
 })
 export class WarehouseCreateModalComponent implements OnInit {
@@ -58,7 +62,7 @@ export class WarehouseCreateModalComponent implements OnInit {
   isLoading = false;
   submitted = false;
   showPassword = false;
-
+  icons = freeSet;
   constructor(
     private fb: FormBuilder,
     private warehouseService: WarehouseService,

@@ -21,7 +21,7 @@ import {
   ModalBodyComponent,
   ModalFooterComponent,
 } from '@coreui/angular'; // Ajusta según cómo estés usando CoreUI
-import { IconDirective } from '@coreui/icons-angular';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
 import { ProductDto } from '../../../../models/product.dto';
 import { ProductVariantDto } from '../../../../models/product-variant.dto';
 import { minLengthArray } from '../../../../shared/validators/custom-validators';
@@ -46,6 +46,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ReactiveFormsModule,
     IconDirective,
     NgSelectModule,
+    IconModule,
+    IconDirective,
   ],
 })
 export class WarehouseProductModalComponent implements OnInit {
@@ -130,7 +132,7 @@ export class WarehouseProductModalComponent implements OnInit {
       name: ['', Validators.required],
       productCode: [''],
       sku: [''],
-      shopifyId: [''],
+      // shopifyId: [''],
       price: [null],
       quantity: [null, [Validators.required, Validators.min(0)]],
     });
@@ -179,6 +181,7 @@ export class WarehouseProductModalComponent implements OnInit {
     if (this.productForm.valid) {
       this.isSaving = true;
       this.onSave.emit(this.productForm.value);
+      this.resetForm();
     } else {
       console.log('Formulario inválido:', this.productForm.value);
     }
@@ -244,7 +247,7 @@ export class WarehouseProductModalComponent implements OnInit {
       name: ['', Validators.required],
       productCode: [''],
       sku: [this.generateVariantSku(productSku, variantsArray.length)],
-      shopifyId: [''],
+      // shopifyId: [''],
       price: [null],
       quantity: [null, [Validators.required, Validators.min(1)]],
     });

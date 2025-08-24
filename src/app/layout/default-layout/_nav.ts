@@ -59,6 +59,6 @@ export const navItems: CustomNavData[] = [
     name: 'Balance',
     url: '/stores',
     iconComponent: { name: 'cil-chart' },
-    roles: ['admin', 'supervisor'],
+    roles: ['admin', 'supervisor', 'tienda'],
   },
 ];

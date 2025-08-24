@@ -22,7 +22,7 @@ import { WalletTransactionFilter } from '../../../models/wallet-transaction-filt
 import { NgSelectModule } from '@ng-select/ng-select';
 import { StoreDto } from '../../../models/store.dto';
 import { StoreService } from '../../../services/store.service';
-import { IconDirective } from '@coreui/icons-angular';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
 import { RouterLink } from '@angular/router';
 import { HasRoleDirective } from '../../../shared/directives/has-role.directive';
 
@@ -40,7 +40,9 @@ import { HasRoleDirective } from '../../../shared/directives/has-role.directive'
     LoadingOverlayComponent,
     NgSelectModule,
     RouterLink,
-    HasRoleDirective
+    HasRoleDirective,
+    IconDirective,
+    IconModule,
   ],
   templateUrl: './wallet-transaction-list.component.html',
   styleUrl: './wallet-transaction-list.component.scss',
@@ -163,32 +165,6 @@ export class WalletTransactionListComponent implements OnInit {
         return 'bg-success';
       case 'salida':
         return 'bg-danger';
-      default:
-        return 'bg-secondary';
-    }
-  }
-
-  getStatusBadgeClass(status: string | undefined): string {
-    if (!status) {
-      return 'bg-secondary';
-    }
-    const normalized = status.trim().toLowerCase();
-    switch (normalized) {
-      case 'entregado':
-      case 'completed':
-      case 'approved':
-        return 'bg-success';
-      case 'pendiente':
-      case 'pending':
-        return 'bg-warning';
-      case 'cancelado':
-      case 'rechazado':
-      case 'rejected':
-      case 'cancelled':
-        return 'bg-danger';
-      case 'procesando':
-      case 'processing':
-        return 'bg-info';
       default:
         return 'bg-secondary';
     }

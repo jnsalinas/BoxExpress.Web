@@ -7,4 +7,7 @@ export interface StoreDto extends BaseDto {
   balance?: number;
   availableToWithdraw?: number;
   pendingWithdrawals?: number;
+  shopifyShopDomain?: string;
+  username?: string;
+  password?: string;
 }

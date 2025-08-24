@@ -12,7 +12,7 @@ import { UtcDatePipe } from '../../../../shared/pipes/utc-date.pipe';
 import { GenericPaginationComponent } from '../../../../shared/components/generic-pagination/generic-pagination.component';
 import { LoadingOverlayComponent } from '../../../../shared/components/loading-overlay/loading-overlay.component';
 import { NgSelectComponent, NgSelectModule } from '@ng-select/ng-select';
-import { IconDirective } from '@coreui/icons-angular';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
 import { WithdrawalRequestService } from '../../../../services/withdrawal-request.service';
 import { PaginationDto } from '../../../../models/common/pagination.dto';
 import { WithdrawalRequestDto } from '../../../../models/withdrawal-request.dto';
@@ -44,6 +44,8 @@ import { HasRoleDirective } from '../../../../shared/directives/has-role.directi
     WithdrawalRequestModalComponent,
     GenericModalComponent,
     HasRoleDirective,
+    IconDirective,
+    IconModule,
   ],
   templateUrl: './withdrawal-request-list.component.html',
   styleUrl: './withdrawal-request-list.component.scss',

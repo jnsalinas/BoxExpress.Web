@@ -18,6 +18,8 @@ import { InventoryHoldResolutionDto } from '../../../models/inventory-hold-resol
 import { GenericModalComponent } from '../../shared/components/generic-modal/generic-modal.component';
 import { RouterLink } from '@angular/router';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
+import { freeSet } from '@coreui/icons';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
 
 @Component({
   standalone: true,
@@ -33,6 +35,8 @@ import { LoadingOverlayComponent } from '../../../shared/components/loading-over
     GenericModalComponent,
     RouterLink,
     LoadingOverlayComponent,
+    IconDirective,
+    IconModule,
   ],
   templateUrl: './inventory-return-list.component.html',
   styleUrl: './inventory-return-list.component.scss',
@@ -42,7 +46,7 @@ export class InventoryReturnListComponent implements OnInit {
   pendingReturns: InventoryHoldDto[] = [];
   inventoryHoldResolution: InventoryHoldResolutionDto | null = null;
   isLoading = false;
-
+  icons = freeSet;
   constructor(private inventoryHoldService: InventoryHoldService) {}
   
   ngOnInit(): void {

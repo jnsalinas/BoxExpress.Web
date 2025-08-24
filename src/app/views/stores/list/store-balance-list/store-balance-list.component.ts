@@ -9,10 +9,10 @@ import {
   TableDirective,
 } from '@coreui/angular';
 import { freeSet } from '@coreui/icons';
-import { IconDirective } from '@coreui/icons-angular';
+import { IconDirective, IconModule } from '@coreui/icons-angular';
 import { StoreDto } from '../../../../models/store.dto';
-import { StoreService } from 'src/app/services/store.service';
-import { LoadingOverlayComponent } from 'src/app/shared/components/loading-overlay/loading-overlay.component';
+import { StoreService } from '../../../../services/store.service';
+import { LoadingOverlayComponent } from '../../../../shared/components/loading-overlay/loading-overlay.component';
 import { PaginationDto } from '../../../../models/common/pagination.dto';
 import { GenericPaginationComponent } from '../../../../shared/components/generic-pagination/generic-pagination.component';
 import { StoreFilter } from '../../../../models/store-filter.model';
@@ -22,6 +22,8 @@ import {
   toUtcEndOfDayLocal,
 } from '../../../../shared/utils/date-utils';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { StoreCreateModalComponent } from '../../components/store-create-modal/store-create-modal.component';
+import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 
 @Component({
   standalone: true,
@@ -39,6 +41,10 @@ import { NgSelectModule } from '@ng-select/ng-select';
     NgSelectModule,
     ReactiveFormsModule,
     IconDirective,
+    StoreCreateModalComponent,
+    HasRoleDirective,
+    IconModule,
+    IconDirective,
   ],
   templateUrl: './store-balance-list.component.html',
   styleUrl: './store-balance-list.component.scss',
@@ -50,7 +56,7 @@ export class StoreBalanceListComponent implements OnInit {
   pagination: PaginationDto = {};
   currentPage: number = 1;
   filtersForm: FormGroup = new FormGroup({});
-
+  storeId: number | null = null;
   constructor(private storeService: StoreService, private fb: FormBuilder) {}
 
   ngOnInit(): void {
@@ -112,5 +118,27 @@ export class StoreBalanceListComponent implements OnInit {
       a.click();
       this.isLoading = false;
     });
+  }
+
+  onFormSubmit(store: StoreDto) {
+    if (this.storeId) {
+      this.storeService.update(this.storeId, store).subscribe((response) => {
+        this.loadStores();
+        this.onCloseModal();
+      });
+    } else {
+      this.storeService.create(store).subscribe((response) => {
+        this.loadStores();
+        this.onCloseModal();
+      });
+    }
+  }
+
+  editStore(storeId: number) {
+    this.storeId = storeId;
+  }
+
+  onCloseModal() {
+    this.storeId = null;
   }
 }

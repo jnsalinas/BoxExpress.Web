@@ -1,0 +1,149 @@
+<c-modal
+  [visible]="storeId !== null"
+  size="lg"
+  backdrop="static"
+  class="modern-modal"
+>
+  <c-modal-header class="modal-header-custom">
+    <h5 class="modal-title">
+      <div class="d-flex align-items-center">
+        <div class="modal-icon me-2">
+          <i class="fas fa-store text-primary"></i>
+        </div>
+        <div>
+          <span class="fw-bold">Editar tienda</span>
+        </div>
+      </div>
+    </h5>
+  </c-modal-header>
+
+  <c-modal-body class="modal-body-custom">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label for="name" class="form-label">
+            <i class="fas fa-tag me-1 text-muted"></i>
+            Nombre <span class="text-danger">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            formControlName="name"
+            placeholder="Ingrese el nombre de la tienda"
+            [class.is-invalid]="
+              form.get('name')?.invalid &&
+              (form.get('name')?.touched || submitted)
+            "
+          />
+          <div
+            *ngIf="
+              form.get('name')?.invalid &&
+              (form.get('name')?.touched || submitted)
+            "
+            class="invalid-feedback d-block"
+          >
+            <span *ngIf="form.get('name')?.errors?.['required']"
+              >El nombre es obligatorio.</span
+            >
+            <span *ngIf="form.get('name')?.errors?.['minlength']"
+              >El nombre debe tener al menos 3 caracteres.</span
+            >
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label for="shopifyShopDomain" class="form-label">
+            <i class="fas fa-link me-1 text-muted"></i>
+            Dominio shopify
+          </label>
+          <input
+            type="text"
+            id="shopifyShopDomain"
+            class="form-control"
+            formControlName="shopifyShopDomain"
+            placeholder="mi-tienda.myshopify.com"
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label for="username" class="form-label">
+            <i class="fas fa-user me-1 text-muted"></i>
+            Usuario
+          </label>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            formControlName="username"
+            placeholder="Ingrese el nombre de usuario"
+          />
+        </div>
+
+        <div class="col-md-6">
+          <label for="password" class="form-label">
+            <i class="fas fa-lock me-1 text-muted"></i>
+            Contraseña
+          </label>
+          <div class="position-relative">
+            <input
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              class="form-control"
+              formControlName="password"
+              placeholder="Ingrese la contraseña"
+            />
+            <button
+              type="button"
+              class="btn btn-sm position-absolute end-0 top-50 translate-middle-y me-2"
+              (click)="togglePasswordVisibility()"
+              tabindex="-1"
+            >
+              <img
+                *ngIf="!showPassword"
+                src="assets/eye-solid.svg"
+                alt="Mostrar contraseña"
+                width="16"
+                height="16"
+              />
+              <img
+                *ngIf="showPassword"
+                src="assets/eye-slash-solid.svg"
+                alt="Ocultar contraseña"
+                width="16"
+                height="16"
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </c-modal-body>
+
+  <c-modal-footer class="modal-footer-custom">
+    <div class="d-flex gap-2 w-100">
+      <button
+        type="button"
+        class="btn btn-outline-secondary flex-fill"
+        (click)="onClose()"
+        [disabled]="isLoading"
+      >
+        <i class="fas fa-times me-1"></i>
+        Cancelar
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary flex-fill"
+        (click)="onSubmit()"
+        [disabled]="form.invalid || isLoading"
+      >
+        <span
+          *ngIf="isLoading"
+          class="spinner-border spinner-border-sm me-2"
+        ></span>
+        <i class="fas fa-save me-1" *ngIf="!isLoading"></i>
+        Guardar cambios
+      </button>
+    </div>
+  </c-modal-footer>
+</c-modal>

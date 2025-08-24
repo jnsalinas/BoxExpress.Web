@@ -10,12 +10,15 @@
       <div class="row align-items-center">
         <div class="col-md-8">
           <div class="d-flex align-items-center">
-            <div class="product-loans-icon me-3">
-                      <svg [cIcon]="icons.cilPeople" size="sm" class="text-primary"></svg>
+            <div class="header-icon me-3">
+              <svg [cIcon]="icons.cilBasket" size="2xl"></svg>
             </div>
             <div>
               <h3 class="mb-1 text-primary">Gestión Tradicional</h3>
-              <p class="text-muted mb-0 small">Administra y monitorea todos los préstamos de productos del sistema</p>
+              <p class="text-muted mb-0 small">
+                Administra y monitorea todos los préstamos de productos del
+                sistema
+              </p>
             </div>
           </div>
         </div>
@@ -27,7 +30,11 @@
               (click)="downloadExcel()"
               title="Exportar a Excel"
             >
-              <svg [cIcon]="icons.cilCloudDownload" size="sm" class="me-1"></svg>
+              <svg
+                [cIcon]="icons.cilCloudDownload"
+                size="sm"
+                class="me-1"
+              ></svg>
               Exportar
             </button>
             <button
@@ -63,7 +70,11 @@
         <div class="row g-2 align-items-end">
           <div class="col-md-2">
             <label for="warehouse" class="form-label small fw-semibold mb-1">
-              <svg [cIcon]="icons.cilHome" size="sm" class="me-1 text-muted"></svg>
+              <svg
+                [cIcon]="icons.cilHome"
+                size="sm"
+                class="me-1 text-muted"
+              ></svg>
               Bodega
             </label>
             <ng-select
@@ -77,10 +88,14 @@
             >
             </ng-select>
           </div>
-          
+
           <div class="col-md-2">
             <label for="startDate" class="form-label small fw-semibold mb-1">
-              <svg [cIcon]="icons.cilCalendar" size="sm" class="me-1 text-muted"></svg>
+              <svg
+                [cIcon]="icons.cilCalendar"
+                size="sm"
+                class="me-1 text-muted"
+              ></svg>
               Desde
             </label>
             <input
@@ -93,7 +108,11 @@
 
           <div class="col-md-2">
             <label for="endDate" class="form-label small fw-semibold mb-1">
-              <svg [cIcon]="icons.cilCalendar" size="sm" class="me-1 text-muted"></svg>
+              <svg
+                [cIcon]="icons.cilCalendar"
+                size="sm"
+                class="me-1 text-muted"
+              ></svg>
               Hasta
             </label>
             <input
@@ -103,10 +122,14 @@
               class="form-control form-control-sm"
             />
           </div>
-          
+
           <div class="col-md-2">
             <label for="status" class="form-label small fw-semibold mb-1">
-              <svg [cIcon]="icons.cilTask" size="sm" class="me-1 text-muted"></svg>
+              <svg
+                [cIcon]="icons.cilTask"
+                size="sm"
+                class="me-1 text-muted"
+              ></svg>
               Estado
             </label>
             <ng-select
@@ -152,7 +175,10 @@
           Resumen por Estado
         </h6>
         <div class="row g-2">
-          <div class="col-md-2 col-sm-4 col-6" *ngFor="let status of productLoanSummary">
+          <div
+            class="col-md-2 col-sm-4 col-6"
+            *ngFor="let status of productLoanSummary"
+          >
             <c-card
               class="status-card text-center h-100"
               [ngClass]="getStatusClass(status.statusName)"
@@ -176,27 +202,51 @@
             <thead class="table-light">
               <tr>
                 <th scope="col" class="text-center">
-                    <svg [cIcon]="icons.cilListNumbered" size="sm" class="text-muted"></svg>
+                  <svg
+                    [cIcon]="icons.cilListNumbered"
+                    size="sm"
+                    class="text-muted"
+                  ></svg>
                   ID
                 </th>
                 <th scope="col">
-                  <svg [cIcon]="icons.cilHome" size="sm" class="text-muted me-1"></svg>
+                  <svg
+                    [cIcon]="icons.cilHome"
+                    size="sm"
+                    class="text-muted me-1"
+                  ></svg>
                   Bodega
                 </th>
                 <th scope="col">
-                  <svg [cIcon]="icons.cilCalendar" size="sm" class="text-muted me-1"></svg>
+                  <svg
+                    [cIcon]="icons.cilCalendar"
+                    size="sm"
+                    class="text-muted me-1"
+                  ></svg>
                   Fecha
                 </th>
                 <th scope="col">
-                  <svg [cIcon]="icons.cilNotes" size="sm" class="text-muted me-1"></svg>
+                  <svg
+                    [cIcon]="icons.cilNotes"
+                    size="sm"
+                    class="text-muted me-1"
+                  ></svg>
                   Notas
                 </th>
                 <th scope="col">
-                  <svg [cIcon]="icons.cilTask" size="sm" class="text-muted me-1"></svg>
+                  <svg
+                    [cIcon]="icons.cilTask"
+                    size="sm"
+                    class="text-muted me-1"
+                  ></svg>
                   Estado
                 </th>
                 <th scope="col" class="text-center">
-                  <svg [cIcon]="icons.cilCog" size="sm" class="text-muted"></svg>
+                  <svg
+                    [cIcon]="icons.cilCog"
+                    size="sm"
+                    class="text-muted"
+                  ></svg>
                   Acciones
                 </th>
               </tr>
@@ -208,26 +258,40 @@
                 </td>
                 <td>
                   <div class="d-flex align-items-center">
-                    <svg [cIcon]="icons.cilHome" size="sm" class="text-primary me-2"></svg>
+                    <svg
+                      [cIcon]="icons.cilHome"
+                      size="sm"
+                      class="text-primary me-2"
+                    ></svg>
                     <span class="fw-medium">{{ loan.warehouseName }}</span>
                   </div>
                 </td>
                 <td>
                   <div class="d-flex align-items-center">
-                    <svg [cIcon]="icons.cilCalendar" size="sm" class="text-info me-2"></svg>
-                    <span>{{ loan.loanDate | date:'dd/MM/yyyy' }}</span>
+                    <svg
+                      [cIcon]="icons.cilCalendar"
+                      size="sm"
+                      class="text-info me-2"
+                    ></svg>
+                    <span>{{ loan.loanDate | date : "dd/MM/yyyy" }}</span>
                   </div>
                 </td>
                 <td>
                   <div class="notes-cell">
-                    <span class="text-truncate d-inline-block" style="max-width: 200px;" 
-                          [title]="loan.notes">
-                      {{ loan.notes || 'Sin notas' }}
+                    <span
+                      class="text-truncate d-inline-block"
+                      style="max-width: 200px"
+                      [title]="loan.notes"
+                    >
+                      {{ loan.notes || "Sin notas" }}
                     </span>
                   </div>
                 </td>
                 <td>
-                  <span class="badge" [ngClass]="getStatusBadgeClass(loan.status)">
+                  <span
+                    class="badge"
+                    [ngClass]="getStatusBadgeClass(loan.status)"
+                  >
                     {{ getStatusDisplayName(loan.status) }}
                   </span>
                 </td>
@@ -263,14 +327,20 @@
             </tbody>
           </table>
         </div>
-        
+
         <!-- Mensaje cuando no hay datos -->
         <div *ngIf="productLoans.length === 0" class="text-center py-5">
-            <svg [cIcon]="icons.cilInbox" size="sm" class="text-muted fs-1 mb-3"></svg>
+          <svg
+            [cIcon]="icons.cilInbox"
+            size="sm"
+            class="text-muted fs-1 mb-3"
+          ></svg>
           <h5 class="text-muted">No se encontraron préstamos</h5>
-          <p class="text-muted small">No hay préstamos que coincidan con los filtros aplicados</p>
+          <p class="text-muted small">
+            No hay préstamos que coincidan con los filtros aplicados
+          </p>
         </div>
-        
+
         <!-- Paginación -->
         <div class="pagination-container mt-4" *ngIf="productLoans.length > 0">
           <app-generic-pagination
