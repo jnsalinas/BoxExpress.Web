@@ -91,7 +91,6 @@ export class RegisterComponent {
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', Validators.required],
-      legalName: ['', Validators.required],
       documentNumber: ['', Validators.required],
       storeName: ['', Validators.required],
       city: [{ value: 1, disabled: true }, Validators.required], // ← deshabilitado desde el inicio
