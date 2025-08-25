@@ -4,7 +4,8 @@
   class="d-print-none sidebar sidebar-fixed border-end"
   colorScheme="dark"
   id="sidebar1"
-  visible
+  [overlaid]="isMobile"
+  [visible]="!isMobile"
 >
   <c-sidebar-header class="border-bottom" style="display: flex; justify-content: space-around;">
   <c-sidebar-brand [routerLink]="[]">

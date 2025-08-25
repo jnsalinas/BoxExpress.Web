@@ -60,6 +60,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   icons = freeSet;
   public navItems = [...navItems];
   private subscription = new Subscription();
+  isMobile = false;
 
   constructor(
     private auth: AuthService,
@@ -94,6 +95,8 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.updateIsMobile();
+    window.addEventListener('resize', this.updateIsMobile);
     // Suscribirse a los cambios del contador de transferencias pendientes
     this.subscription.add(
       this.navBadgeService.pendingTransfersCount$.subscribe((count) => {
@@ -126,6 +129,7 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    window.removeEventListener('resize', this.updateIsMobile);
   }
 
   filterNavByRole(navItems: any[], userRole: string): CustomNavData[] {
@@ -142,4 +146,10 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
       })
       .filter((item) => !item.children || item.children.length > 0);
   }
+
+  updateIsMobile = () => {
+    // breakpoint lg ~992px
+    this.isMobile = window.innerWidth < 992;
+    this.cdr.markForCheck();
+  };
 }
