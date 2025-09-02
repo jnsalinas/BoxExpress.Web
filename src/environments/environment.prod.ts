@@ -1,5 +1,5 @@
 export const environment = {
-    production: false,
+    production: true,
     apiUrl: 'https://boxexpress-service.azurewebsites.net/api',
     auth: '/Auth/login',
     defaultValues: {
