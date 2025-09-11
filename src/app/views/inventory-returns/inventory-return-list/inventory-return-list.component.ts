@@ -30,6 +30,7 @@ import { InventoryHoldFilter } from '../../../models/inventory-hold-filter.model
 import { toUtcStartOfDayLocal } from '../../../shared/utils/date-utils';
 import { PaginationDto } from '../../../models/common/pagination.dto';
 import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
+import { UtcDatePipe } from '../../../shared/pipes/utc-date.pipe';
 
 @Component({
   standalone: true,
@@ -49,6 +50,7 @@ import { GenericPaginationComponent } from '../../../shared/components/generic-p
     IconModule,
     ReactiveFormsModule,
     GenericPaginationComponent,
+    UtcDatePipe,
   ],
   templateUrl: './inventory-return-list.component.html',
   styleUrl: './inventory-return-list.component.scss',

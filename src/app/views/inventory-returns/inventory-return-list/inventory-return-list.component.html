@@ -189,7 +189,7 @@
                   <span class="badge bg-info">{{ hold.quantity }}</span>
                 </td>
                 <td class="date-cell">
-                  {{ hold.createdAt | date : "short" }}
+                  {{ hold.createdAt | utcDate }}
                 </td>
                 <td class="actions-cell">
                   <div class="d-flex gap-1">
