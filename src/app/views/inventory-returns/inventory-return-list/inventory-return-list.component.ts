@@ -20,6 +20,16 @@ import { RouterLink } from '@angular/router';
 import { LoadingOverlayComponent } from '../../../shared/components/loading-overlay/loading-overlay.component';
 import { freeSet } from '@coreui/icons';
 import { IconDirective, IconModule } from '@coreui/icons-angular';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { InventoryHoldFilter } from '../../../models/inventory-hold-filter.model';
+import { toUtcStartOfDayLocal } from '../../../shared/utils/date-utils';
+import { PaginationDto } from '../../../models/common/pagination.dto';
+import { GenericPaginationComponent } from '../../../shared/components/generic-pagination/generic-pagination.component';
 
 @Component({
   standalone: true,
@@ -37,6 +47,8 @@ import { IconDirective, IconModule } from '@coreui/icons-angular';
     LoadingOverlayComponent,
     IconDirective,
     IconModule,
+    ReactiveFormsModule,
+    GenericPaginationComponent,
   ],
   templateUrl: './inventory-return-list.component.html',
   styleUrl: './inventory-return-list.component.scss',
@@ -47,31 +59,43 @@ export class InventoryReturnListComponent implements OnInit {
   inventoryHoldResolution: InventoryHoldResolutionDto | null = null;
   isLoading = false;
   icons = freeSet;
-  constructor(private inventoryHoldService: InventoryHoldService) {}
-  
+  filtersForm: FormGroup = new FormGroup({});
+  currentPage: number = 1;
+  pagination: PaginationDto | null = null;
+  constructor(
+    private inventoryHoldService: InventoryHoldService,
+    private fb: FormBuilder
+  ) {}
+
   ngOnInit(): void {
     this.loadPendingReturns();
+    this.initForm();
   }
 
   loadPendingReturns(): void {
     this.isLoading = true;
-    this.inventoryHoldService
-      .getAll({ status: InventoryHoldStatus.PendingReturn })
-      .subscribe({
-        next: (res) => {
-          this.pendingReturns = res.data;
-          this.isLoading = false;
-        },
-        error: () => {
-          this.isLoading = false;
-        },
-      });
+    this.inventoryHoldService.getAll(this.getFilters()).subscribe({
+      next: (res) => {
+        this.pendingReturns = res.data;
+        this.pagination = res.pagination;
+        this.isLoading = false;
+      },
+      error: () => {
+        this.isLoading = false;
+      },
+    });
   }
 
   downloadExcel(): void {
     // Implementar exportación a Excel
     console.log('Exportando devoluciones a Excel...');
     // TODO: Implementar lógica de exportación
+  }
+
+  initForm(): void {
+    this.filtersForm = this.fb.group({
+      createdAt: [null],
+    });
   }
 
   getTitleModal(): string {
@@ -139,5 +163,35 @@ export class InventoryReturnListComponent implements OnInit {
 
   cancelReturn(): void {
     this.inventoryHoldResolution = null;
+  }
+
+  onFilter(): void {
+    this.currentPage = 1;
+    this.loadPendingReturns();
+  }
+
+  resetFilters(): void {
+    this.filtersForm.reset();
+    this.currentPage = 1;
+    this.loadPendingReturns();
+  }
+
+  getFilters(): InventoryHoldFilter {
+    const filters = this.filtersForm.value;
+    const payload: InventoryHoldFilter = {
+      status: InventoryHoldStatus.PendingReturn,
+      createdAt: filters.createdAt
+        ? toUtcStartOfDayLocal(filters.createdAt)
+        : null,
+      page: this.currentPage,
+      pageSize: 10,
+      isAll: false,
+    };
+    return payload;
+  }
+
+  onPageChange(page: number): void {
+    this.currentPage = page;
+    this.loadPendingReturns();
   }
 }

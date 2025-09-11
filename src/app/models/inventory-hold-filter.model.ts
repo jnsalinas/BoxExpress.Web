@@ -6,5 +6,5 @@ export interface InventoryHoldFilter extends PaginationFilter {
   warehouseInventoryId?: number;
   status?: InventoryHoldStatus;
   statuses?: InventoryHoldStatus[];
-
+  createdAt?: Date | null;
 }
