@@ -391,6 +391,8 @@ export class OrderFormComponent implements OnInit, OnChanges {
 
   onStoreChange(storeId: number) {
     if (storeId > 0) {
+      let deliveryFee = this.stores.find((s) => s.id === storeId)?.deliveryFee ?? 150;
+      this.form.get('deliveryFee')?.setValue(deliveryFee);
       this.isLoading = true;
       this.productVariantService
         .getAll({ storeId: storeId, isAll: true })

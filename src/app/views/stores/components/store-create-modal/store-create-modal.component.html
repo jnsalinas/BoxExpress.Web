@@ -70,19 +70,18 @@
           </div>
         </div>
 
-        <!-- <div class="col-md-6">
-          <label for="shopifyShopDomain" class="form-label">
+        <div class="col-md-6" *hasRole="['admin']">
+          <label for="deliveryFee" class="form-label">
             <i class="fas fa-link me-1 text-muted"></i>
-            Dominio shopify
+            Flete
           </label>
           <input
-            type="text"
-            id="shopifyShopDomain"
+            type="number"
+            id="deliveryFee"
             class="form-control"
-            formControlName="shopifyShopDomain"
-            placeholder="mi-tienda.myshopify.com"
+            formControlName="deliveryFee"
           />
-        </div> -->
+        </div>
       </div>
       <div class="row g-3">
         <div class="col-md-6">

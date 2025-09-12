@@ -22,6 +22,7 @@ import { StoreDto } from '../../../../models/store.dto';
 import { StoreService } from '../../../../services/store.service';
 import { environment } from '../../../../../environments/environment';
 import { passwordPattern } from '../../../../shared/validators/custom-validators';
+import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
 
 @Component({
   selector: 'app-store-create-modal',
@@ -32,6 +33,7 @@ import { passwordPattern } from '../../../../shared/validators/custom-validators
     ModalHeaderComponent,
     ModalBodyComponent,
     ModalFooterComponent,
+    HasRoleDirective,
   ],
   standalone: true,
   providers: [ModalService],
@@ -56,9 +58,9 @@ export class StoreCreateModalComponent implements OnInit {
     this.form = new FormGroup({
       id: new FormControl(null, [Validators.required]),
       name: new FormControl('', [Validators.required, Validators.minLength(3)]),
-      shopifyShopDomain: new FormControl(''),
+      deliveryFee: new FormControl(''),
       username: new FormControl(''),
-      password: new FormControl('', [Validators.required, passwordPattern]),
+      password: new FormControl('', [passwordPattern]),
     });
   }
 

@@ -24,6 +24,7 @@ import {
 import { NgSelectModule } from '@ng-select/ng-select';
 import { StoreCreateModalComponent } from '../../components/store-create-modal/store-create-modal.component';
 import { HasRoleDirective } from '../../../../shared/directives/has-role.directive';
+import { HasRoleOrHigherDirective } from '../../../../shared/directives/has-role-or-higher.directive';
 
 @Component({
   standalone: true,
@@ -43,6 +44,7 @@ import { HasRoleDirective } from '../../../../shared/directives/has-role.directi
     IconDirective,
     StoreCreateModalComponent,
     HasRoleDirective,
+    HasRoleOrHigherDirective,
     IconModule,
     IconDirective,
   ],
