@@ -18,6 +18,24 @@
   </c-modal-header>
 
   <c-modal-body class="modal-body-custom">
+    <div class="alert alert-success" role="alert">
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+          <i class="fas fa-info-circle me-2"></i>
+          <span class="fw-semibold">Integración con Shopify</span>
+        </div>
+        <button
+          type="button"
+          class="btn btn-sm btn-light"
+          (click)="copyLink()"
+          [disabled]="!store?.id"
+        >
+          <i class="fas" [ngClass]="copied ? 'fa-check' : 'fa-copy'"></i>
+          <span class="ms-1">{{ copied ? "Copiado" : "Copiar" }}</span>
+        </button>
+      </div>
+      <div class="small text-break font-monospace mt-2">{{ computedUrl }}</div>
+    </div>
     <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
       <div class="row g-3">
         <div class="col-md-6">
@@ -52,7 +70,7 @@
           </div>
         </div>
 
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
           <label for="shopifyShopDomain" class="form-label">
             <i class="fas fa-link me-1 text-muted"></i>
             Dominio shopify
@@ -64,8 +82,9 @@
             formControlName="shopifyShopDomain"
             placeholder="mi-tienda.myshopify.com"
           />
-        </div>
-
+        </div> -->
+      </div>
+      <div class="row g-3">
         <div class="col-md-6">
           <label for="username" class="form-label">
             <i class="fas fa-user me-1 text-muted"></i>
@@ -93,6 +112,17 @@
               formControlName="password"
               placeholder="Ingrese la contraseña"
             />
+            <div
+              *ngIf="form.get('password')?.invalid && (form.get('password')?.touched || submitted)"
+              class="invalid-feedback d-block"
+            >
+              <span *ngIf="form.get('password')?.errors?.['required']">
+                La contraseña es obligatoria.
+              </span>
+              <span *ngIf="form.get('password')?.errors?.['passwordPattern']">
+                Debe tener al menos 8 caracteres, 1 mayúscula y 1 número.
+              </span>
+            </div>
             <button
               type="button"
               class="btn btn-sm position-absolute end-0 top-50 translate-middle-y me-2"

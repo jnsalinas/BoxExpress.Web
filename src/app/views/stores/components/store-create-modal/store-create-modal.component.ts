@@ -13,19 +13,15 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  CardComponent,
-  CardBodyComponent,
-  ModalComponent,
-  RowComponent,
-  ColComponent,
-} from '@coreui/angular';
+import { ModalComponent } from '@coreui/angular';
 import { ModalHeaderComponent } from '@coreui/angular';
 import { ModalBodyComponent } from '@coreui/angular';
 import { ModalFooterComponent } from '@coreui/angular';
 import { ModalService } from '@coreui/angular';
 import { StoreDto } from '../../../../models/store.dto';
 import { StoreService } from '../../../../services/store.service';
+import { environment } from '../../../../../environments/environment';
+import { passwordPattern } from '../../../../shared/validators/custom-validators';
 
 @Component({
   selector: 'app-store-create-modal',
@@ -33,10 +29,6 @@ import { StoreService } from '../../../../services/store.service';
     CommonModule,
     ReactiveFormsModule,
     ModalComponent,
-    CardComponent,
-    CardBodyComponent,
-    RowComponent,
-    ColComponent,
     ModalHeaderComponent,
     ModalBodyComponent,
     ModalFooterComponent,
@@ -56,6 +48,8 @@ export class StoreCreateModalComponent implements OnInit {
   isLoading = false;
   submitted = false;
   showPassword = false;
+  environment = environment;
+  copied = false;
   constructor(private storeService: StoreService) {}
 
   initForm() {
@@ -64,7 +58,7 @@ export class StoreCreateModalComponent implements OnInit {
       name: new FormControl('', [Validators.required, Validators.minLength(3)]),
       shopifyShopDomain: new FormControl(''),
       username: new FormControl(''),
-      password: new FormControl(''),
+      password: new FormControl('', [Validators.required, passwordPattern]),
     });
   }
 
@@ -97,5 +91,20 @@ export class StoreCreateModalComponent implements OnInit {
 
   togglePasswordVisibility(): void {
     this.showPassword = !this.showPassword;
+  }
+
+  get computedUrl(): string {
+    const id = this.store?.id ?? '';
+    return `${this.environment.apiUrl}/Shopify/webhook/${id}`;
+  }
+
+  copyLink() {
+    if (!this.store?.id) {
+      return;
+    }
+    navigator.clipboard.writeText(this.computedUrl).then(() => {
+      this.copied = true;
+      setTimeout(() => (this.copied = false), 2000);
+    });
   }
 }
