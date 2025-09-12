@@ -119,8 +119,8 @@
                   </span>
                   <span *ngIf="!variant.sku" class="text-muted small">-</span>
                 </td>
-                <td *hasRole="['admin', 'supervisor', 'bodega']" class="actions-cell">
-                  <div class="d-flex gap-1">
+                <td  class="actions-cell">
+                  <div class="d-flex gap-1" *hasRole="['admin', 'supervisor', 'bodega']">
                     <a *hasRole="['admin', 'supervisor']" class="btn btn-sm btn-outline-primary"
                       (click)="openInventoryItemModal(variant)" title="Editar">
                       <svg [cIcon]="icons.cilPencil" size="sm" class="me-1"></svg>
