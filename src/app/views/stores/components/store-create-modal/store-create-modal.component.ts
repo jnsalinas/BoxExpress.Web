@@ -96,7 +96,7 @@ export class StoreCreateModalComponent implements OnInit {
   }
 
   get computedUrl(): string {
-    const id = this.store?.id ?? '';
+    const id = this.store?.publicId ?? '';
     return `${this.environment.apiUrl}/Shopify/webhook/${id}`;
   }
 
