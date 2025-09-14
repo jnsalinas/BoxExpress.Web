@@ -73,7 +73,7 @@
                   <i class="fas fa-barcode me-1"></i>
                   SKU
                 </th>
-                <th *hasRole="['admin', 'supervisor', 'bodega']" class="actions-column">
+                <th class="actions-column">
                   <i class="fas fa-cogs me-1"></i>
                   Acciones
                 </th>
@@ -119,15 +119,15 @@
                   </span>
                   <span *ngIf="!variant.sku" class="text-muted small">-</span>
                 </td>
-                <td *hasRole="['admin', 'supervisor', 'bodega']" class="actions-cell">
-                  <div class="d-flex gap-1">
-                    <a *hasRole="['admin', 'supervisor']" class="btn btn-sm btn-outline-primary"
+                <td class="actions-cell">
+                  <div class="d-flex gap-1" >
+                    <a *hasRole="['admin', 'supervisor', 'bodega']" class="btn btn-sm btn-outline-primary"
                       (click)="openInventoryItemModal(variant)" title="Editar">
                       <svg [cIcon]="icons.cilPencil" size="sm" class="me-1"></svg>
                       Editar
                     </a>
 
-                    <a class="btn btn-sm btn-outline-primary" [routerLink]="[
+                    <!-- <a class="btn btn-sm btn-outline-primary" [routerLink]="[
                         '/warehouses',
                         variant?.warehouseId,
                         'inventory',
@@ -135,7 +135,7 @@
                       ]" title="Ver historial">
                       <svg [cIcon]="icons.cilHistory" size="sm" class="me-1"></svg>
                       Ver historial
-                    </a>
+                    </a> -->
                   </div>
                 </td>
               </tr>

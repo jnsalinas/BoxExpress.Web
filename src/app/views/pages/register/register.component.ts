@@ -93,7 +93,7 @@ export class RegisterComponent {
       phone: ['', Validators.required],
       documentNumber: ['', Validators.required],
       storeName: ['', Validators.required],
-      city: [{ value: 1, disabled: true }, Validators.required], // ← deshabilitado desde el inicio
+      city: [{ value: 1 }, Validators.required], // ← deshabilitado desde el inicio
       password: ['', [passwordPattern, Validators.required]],
     });
   }

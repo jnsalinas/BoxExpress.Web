@@ -10,4 +10,6 @@ export interface StoreDto extends BaseDto {
   shopifyShopDomain?: string;
   username?: string;
   password?: string;
+  deliveryFee?: number;
+  publicId?: string;
 }
