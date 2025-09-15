@@ -27,10 +27,10 @@
             <button
               class="btn btn-primary btn-sm"
               (click)="openInventoryModal()"
-              title="Nuevo productos"
+              title="Nuevo producto"
             >
               <svg [cIcon]="icons.cilPlus" size="sm" class="me-1"></svg>
-              Nuevo productos
+              Nuevo producto
             </button>
             <button
               class="btn btn-primary btn-sm"
@@ -40,6 +40,14 @@
               <svg [cIcon]="icons.cilArrowRight" size="sm" class="me-1"></svg>
               Transferir productos
             </button>
+            <button
+            class="btn btn-primary btn-sm"
+            (click)="openTransferStoreModal()"
+            title="Transferir a tienda"
+          >
+            <svg [cIcon]="icons.cilArrowRight" size="sm" class="me-1"></svg>
+            Transferir a tienda
+          </button>
           </div>
         </div>
       </div>
@@ -162,5 +170,13 @@
   (onClose)="handleTransferClose($event)"
 >
 </app-warehouse-transfer-modal>
+
+<app-warehouse-transfer-store-modal
+  *ngIf="isModalTransferStoreVisible"
+  [isVisible]="isModalTransferStoreVisible"
+  (onSave)="handleTransferStoreSave($event)"
+  (onClose)="handleTransferStoreClose($event)"
+>
+</app-warehouse-transfer-store-modal>
 
 <app-generic-modal></app-generic-modal>

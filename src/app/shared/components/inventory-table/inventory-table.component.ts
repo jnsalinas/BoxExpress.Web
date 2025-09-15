@@ -74,13 +74,11 @@ export class InventoryTableComponent {
   }
 
   handleInventoryItemSave(data: any) {
-    console.log('Saved data:', data);
     this.modal.show({
       title: 'Actualizar inventario',
       body: `¿Estás seguro de que desea actualizar el inventario?`,
       ok: () => {
         if (this.warehouseInventoryId != null) {
-          console.log('Saved data:', data);
           this.warehouseInventoryService
             .update(this.warehouseInventoryId, data)
             .subscribe({

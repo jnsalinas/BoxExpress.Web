@@ -119,6 +119,7 @@ export class WarehouseTransferModalComponent implements OnInit {
     this.transferDetails.push(variant);
     this.variantOptions.push([]);
     this.isLoadingVariant.push(false);
+    this.variantOptions[index] = [];
 
     const subject = new Subject<string>();
     subject.pipe(debounceTime(300)).subscribe((term) => {
@@ -133,10 +134,6 @@ export class WarehouseTransferModalComponent implements OnInit {
     this.variantOptions.splice(index, 1);
     this.variantInputSubjects.splice(index, 1);
     this.isLoadingVariant.splice(index, 1);
-  }
-
-  onVariantSearch(term: string, index: number): void {
-    this.variantInputSubjects[index].next(term);
   }
 
   private fetchVariants(term: string, index: number): void {

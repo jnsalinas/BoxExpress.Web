@@ -14,7 +14,6 @@ export class NavBadgeService {
   }
 
   updatePendingTransfersCount(count: number) {
-    console.log('NavBadgeService - actualizando count a:', count);
     this.pendingTransfersCountSubject.next(count);
   }
 

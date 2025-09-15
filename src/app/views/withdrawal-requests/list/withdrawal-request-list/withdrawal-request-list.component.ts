@@ -185,8 +185,6 @@ export class WithdrawalRequestListComponent implements OnInit {
       ok: () => {
         this.withdrawalRequestService.create(sanitizedData).subscribe({
           next: (data) => {
-            console.log(data);
-            //todo mostrar mensaje de crecion
             this.loadWithdrawalRequest();
             this.isLoading = false;
             this.handleWithdrawalRequestClose();
@@ -204,7 +202,6 @@ export class WithdrawalRequestListComponent implements OnInit {
   }
 
   handleWithdrawalRequestApprove(payload: { id: number; reason: string }) {
-    console.log('handleWithdrawalRequestApprove', payload.id);
     this.isLoading = true;
     this.modal.show({
       title: 'Aprobacion de retiro',
@@ -232,8 +229,6 @@ export class WithdrawalRequestListComponent implements OnInit {
   }
 
   handleWithdrawalRequestReject(payload: { id: number; reason: string }) {
-    console.log(payload);
-    console.log('handleWithdrawalRequestReject', payload.id);
     this.isLoading = true;
     this.modal.show({
       title: 'Rechazo de retiro',
@@ -243,8 +238,6 @@ export class WithdrawalRequestListComponent implements OnInit {
           .reject(payload.id, { reason: payload.reason })
           .subscribe({
             next: (data) => {
-              //todo mostrar mensaje de crecion
-              console.log('data', data);
               this.loadWithdrawalRequest();
               this.isLoading = false;
               this.handleWithdrawalRequestClose();
