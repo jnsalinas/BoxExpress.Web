@@ -133,10 +133,11 @@ export class OrderListComponent implements OnInit {
     this.filtersForm = this.fb.group({
       startDate: [null],
       endDate: [null],
-      orderId: [null],
+      query: [null],
       storeId: [null],
       warehouseId: [null],
       scheduledDate: [null],
+      statusId: [null],
     });
   }
 
@@ -173,14 +174,14 @@ export class OrderListComponent implements OnInit {
         ? toUtcStartOfDayLocal(filters.startDate)
         : null,
       endDate: filters.endDate ? toUtcEndOfDayLocal(filters.endDate) : null,
-      orderId: filters.orderId ?? null,
+      query: filters.query ?? null,
       storeId: filters.storeId || null,
       page: this.currentPage,
       warehouseId: filters.warehouseId || null,
       scheduledDate: filters.scheduledDate
         ? toUtcStartOfDayLocal(filters.scheduledDate)
         : null,
-      // pageSize: 2
+      statusId: filters.statusId || null,
     };
     return payload;
   }
@@ -604,5 +605,12 @@ export class OrderListComponent implements OnInit {
 
   onBulkUploadClose(event: any) {
     this.showBulkUploadModal = false;
+  }
+
+  get totalOrders(): number {
+    return (this.orderSummary || []).reduce(
+      (sum, item) => sum + (item?.count ?? 0),
+      0
+    );
   }
 }
