@@ -100,14 +100,12 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
     // Suscribirse a los cambios del contador de transferencias pendientes
     this.subscription.add(
       this.navBadgeService.pendingTransfersCount$.subscribe((count) => {
-        console.log('navBadgeService - count', count);
         this.updateNavItems(count);
       })
     );
   }
 
   private updateNavItems(pendingCount: number) {
-    console.log('Actualizando navItems con count:', pendingCount);
     const transferItem = this.navItems.find(
       (item) => item.name === 'Transferencias'
     );
@@ -117,7 +115,6 @@ export class DefaultLayoutComponent implements OnInit, OnDestroy {
       }
       transferItem.badge.text = pendingCount.toString();
       transferItem.badge.color = pendingCount > 0 ? 'warning' : 'secondary';
-      console.log('Badge actualizado:', transferItem.badge);
 
       // Crear nueva referencia del array para forzar la detección de cambios
       this.navItems = [...this.navItems];

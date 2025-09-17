@@ -121,7 +121,6 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
       this.isLoading = true;
       this.walletService.summary().subscribe({
         next: (res) => {
-          console.log(res);
           this.store = res;
           this.isLoading = false;
         },
@@ -136,7 +135,6 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
   startAutoRefresh(): void {
     // Auto-refresh cada 30 segundos
     this.refreshInterval = setInterval(() => {
-      console.log('refreshing balance');
       this.getBalanceInformation();
     }, 30000); // 30 segundos
   }
@@ -151,7 +149,6 @@ export class DefaultHeaderComponent extends HeaderComponent implements OnInit {
     this.warehouseInventoryTransferService.getPendingTransfers({}).subscribe({
       next: (response) => {
         const count = response;
-        console.log('count', count);
         this.navBadgeService.updatePendingTransfersCount(count);
       },
       error: (err) => {

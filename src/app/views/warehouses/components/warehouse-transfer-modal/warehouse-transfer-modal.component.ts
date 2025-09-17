@@ -119,6 +119,7 @@ export class WarehouseTransferModalComponent implements OnInit {
     this.transferDetails.push(variant);
     this.variantOptions.push([]);
     this.isLoadingVariant.push(false);
+    this.variantOptions[index] = [];
 
     const subject = new Subject<string>();
     subject.pipe(debounceTime(300)).subscribe((term) => {
@@ -135,10 +136,6 @@ export class WarehouseTransferModalComponent implements OnInit {
     this.isLoadingVariant.splice(index, 1);
   }
 
-  onVariantSearch(term: string, index: number): void {
-    this.variantInputSubjects[index].next(term);
-  }
-
   private fetchVariants(term: string, index: number): void {
     if (!term || term.length < 2) {
       this.variantOptions[index] = [];
@@ -146,25 +143,28 @@ export class WarehouseTransferModalComponent implements OnInit {
     }
 
     this.isLoadingVariant[index] = true;
-    this.warehouseInventoriesService.autocomplete(term, this.warehouseId).subscribe({
-      next: (matches) => {
-        this.variantOptions[index] = matches.filter(
-          (v) => !this.isDuplicate(v.id, index)
-        );
+    this.warehouseInventoriesService
+      .autocomplete(term, this.warehouseId)
+      .subscribe({
+        next: (matches) => {
+          console.log('matches', matches);
+          this.variantOptions[index] = matches.filter(
+            (v) => !this.isDuplicate(v.id, index)
+          );
 
-        for (const match of matches) {
-          if (!this.variantsList.find((v) => v.id === match.id)) {
-            this.variantsList.push(match);
+          for (const match of matches) {
+            if (!this.variantsList.find((v) => v.id === match.id)) {
+              this.variantsList.push(match);
+            }
           }
-        }
 
-        this.isLoadingVariant[index] = false;
-      },
-      error: (err) => {
-        console.error('Autocomplete error:', err);
-        this.isLoadingVariant[index] = false;
-      },
-    });
+          this.isLoadingVariant[index] = false;
+        },
+        error: (err) => {
+          console.error('Autocomplete error:', err);
+          this.isLoadingVariant[index] = false;
+        },
+      });
   }
 
   onVariantSelected(
@@ -197,10 +197,11 @@ export class WarehouseTransferModalComponent implements OnInit {
   }
 
   getVariantOptions(index: number): ProductVariantAutocompleteDto[] {
+    console.log('variantOptions', this.variantOptions[index]);
     this.variantOptions[index].forEach((option) => {
       option.displayName = `${option.productName || ''} - ${
         option.name || ''
-      } - ${option.availableUnits || ''}`;
+      } - ${option.storeName || ''} - ${option.availableUnits || ''}`;
     });
     return this.variantOptions[index] || [];
   }
@@ -208,7 +209,8 @@ export class WarehouseTransferModalComponent implements OnInit {
   isDuplicate(productVariantId: number, currentIndex: number): boolean {
     return this.transferDetails.controls.some(
       (control, index) =>
-        index !== currentIndex && control.get('productVariantId')?.value === productVariantId
+        index !== currentIndex &&
+        control.get('productVariantId')?.value === productVariantId
     );
   }
 
@@ -218,7 +220,9 @@ export class WarehouseTransferModalComponent implements OnInit {
       .map((control) => {
         const productVariantId = control.get('productVariantId')?.value;
         const quantity = control.get('quantity')?.value;
-        const variant = this.variantsList.find((v) => v.id === productVariantId)!;
+        const variant = this.variantsList.find(
+          (v) => v.id === productVariantId
+        )!;
         return productVariantId
           ? { id: productVariantId, name: variant.displayName, quantity }
           : null;

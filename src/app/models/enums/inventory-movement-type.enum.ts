@@ -8,6 +8,11 @@ export enum InventoryMovementType {
   OrderDeliveryReverted = 7,
   InitialStock = 8,
   LostOnCancellation = 9,
+  Loan = 10,
+  LoanReturned = 11,
+  LoanDelivered = 12,
+  TransferStoreSent = 13,
+  TransferStoreReceived = 14,
 }
 
 export const InventoryMovementTypeText: Record<InventoryMovementType, string> =
@@ -21,4 +26,9 @@ export const InventoryMovementTypeText: Record<InventoryMovementType, string> =
     [InventoryMovementType.OrderDeliveryReverted]: 'Orden revertida',
     [InventoryMovementType.InitialStock]: 'Inicial stock',
     [InventoryMovementType.LostOnCancellation]: 'Pérdida por cancelación de orden ',
+    [InventoryMovementType.Loan]: 'Préstamo',
+    [InventoryMovementType.LoanReturned]: 'Préstamo devuelto',
+    [InventoryMovementType.LoanDelivered]: 'Préstamo entregado',
+    [InventoryMovementType.TransferStoreSent]: 'Transferencia de tienda enviada',
+    [InventoryMovementType.TransferStoreReceived]: 'Transferencia de tienda recibida',
   };

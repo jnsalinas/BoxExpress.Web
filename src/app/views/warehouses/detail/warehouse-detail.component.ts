@@ -36,6 +36,7 @@ import { HasRoleDirective } from '../../../shared/directives/has-role.directive'
 import { MessageService } from '../../../services/message.service';
 import { InventoryTableComponent } from '../../../shared/components/inventory-table/inventory-table.component';
 import { AuthService } from '../../../services/auth.service';
+import { WarehouseTransferStoreModalComponent } from '../components/warehouse-transfer-store-modal/warehouse-transfer-store-modal.component';
 
 @Component({
   selector: 'app-warehouse-detail',
@@ -60,6 +61,7 @@ import { AuthService } from '../../../services/auth.service';
     InventoryTableComponent,
     IconDirective,
     IconModule,
+    WarehouseTransferStoreModalComponent,
   ],
   templateUrl: './warehouse-detail.component.html',
   styleUrls: ['./warehouse-detail.component.scss'],
@@ -84,6 +86,7 @@ export class WarehouseDetailComponent implements OnInit {
   pagination: PaginationDto | null = null;
   filtersForm: FormGroup = new FormGroup({});
   warehouseInventoryId: number | null = null;
+  isModalTransferStoreVisible = false;
 
   constructor(
     private warehouseService: WarehouseService,
@@ -121,7 +124,6 @@ export class WarehouseDetailComponent implements OnInit {
       .getWarehouseInventories(this.getFilters())
       .subscribe({
         next: (response) => {
-          console.log('Warehouse inventories:', response);
           if (this.warehouseDetail) {
             // this.warehouseDetail.products = result;
             this.filteredProducts = response.data ?? [];
@@ -130,7 +132,6 @@ export class WarehouseDetailComponent implements OnInit {
           this.isLoading = false;
         },
         error: (err) => {
-          console.error('Error isLoading warehouses', err);
           this.isLoading = false;
         },
       });
@@ -160,7 +161,6 @@ export class WarehouseDetailComponent implements OnInit {
   }
 
   handleInventoryClose(data: any) {
-    console.log('Modal closed with data:', data);
     this.isModalInventoryVisible = false;
     this.productToEdit = null;
     // Resetear el estado de guardado en el modal
@@ -170,12 +170,10 @@ export class WarehouseDetailComponent implements OnInit {
   }
 
   handleInventorySave(data: any) {
-    console.log('Saved data:', data);
     this.warehouseService
       .addInventory(this.warehouseId!, data.products)
       .subscribe({
         next: (data) => {
-          console.log('Warehouse created:', data);
           this.handleInventoryClose(null);
           this.loadWarehouseInventories(); // Recargar la lista
           // Resetear el estado de guardado en el modal
@@ -185,8 +183,6 @@ export class WarehouseDetailComponent implements OnInit {
           this.messageService.showSuccess('Inventario creado correctamente');
         },
         error: (err) => {
-          console.log('Error isLoading warehouses', err);
-          console.error('Error isLoading warehouses', err);
           this.handleInventoryClose(null);
           // Resetear el estado de guardado en el modal
           if (this.inventoryModal) {
@@ -216,7 +212,6 @@ export class WarehouseDetailComponent implements OnInit {
       title: 'Aceptar transferencia',
       body: `¿Estás seguro de que desea crear la transferencia?`,
       ok: () => {
-        console.log('Saved data:', data);
         this.isLoading = true;
         this.warehouseService.transfer(this.warehouseId!, data).subscribe({
           next: (data) => {
@@ -267,13 +262,11 @@ export class WarehouseDetailComponent implements OnInit {
   // }
 
   handleInventoryItemSave(data: any) {
-    console.log('Saved data:', data);
     this.modal.show({
       title: 'Actualizar inventario',
       body: `¿Estás seguro de que desea actualizar el inventario?`,
       ok: () => {
         if (this.warehouseInventoryId != null) {
-          console.log('Saved data:', data);
           this.warehouseInventoryService
             .update(this.warehouseInventoryId, data)
             .subscribe({
@@ -285,7 +278,7 @@ export class WarehouseDetailComponent implements OnInit {
                 if (this.inventoryItemModal) {
                   this.inventoryItemModal.resetSavingState();
                 }
-                this.messageService.showSuccess("Inventario actualizado");
+                this.messageService.showSuccess('Inventario actualizado');
               },
               error: (err) => {
                 console.error('Error isLoading warehouses', err);
@@ -326,5 +319,35 @@ export class WarehouseDetailComponent implements OnInit {
 
   onRefreshData() {
     this.loadWarehouseInventories();
+  }
+
+  openTransferStoreModal() {
+    this.isModalTransferStoreVisible = true;
+  }
+
+  handleTransferStoreClose(data: any) {
+    this.isModalTransferStoreVisible = false;
+  }
+
+  handleTransferStoreSave(data: any) {
+    this.modal.show({
+      title: 'Transferir inventario',
+      body: `¿Estás seguro de que desea transferir el inventario?`,
+      ok: () => {
+
+        this.isLoading = true;
+        console.log('data', data);
+        this.warehouseService.transferStore(this.warehouseId!, data.transferDetails).subscribe({
+          next: (data) => {
+            this.messageService.showSuccess('Inventario transferido correctamente');
+            this.isLoading = false;
+            this.handleTransferStoreClose(null);
+            this.loadWarehouseInventories();
+          },
+         
+        }); 
+      },
+      close: () => {},
+    });
   }
 }

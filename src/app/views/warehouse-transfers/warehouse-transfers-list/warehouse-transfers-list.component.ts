@@ -107,13 +107,11 @@ export class WarehouseTransfersListComponent implements OnInit {
     this.isLoading = true;
     this.warehouseInventoryTransferService.getAll(this.getFilters()).subscribe({
       next: (response) => {
-        console.log('Response:', response);
         this.warehouseInventoryTransfers = response.data;
         this.pagination = response.pagination;
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error fetching transactions:', error);
         this.isLoading = false;
       },
     });
